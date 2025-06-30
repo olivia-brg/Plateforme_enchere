@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENI-Enchères - Connexion</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>ENI-Enchères</h1>
+    <form action="/createAccount" method="post">
+        <label for="username">Identifiant :</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Mot de passe :</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Connexion</button>
+
+        <div class="checkbox-container">
+            <input type="checkbox" id="remember-me" name="remember-me">
+            <label for="remember-me">Se souvenir de moi</label>
+        </div>
+
+        <div class="forgot-password">
+            <a href="/forgot-password">Mot de passe oublié</a>
+        </div>
+    </form>
+
+    <button class="create-account" type="submit">Créer un compte</button>
+</body>
+
+</html>
