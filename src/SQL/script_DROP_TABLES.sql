@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS bids;
-DROP TABLE IF EXISTS auctionUsers;
 DROP TABLE IF EXISTS deliveryAddress;
+DROP TABLE IF EXISTS auctionUsers;
 DROP TABLE IF EXISTS categories;
 DROP TABLE IF EXISTS articles;
 
