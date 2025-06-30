@@ -1,5 +1,50 @@
 package fr.eni.encheres.dal;
 
+import fr.eni.encheres.bo.User;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+@Repository
 public class UserDAOImpl implements UserDAO{
 
+    // TODO: Doit on faire un fonction checkPassword à part
+    //       ou le return null est suffisant?
+
+    private final String FIND_BY_SOMETHING = "/*Requete à renseigner*/";
+
+    private NamedParameterJdbcTemplate jdbcTemplate;
+
+    public UserDAOImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Override
+    public User login(String username, String password) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("username", username);
+        mapSqlParameterSource.addValue("password", password);
+        return jdbcTemplate.queryForObject(FIND_BY_SOMETHING, mapSqlParameterSource, new UserRowMapper());
+    }
+
+    class UserRowMapper implements RowMapper<User> {
+
+        @Override
+        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+            User m = new User();
+            m.setId(rs.getInt(""));
+            m.setUserName(rs.getString(""));
+            m.setFirsName(rs.getString(""));
+            m.setLastName(rs.getString(""));
+            m.setAdmin(rs.getBoolean(""));
+            // TODO: ajouter autant d'attribut que necessaire
+
+            return m;
+        }
+
+    }
 }
