@@ -15,6 +15,11 @@ public class LoginController {
         this.loginService = loginService;
     }
 
+    @GetMapping("/login")
+    public String login(){
+        return "login";
+    }
+
     @PostMapping("/login")
     public String login(@RequestParam(name = "username", required = true) String username,
                         @RequestParam(name = "password", required = true) String password,
@@ -47,5 +52,11 @@ public class LoginController {
         }
         System.out.println(connectedUser);
         return "redirect:/index";
+    }
+
+    @ModelAttribute("connectedUser")
+    public User AddUser(){
+        System.out.println("Add Attribut User to Session");
+        return new User();
     }
 }
