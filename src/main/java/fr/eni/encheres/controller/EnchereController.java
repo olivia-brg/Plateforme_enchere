@@ -14,7 +14,7 @@ public class EnchereController {
 
 
     @RequestMapping(path={"/","/index"}, method = {RequestMethod.GET, RequestMethod.POST})
-    public String accueil(@ModelAttribute("membreEnSession") User connectedUser){
+    public String accueil(@ModelAttribute("connectedUser") User connectedUser){
         return "index";
     }
 

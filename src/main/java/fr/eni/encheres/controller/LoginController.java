@@ -1,6 +1,6 @@
 package fr.eni.encheres.controller;
 
-import fr.eni.encheres.bll.login.LoginService;
+import fr.eni.encheres.bll.user.UserService;
 import fr.eni.encheres.bo.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -10,9 +10,9 @@ import org.springframework.web.bind.support.SessionStatus;
 @SessionAttributes({"connectedUser"})
 public class LoginController {
 
-    private final LoginService loginService;
+    private final UserService loginService;
 
-    public LoginController(LoginService loginService) {
+    public LoginController(UserService loginService) {
         this.loginService = loginService;
     }
 
