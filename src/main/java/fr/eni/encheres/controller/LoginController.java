@@ -21,10 +21,10 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam(name = "username", required = true) String username,
+    public String login(@RequestParam(name = "userName", required = true) String userName,
                         @RequestParam(name = "password", required = true) String password,
                         @ModelAttribute("connectedUser") User connectedUser) {
-        User user = this.loginService.load(username, password);
+        User user = this.loginService.load(userName, password);
         if (user != null) {
             connectedUser.setId(user.getId());
             connectedUser.setUserName(user.getUserName());
@@ -52,6 +52,11 @@ public class LoginController {
         }
         System.out.println(connectedUser);
         return "redirect:/index";
+    }
+
+    @GetMapping("/signIn")
+    public String signIn(){
+        return "signIn";
     }
 
     @ModelAttribute("connectedUser")
