@@ -13,7 +13,8 @@ import java.sql.SQLException;
 public class UserDAOImpl implements UserDAO{
 
     private final String FIND_USER = """
-        SELECT userName,
+        SELECT id,
+               userName,
                firstName,
                lastName,
                email,
@@ -47,11 +48,11 @@ public class UserDAOImpl implements UserDAO{
         @Override
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
             User m = new User();
-            m.setId(rs.getInt(""));
-            m.setUserName(rs.getString(""));
-            m.setFirsName(rs.getString(""));
-            m.setLastName(rs.getString(""));
-            m.setAdmin(rs.getBoolean(""));
+            m.setId(rs.getInt("id"));
+            m.setUserName(rs.getString("userName"));
+            m.setFirsName(rs.getString("firstName"));
+            m.setLastName(rs.getString("lastName"));
+            m.setAdmin(rs.getBoolean("isAdmin"));
             // TODO: ajouter autant d'attribut que necessaire
 
             return m;
