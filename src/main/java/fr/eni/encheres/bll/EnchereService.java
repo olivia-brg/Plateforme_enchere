@@ -1,5 +1,5 @@
 package fr.eni.encheres.bll;
 
-public class ArticleService {
+public class EnchereService {
 
 }

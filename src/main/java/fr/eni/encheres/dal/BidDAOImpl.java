@@ -28,6 +28,7 @@ public class BidDAOImpl implements BidDAO{
         MapSqlParameterSource namedParameters = new MapSqlParameterSource();
         namedParameters.addValue("id", id);
         return namedParameterJdbcTemplate.queryForObject(sql, namedParameters ,new BeanPropertyRowMapper<>(Bid.class));
+
     }
 
     @Override
@@ -40,7 +41,7 @@ public class BidDAOImpl implements BidDAO{
 
     @Override
     public List<Bid> readAllFromArticleIdByUserId(long articleId, long userId) {
-        String SQL = "SELECT (bidDate, bidAmount, userId, articleId) FROM bids WHERE (id = :artId AND userId = :userId)"   ;
+        String SQL = "SELECT (bidDate, bidAmount, userId, articleId) FROM bids WHERE (articleId = :artId AND userId = :userId)"   ;
         MapSqlParameterSource namedParameters = new MapSqlParameterSource();
         namedParameters.addValue("artId", articleId);
         namedParameters.addValue("userId", userId);
