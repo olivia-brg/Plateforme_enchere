@@ -47,3 +47,5 @@ Thumbs.db
 *.ctxt
 .mtj.tmp/
 bin
+# ⬇️ À décommenter une fois que tout le monde aura récupéré le fichier ⬇️
+# gradle.properties
