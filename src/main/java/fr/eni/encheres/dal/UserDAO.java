@@ -5,6 +5,7 @@ import fr.eni.encheres.bo.User;
 public interface UserDAO {
 
     User login(String username, String password);
+    public boolean findId(String userName);
 
 
 
