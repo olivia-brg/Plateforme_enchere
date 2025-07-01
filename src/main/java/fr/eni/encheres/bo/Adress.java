@@ -2,13 +2,15 @@ package fr.eni.encheres.bo;
 
 public class Adress {
 	
+	private int id;
 	private String street;
 	private String postalCode;
 	private String city;
 	
 //	Full constructor
-	public Adress(String street, String postalCode, String city) {
+	public Adress(int id,String street, String postalCode, String city) {
 		
+		this.id = id;
 		this.street = street;
 		this.postalCode = postalCode;
 		this.city = city;
