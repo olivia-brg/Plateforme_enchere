@@ -3,12 +3,11 @@ package fr.eni.encheres.controller;
 import fr.eni.encheres.bll.user.UserService;
 import fr.eni.encheres.bo.User;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/profile")
-@SessionAttributes({"connectedUser"})
+@SessionAttributes({"connectedUser", "updateUserInfo"})
 public class ProfilController {
 
     private UserService userService;
@@ -17,21 +16,32 @@ public class ProfilController {
         this.userService = userService;
     }
 
+    @ModelAttribute("updateUserInfo")
+    public User AddUser(){
+        return new User();
+    }
+
+
     @GetMapping("")
     public String showProfil(@ModelAttribute("connectedUser") User connectedUser) {
-        return "profil";
+        return "profile";
     }
 
     @PostMapping("/update")
-    public String updateProfil(@ModelAttribute("connectedUser") User connectedUser
-                               /*BindingResult bindingResult*/
-    ) {
-//        if (bindingResult.hasErrors()) {
-//            return "profil";
-//        } else {
-//        }
-            this.userService.update(connectedUser);
-            return "redirect:/profile";
+    public String updateProfil(@ModelAttribute("updateUserInfo") User updateUserInfo,
+                               @RequestParam(name = "password", required = true) String password,
+                               @RequestParam(name = "confirmPassword", required = true) String confirmPassword) {
+        System.out.println("updateUserInfo = " + updateUserInfo);
+        if (password.equals(confirmPassword)) {
+            if (this.userService.isPasswordCorrect(updateUserInfo.getUserName(), password)) {
+                this.userService.update(updateUserInfo);
+            } else {
+                System.out.println("Mot de passe erroné");
+            }
+        } else {
+            System.out.println("Veuillez saisir le même mot de passe");
+        }
+        return "redirect:/profile";
 
     }
 

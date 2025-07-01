@@ -15,11 +15,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User load(String username, String password) {
-        return this.userDAO.login(username, password);
+        User user = this.userDAO.login(username, password);
+        System.out.println(user);
+        return user;
     }
 
     @Override
     public void update(User user) {
         this.userDAO.update(user);
+    }
+
+    @Override
+    public boolean isPasswordCorrect(String username, String password) {
+        return this.userDAO.isPasswordCorrect(username, password);
     }
 }

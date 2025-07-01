@@ -1,6 +1,7 @@
 package fr.eni.encheres.dal;
 
 import fr.eni.encheres.bo.User;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -25,13 +26,12 @@ public class UserDAOImpl implements UserDAO{
                credit,
                isAdmin
         from auctionUsers
-            WHERE userName = :userName
-            AND password = :password
+        WHERE userName = :userName AND
+              password = :password
     """;
 
     private final String UPDATE_USER = """
-        UPDATE auctionUsers SET userName = :userName,
-                                firstName = :firstName,
+        UPDATE auctionUsers SET firstName = :firstName,
                                 lastName = :lastName,
                                 email = :email,
                                 phoneNumber = :phoneNumber,
@@ -39,6 +39,14 @@ public class UserDAOImpl implements UserDAO{
                                 city = :city,
                                 postalCode = :postalCode,
                                 password = :password
+        WHERE userName = :userName
+    """;
+
+    private final String IS_PASSWORD_CORRECT = """
+        SELECT COUNT(*)
+        FROM auctionUsers
+        WHERE username = :userName AND
+              password = :password
     """;
 
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -52,42 +60,74 @@ public class UserDAOImpl implements UserDAO{
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("userName", username);
         mapSqlParameterSource.addValue("password", password);
-        return jdbcTemplate.queryForObject(FIND_USER, mapSqlParameterSource, new UserRowMapper());
+        User user = jdbcTemplate.queryForObject(FIND_USER, mapSqlParameterSource, new UserRowMapper());
+        System.out.println(user);
+        return user;
     }
 
     @Override
     public void update(User user) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("userName", user.getUserName());
-        mapSqlParameterSource.addValue("firstName", user.getFirsName());
-        mapSqlParameterSource.addValue("lastName", user.getLastName());
-        mapSqlParameterSource.addValue("email", user.getEmail());
-        mapSqlParameterSource.addValue("phoneNumber", user.getPhoneNumber());
-        mapSqlParameterSource.addValue("street", user.getStreet());
-        mapSqlParameterSource.addValue("city", user.getCity());
-        mapSqlParameterSource.addValue("postalCode", user.getPostalCode());
-        mapSqlParameterSource.addValue("password", user.getPassword());
-        jdbcTemplate.update(UPDATE_USER, mapSqlParameterSource);
+
+//        if (isPasswordCorrect(user.getUserName(), user.getPassword())) {
+            mapSqlParameterSource.addValue("userName", user.getUserName());
+            mapSqlParameterSource.addValue("firstName", user.getFirstName());
+            mapSqlParameterSource.addValue("lastName", user.getLastName());
+            mapSqlParameterSource.addValue("email", user.getEmail());
+            mapSqlParameterSource.addValue("phoneNumber", user.getPhoneNumber());
+            mapSqlParameterSource.addValue("street", user.getStreet());
+            mapSqlParameterSource.addValue("city", user.getCity());
+            mapSqlParameterSource.addValue("postalCode", user.getPostalCode());
+            mapSqlParameterSource.addValue("password", user.getPassword());
+            jdbcTemplate.update(UPDATE_USER, mapSqlParameterSource);
+//        }
+
     }
+
+    @Override
+    public boolean isPasswordCorrect(String username, String password) {
+        try {
+            if (username == null || password == null) {
+                return false;
+            }
+
+            MapSqlParameterSource params = new MapSqlParameterSource();
+            params.addValue("userName", username);
+            params.addValue("password", password);
+
+            Integer count = jdbcTemplate.queryForObject(
+                    IS_PASSWORD_CORRECT,
+                    params,
+                    Integer.class
+            );
+            System.out.println("isPasswordCorrect = " + (count != null && count > 0));
+
+            return count != null && count > 0;
+
+        } catch (Exception e) {
+            System.out.println("Erreur lors de la vérification du mot de passe");
+            //logger.error("Erreur lors de la vérification du mot de passe", e);
+            return false;
+        }
+    }
+
 
     class UserRowMapper implements RowMapper<User> {
         @Override
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-            User m = new User();
-            m.setId(rs.getInt("id"));
-            m.setUserName(rs.getString("userName"));
-            m.setFirstName(rs.getString("firstName"));
-            m.setLastName(rs.getString("lastName"));
-            m.setEmail(rs.getString("email"));
-            m.setPhoneNumber(rs.getString("phoneNumber"));
-            m.setStreet(rs.getString("street"));
-            m.setCity(rs.getString("city"));
-            m.setPostalCode(rs.getString("postalCode"));
-            m.setCredit(rs.getFloat("credit"));
-            m.setAdmin(rs.getBoolean("isAdmin"));
-
-
-            return m;
+            User user = new User();
+            user.setId(rs.getInt("id"));
+            user.setUserName(rs.getString("userName"));
+            user.setFirstName(rs.getString("firstName"));
+            user.setLastName(rs.getString("lastName"));
+            user.setEmail(rs.getString("email"));
+            user.setPhoneNumber(rs.getString("phoneNumber"));
+            user.setStreet(rs.getString("street"));
+            user.setCity(rs.getString("city"));
+            user.setPostalCode(rs.getString("postalCode"));
+            user.setCredit(rs.getFloat("credit"));
+            user.setAdmin(rs.getBoolean("isAdmin"));
+            return user;
         }
     }
 }

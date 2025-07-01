@@ -76,17 +76,10 @@ public class LoginController {
         return "redirect:/index";
     }
 
-
-    @ModelAttribute("connectedUser")
-    public User AddUser(){
-        System.out.println("Add Attribut User to Session");
-        return new User();
-
     @GetMapping("/logout")
     public String finSession(SessionStatus status) {
         // Suppression des attributs de @SessionAttributs
         status.setComplete();
         return "redirect:/index";
-
     }
 }
