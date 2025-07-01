@@ -50,7 +50,7 @@ public class UserDAOImpl implements UserDAO{
             User m = new User();
             m.setId(rs.getInt("id"));
             m.setUserName(rs.getString("userName"));
-            m.setFirsName(rs.getString("firstName"));
+            m.setFirstName(rs.getString("firstName"));
             m.setLastName(rs.getString("lastName"));
             m.setAdmin(rs.getBoolean("isAdmin"));
             // TODO: ajouter autant d'attribut que necessaire

@@ -3,6 +3,7 @@ package fr.eni.encheres.controller;
 import fr.eni.encheres.bll.login.LoginService;
 import fr.eni.encheres.bo.User;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -28,7 +29,7 @@ public class LoginController {
         if (user != null) {
             connectedUser.setId(user.getId());
             connectedUser.setUserName(user.getUserName());
-            connectedUser.setFirsName(user.getFirsName());
+            connectedUser.setFirstName(user.getFirstName());
             connectedUser.setLastName(user.getLastName());
             connectedUser.setEmail(user.getEmail());
             connectedUser.setPhoneNumber(user.getPhoneNumber());
@@ -40,7 +41,7 @@ public class LoginController {
         } else {
             connectedUser.setId(0);
             connectedUser.setUserName(null);
-            connectedUser.setFirsName(null);
+            connectedUser.setFirstName(null);
             connectedUser.setLastName(null);
             connectedUser.setEmail(null);
             connectedUser.setPhoneNumber(null);
@@ -54,10 +55,19 @@ public class LoginController {
         return "redirect:/index";
     }
 
-    @GetMapping("/signIn")
-    public String signIn(){
+    @GetMapping(path="/signIn")
+    public String signIn(Model model){
+        model.addAttribute("user", new User());
         return "signIn";
     }
+
+    @PostMapping(path="/signIn")
+    public String addUser(Model model){
+        model.addAttribute("user", new User());
+        //ajouter articleService
+        return "redirect:/index";
+    }
+
 
     @ModelAttribute("connectedUser")
     public User AddUser(){
