@@ -1,4 +1,4 @@
-# === Java & Build Artifacts ===
+﻿# === Java & Build Artifacts ===
 *.class
 *.jar
 *.war
@@ -47,5 +47,4 @@ Thumbs.db
 *.ctxt
 .mtj.tmp/
 bin
-# ⬇️ À décommenter une fois que tout le monde aura récupéré le fichier ⬇️
-# gradle.properties
+gradle.properties
