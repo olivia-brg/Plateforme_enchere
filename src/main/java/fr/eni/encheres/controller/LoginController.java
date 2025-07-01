@@ -5,6 +5,7 @@ import fr.eni.encheres.bo.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 
 @Controller
 @SessionAttributes({"connectedUser"})
@@ -19,6 +20,12 @@ public class LoginController {
     @GetMapping("/login")
     public String login(){
         return "login";
+    }
+
+    @ModelAttribute("connectedUser")
+    public User AddUser(){
+        System.out.println("Add Attribut User to Session");
+        return new User();
     }
 
     @PostMapping("/login")
@@ -51,7 +58,7 @@ public class LoginController {
             connectedUser.setCredit(0);
             connectedUser.setAdmin(false);
         }
-        System.out.println(connectedUser);
+        System.out.println(connectedUser.getUserName());
         return "redirect:/index";
     }
 
@@ -60,6 +67,7 @@ public class LoginController {
         model.addAttribute("user", new User());
         return "signIn";
     }
+
 
     @PostMapping(path="/signIn")
     public String addUser(Model model){
@@ -73,5 +81,12 @@ public class LoginController {
     public User AddUser(){
         System.out.println("Add Attribut User to Session");
         return new User();
+
+    @GetMapping("/logout")
+    public String finSession(SessionStatus status) {
+        // Suppression des attributs de @SessionAttributs
+        status.setComplete();
+        return "redirect:/index";
+
     }
 }
