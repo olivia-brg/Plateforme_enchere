@@ -38,7 +38,7 @@ public class UserDAOImpl implements UserDAO{
     @Override
     public User login(String username, String password) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("username", username);
+        mapSqlParameterSource.addValue("userName", username);
         mapSqlParameterSource.addValue("password", password);
         return jdbcTemplate.queryForObject(FIND_USER, mapSqlParameterSource, new UserRowMapper());
     }
