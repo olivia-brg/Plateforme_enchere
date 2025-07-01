@@ -47,5 +47,4 @@ Thumbs.db
 *.ctxt
 .mtj.tmp/
 bin
-
 gradle.properties
