@@ -12,10 +12,21 @@ import java.sql.SQLException;
 @Repository
 public class UserDAOImpl implements UserDAO{
 
-    // TODO: Doit on faire un fonction checkPassword à part
-    //       ou le return null est suffisant?
-
-    private final String FIND_BY_SOMETHING = "/*Requete à renseigner*/";
+    private final String FIND_USER = """
+        SELECT userName,
+               firstName,
+               lastName,
+               email,
+               phoneNumber,
+               street,
+               city,
+               postalCode,
+               credit,
+               isAdmin
+        from auctionUsers
+            WHERE userName = :userName
+            AND password = :password
+    """;
 
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -28,7 +39,7 @@ public class UserDAOImpl implements UserDAO{
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("username", username);
         mapSqlParameterSource.addValue("password", password);
-        return jdbcTemplate.queryForObject(FIND_BY_SOMETHING, mapSqlParameterSource, new UserRowMapper());
+        return jdbcTemplate.queryForObject(FIND_USER, mapSqlParameterSource, new UserRowMapper());
     }
 
     class UserRowMapper implements RowMapper<User> {
