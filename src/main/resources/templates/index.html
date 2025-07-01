@@ -1,12 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="fr">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ENI-Auctions - My Profile</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+<head th:replace="~{fragments/frag :: head('ENI-Enchères')}"></head>
 
 <body>
     <h1>ENI-Auctions</h1>
@@ -45,7 +40,7 @@
             </div>
         </div>
         <div class="single-article">
-            <img src="pic.jpg" alt="">
+            <img src="img/pic.jpg" alt="">
             <div class="article-infos">
                 <h5>Exemple</h5>
                 <p>Prix: </p>
