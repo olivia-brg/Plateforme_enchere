@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENI-Enchères - product-page</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>ENI-Enchères</h1>
+    <h2> [userName] a remporté l'enchère</h2>
+    <div class="detail-objet">
+        <h3>nom de l'objet</h3>
+        <img src="pic.jpg" alt="">
+        <div class="form-group">
+            <label for="best-bid">Meilleur offre:</label>
+            <input type="text" id="best-bid" name="best-bid" readonly>
+        </div>
+        <div class="form-group">
+            <label for="intial-price">Mise à prix:</label>
+            <input type="number" id="intial-price" name="intial-price" readonly>
+        </div>
+        <div class="form-group">
+            <label for="auction-end">Fin de l'enchère:</label>
+            <input type="datetime" id="auction-end" name="auction-end" readonly>
+        </div>
+        <div class="form-group">
+            <label for="delivery-address">Retrait: </label>
+            <input type="text" id="delivery-address" name="delivery-address" readonly>
+        </div>
+        <div class="form-group">
+            <label for="seller">Vendeur: </label>
+            <input type="text" id="seller" name="seller" readonly>
+        </div>
+        <div class="form-group">
+            <button type="submit">Retrait effectué</button>
+            <button type="submit">Contacter [userName]</button>
+            <button type="submit">Back</button>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
