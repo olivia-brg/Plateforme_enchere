@@ -3,37 +3,38 @@ package fr.eni.encheres.bo;
 import java.time.LocalDate;
 
 public class Article {
-	
+	// Attribut
 	private int id;
 	private String name;
 	private String description;
 	private LocalDate auctionStartDate;
 	private LocalDate auctionEndDate;
 	private float soldPrice;
-	private float StartingPrice;
+	private float startingPrice;
 	private boolean isOnSale;
+	//association
 	private Category category;
 	private Adress withdrawalAdress;
+	private User user;
 	
 //	Full constructor
 	public Article(int id, String name, String description, LocalDate auctionStartDate, LocalDate auctionEndDate,
-			float minBid, float actualPrice, boolean isOnSale, Category category, Adress withdrawalAdress) {
+			float minBid, float actualPrice, boolean isOnSale, Category category, Adress withdrawalAdress, User user) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.auctionStartDate = auctionStartDate;
 		this.auctionEndDate = auctionEndDate;
 		this.soldPrice = minBid;
-		this.StartingPrice = actualPrice;
+		this.startingPrice = actualPrice;
 		this.isOnSale = isOnSale;
 		this.category = category;
 		this.withdrawalAdress = withdrawalAdress;
+		this.user = user;
 	}
 //	Empty constructor
 	public Article() {
 	}
-	
-//	List setter and getter
 	public int getId() {
 		return id;
 	}
@@ -64,17 +65,17 @@ public class Article {
 	public void setAuctionEndDate(LocalDate auctionEndDate) {
 		this.auctionEndDate = auctionEndDate;
 	}
-	public float getMinBid() {
+	public float getSoldPrice() {
 		return soldPrice;
 	}
-	public void setMinBid(float minBid) {
-		this.soldPrice = minBid;
+	public void setSoldPrice(float soldPrice) {
+		this.soldPrice = soldPrice;
 	}
-	public float getActualPrice() {
-		return StartingPrice;
+	public float getStartingPrice() {
+		return startingPrice;
 	}
-	public void setActualPrice(float actualPrice) {
-		this.StartingPrice = actualPrice;
+	public void setStartingPrice(float startingPrice) {
+		this.startingPrice = startingPrice;
 	}
 	public boolean isOnSale() {
 		return isOnSale;
@@ -94,7 +95,15 @@ public class Article {
 	public void setWithdrawalAdress(Adress withdrawalAdress) {
 		this.withdrawalAdress = withdrawalAdress;
 	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
 	
+//	List setter and getter
+
 
 	
 	
