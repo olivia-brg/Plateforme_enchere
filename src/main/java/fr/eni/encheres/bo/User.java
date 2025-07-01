@@ -19,10 +19,10 @@ public class User {
 	private List<Bid> bids;
 	private List<Article> articles;
 
-//	Constructor without articles and bids
+	//	Constructor without articles and bids
 	public User(int id, String pseudo, String name, String prenom, String email, String phoneNumber, String street,
 			String postalCode, String city, String password, float credit, boolean admin) {
-	
+
 		this.id = id;
 		this.userName = pseudo;
 		this.lastName = name;
@@ -140,14 +140,22 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User{" +
-				"id=" + id +
-				", userName='" + userName + '\'' +
-				", lastName='" + lastName + '\'' +
-				", firstName='" + firstName + '\'' +
-				", email='" + email + '\'' +
-				", credit=" + credit +
-				", isAdmin=" + isAdmin +
-				'}';
+		final StringBuilder sb = new StringBuilder("User{");
+		sb.append("id=").append(id);
+		sb.append(", userName='").append(userName).append('\'');
+		sb.append(", lastName='").append(lastName).append('\'');
+		sb.append(", firstName='").append(firstName).append('\'');
+		sb.append(", email='").append(email).append('\'');
+		sb.append(", phoneNumber='").append(phoneNumber).append('\'');
+		sb.append(", street='").append(street).append('\'');
+		sb.append(", postalCode='").append(postalCode).append('\'');
+		sb.append(", city='").append(city).append('\'');
+		sb.append(", password='").append(password).append('\'');
+		sb.append(", credit=").append(credit);
+		sb.append(", isAdmin=").append(isAdmin);
+		sb.append(", bids=").append(bids);
+		sb.append(", articles=").append(articles);
+		sb.append('}');
+		return sb.toString();
 	}
 }

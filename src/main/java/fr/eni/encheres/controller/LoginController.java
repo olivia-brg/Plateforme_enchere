@@ -24,7 +24,6 @@ public class LoginController {
 
     @ModelAttribute("connectedUser")
     public User AddUser(){
-        System.out.println("Add Attribut User to Session");
         return new User();
     }
 

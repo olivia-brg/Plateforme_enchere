@@ -1,7 +1,8 @@
 package fr.eni.encheres.dal;
 
 import fr.eni.encheres.bo.User;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -11,43 +12,45 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Repository
-public class UserDAOImpl implements UserDAO{
+public class UserDAOImpl implements UserDAO {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserDAOImpl.class);
 
     private final String FIND_USER = """
-        SELECT id,
-               userName,
-               firstName,
-               lastName,
-               email,
-               phoneNumber,
-               street,
-               city,
-               postalCode,
-               credit,
-               isAdmin
-        from auctionUsers
-        WHERE userName = :userName AND
-              password = :password
-    """;
+                SELECT id,
+                       userName,
+                       firstName,
+                       lastName,
+                       email,
+                       phoneNumber,
+                       street,
+                       city,
+                       postalCode,
+                       credit,
+                       isAdmin
+                from auctionUsers
+                WHERE userName = :userName AND
+                      password = :password
+            """;
 
     private final String UPDATE_USER = """
-        UPDATE auctionUsers SET firstName = :firstName,
-                                lastName = :lastName,
-                                email = :email,
-                                phoneNumber = :phoneNumber,
-                                street = :street,
-                                city = :city,
-                                postalCode = :postalCode,
-                                password = :password
-        WHERE userName = :userName
-    """;
+                UPDATE auctionUsers SET firstName = :firstName,
+                                        lastName = :lastName,
+                                        email = :email,
+                                        phoneNumber = :phoneNumber,
+                                        street = :street,
+                                        city = :city,
+                                        postalCode = :postalCode,
+                                        password = :password
+                WHERE userName = :userName
+            """;
 
     private final String IS_PASSWORD_CORRECT = """
-        SELECT COUNT(*)
-        FROM auctionUsers
-        WHERE username = :userName AND
-              password = :password
-    """;
+                SELECT COUNT(*)
+                FROM auctionUsers
+                WHERE username = :userName AND
+                      password = :password
+            """;
 
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -61,7 +64,8 @@ public class UserDAOImpl implements UserDAO{
         mapSqlParameterSource.addValue("userName", username);
         mapSqlParameterSource.addValue("password", password);
         User user = jdbcTemplate.queryForObject(FIND_USER, mapSqlParameterSource, new UserRowMapper());
-        System.out.println(user);
+        assert user != null;
+        logger.info(user.toString());
         return user;
     }
 
@@ -69,18 +73,16 @@ public class UserDAOImpl implements UserDAO{
     public void update(User user) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 
-//        if (isPasswordCorrect(user.getUserName(), user.getPassword())) {
-            mapSqlParameterSource.addValue("userName", user.getUserName());
-            mapSqlParameterSource.addValue("firstName", user.getFirstName());
-            mapSqlParameterSource.addValue("lastName", user.getLastName());
-            mapSqlParameterSource.addValue("email", user.getEmail());
-            mapSqlParameterSource.addValue("phoneNumber", user.getPhoneNumber());
-            mapSqlParameterSource.addValue("street", user.getStreet());
-            mapSqlParameterSource.addValue("city", user.getCity());
-            mapSqlParameterSource.addValue("postalCode", user.getPostalCode());
-            mapSqlParameterSource.addValue("password", user.getPassword());
-            jdbcTemplate.update(UPDATE_USER, mapSqlParameterSource);
-//        }
+        mapSqlParameterSource.addValue("userName", user.getUserName());
+        mapSqlParameterSource.addValue("firstName", user.getFirstName());
+        mapSqlParameterSource.addValue("lastName", user.getLastName());
+        mapSqlParameterSource.addValue("email", user.getEmail());
+        mapSqlParameterSource.addValue("phoneNumber", user.getPhoneNumber());
+        mapSqlParameterSource.addValue("street", user.getStreet());
+        mapSqlParameterSource.addValue("city", user.getCity());
+        mapSqlParameterSource.addValue("postalCode", user.getPostalCode());
+        mapSqlParameterSource.addValue("password", user.getPassword());
+        jdbcTemplate.update(UPDATE_USER, mapSqlParameterSource);
 
     }
 
@@ -100,13 +102,11 @@ public class UserDAOImpl implements UserDAO{
                     params,
                     Integer.class
             );
-            System.out.println("isPasswordCorrect = " + (count != null && count > 0));
-
+            logger.info("isPasswordCorrect : " + (count != null && count > 0));
             return count != null && count > 0;
 
         } catch (Exception e) {
-            System.out.println("Erreur lors de la vérification du mot de passe");
-            //logger.error("Erreur lors de la vérification du mot de passe", e);
+            logger.error("Erreur lors de la vérification du mot de passe", e);
             return false;
         }
     }
@@ -127,6 +127,7 @@ public class UserDAOImpl implements UserDAO{
             user.setPostalCode(rs.getString("postalCode"));
             user.setCredit(rs.getFloat("credit"));
             user.setAdmin(rs.getBoolean("isAdmin"));
+            logger.info(user.toString());
             return user;
         }
     }
