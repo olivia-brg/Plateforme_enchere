@@ -29,12 +29,14 @@ public class ProfilController {
 
     @PostMapping("/update")
     public String updateProfil(@ModelAttribute("updateUserInfo") User updateUserInfo,
+                               @ModelAttribute("connectedUser") User connectedUser,
                                @RequestParam(name = "password", required = true) String password,
                                @RequestParam(name = "confirmPassword", required = true) String confirmPassword) {
         System.out.println("updateUserInfo = " + updateUserInfo);
         if (password.equals(confirmPassword)) {
             if (this.userService.isPasswordCorrect(updateUserInfo.getUserName(), password)) {
                 this.userService.update(updateUserInfo);
+                connectedUser = updateUserInfo;
             } else {
                 System.out.println("Mot de passe erroné");
             }
