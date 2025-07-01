@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class EnchereController {
 
 
-    @RequestMapping(path="/", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(path={"/","/index"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String accueil(){
         return "index";
     }
