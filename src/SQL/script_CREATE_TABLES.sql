@@ -53,11 +53,12 @@ CREATE TABLE articles (
 );
 
 CREATE TABLE bids (
+                      bidId INT IDENTITY ,
                       bidDate DATETIME2,
                       bidAmount NUMERIC(5,2),
                       userId int,
                       articleId int,
-                      CONSTRAINT pk_bid PRIMARY KEY (userId,articleId,bidDate),
+                      CONSTRAINT pk_bid PRIMARY KEY (bidId),
                       CONSTRAINT fk_bid_user FOREIGN KEY(userId) REFERENCES auctionUsers(id),
                       CONSTRAINT fk_bid_article FOREIGN KEY(articleId) REFERENCES articles(id),
 );
