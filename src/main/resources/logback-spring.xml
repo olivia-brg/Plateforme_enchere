@@ -1,26 +1,67 @@
 <configuration>
 
-    <!-- Format des logs -->
-    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"/>
+<!-- Définir différents formats -->
+<property name="PATTERN_DEBUG" value="🌱 DEBUG: %msg%n"/>
+<property name="PATTERN_INFO"  value="ℹ️ INFO: %logger{36} - %msg%n"/>
+<property name="PATTERN_WARN"  value="⚠️ WARN: %d{yyyy-MM-dd HH:mm:ss} [%thread] %logger{36} - %msg%n"/>
+<property name="PATTERN_ERROR" value="❌ ERROR: %d{yyyy-MM-dd HH:mm:ss} [%thread] %logger{36} - %msg%n"/>
 
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
-        </encoder>
-    </appender>
+<!-- DEBUG -->
+<appender name="DEBUG_APPENDER" class="ch.qos.logback.core.ConsoleAppender">
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+        <level>DEBUG</level>
+        <onMatch>ACCEPT</onMatch>
+        <onMismatch>DENY</onMismatch>
+    </filter>
+    <encoder>
+        <pattern>${PATTERN_DEBUG}</pattern>
+    </encoder>
+</appender>
 
-    <!-- Configuration pour profil 'dev' -->
-    <springProfile name="dev">
-        <root level="DEBUG">
-            <appender-ref ref="CONSOLE"/>
-        </root>
-    </springProfile>
+<!-- INFO -->
+<appender name="INFO_APPENDER" class="ch.qos.logback.core.ConsoleAppender">
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+        <level>INFO</level>
+        <onMatch>ACCEPT</onMatch>
+        <onMismatch>DENY</onMismatch>
+    </filter>
+    <encoder>
+        <pattern>${PATTERN_INFO}</pattern>
+    </encoder>
+</appender>
 
-    <!-- Configuration pour profil 'prod' -->
-    <springProfile name="prod">
-        <root level="WARN">
-            <appender-ref ref="CONSOLE"/>
-        </root>
-    </springProfile>
+<!-- WARN -->
+<appender name="WARN_APPENDER" class="ch.qos.logback.core.ConsoleAppender">
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+        <level>WARN</level>
+        <onMatch>ACCEPT</onMatch>
+        <onMismatch>DENY</onMismatch>
+    </filter>
+    <encoder>
+        <pattern>${PATTERN_WARN}</pattern>
+    </encoder>
+</appender>
+
+<!-- ERROR -->
+<appender name="ERROR_APPENDER" class="ch.qos.logback.core.ConsoleAppender">
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+        <level>ERROR</level>
+        <onMatch>ACCEPT</onMatch>
+        <onMismatch>DENY</onMismatch>
+    </filter>
+    <encoder>
+        <pattern>${PATTERN_ERROR}</pattern>
+    </encoder>
+</appender>
+
+<!-- Profil dev avec appender multiple -->
+<springProfile name="dev">
+    <root level="DEBUG">
+        <appender-ref ref="DEBUG_APPENDER"/>
+        <appender-ref ref="INFO_APPENDER"/>
+        <appender-ref ref="WARN_APPENDER"/>
+        <appender-ref ref="ERROR_APPENDER"/>
+    </root>
+</springProfile>
 
 </configuration>
