@@ -1,12 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="fr">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ENI-Auctions - My Profile</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+<head th:replace="~{fragments/headfrag :: head('ENI Auctionszeer')}"></head>
 
 <body>
     <h1>ENI-Auctions</h1>
@@ -22,7 +17,7 @@
     <div class="filtres">
         <h2>Filtres :</h2>
         <label for="cat">Catégories</label>
-        <select name="cat" id="cat">Toutes
+        <select name="cat" id="cat">
             <option value="informatique">Informatique</option>
             <option value="ameublement">Ameublement</option>
             <option value="vetement">Vêtement</option>
@@ -34,7 +29,7 @@
     </div>
     <div class="articles">
         <div class="single-article">
-            <img src="pic.jpg" alt="">
+            <img src="img/pic.jpg" alt="">
             <div class="article-infos">
                 <h5>Exemple</h5>
                 <p>Prix: </p>
@@ -45,7 +40,7 @@
             </div>
         </div>
         <div class="single-article">
-            <img src="pic.jpg" alt="">
+            <img src="img/pic.jpg" alt="">
             <div class="article-infos">
                 <h5>Exemple</h5>
                 <p>Prix: </p>
