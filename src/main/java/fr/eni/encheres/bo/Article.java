@@ -9,7 +9,7 @@ public class Article {
 	private String description;
 	private LocalDate auctionStartDate;
 	private LocalDate auctionEndDate;
-	private float minBid;
+	private float soldPrice;
 	private float StartingPrice;
 	private boolean isOnSale;
 	private Category category;
@@ -23,7 +23,7 @@ public class Article {
 		this.description = description;
 		this.auctionStartDate = auctionStartDate;
 		this.auctionEndDate = auctionEndDate;
-		this.minBid = minBid;
+		this.soldPrice = minBid;
 		this.StartingPrice = actualPrice;
 		this.isOnSale = isOnSale;
 		this.category = category;
@@ -65,10 +65,10 @@ public class Article {
 		this.auctionEndDate = auctionEndDate;
 	}
 	public float getMinBid() {
-		return minBid;
+		return soldPrice;
 	}
 	public void setMinBid(float minBid) {
-		this.minBid = minBid;
+		this.soldPrice = minBid;
 	}
 	public float getActualPrice() {
 		return StartingPrice;
