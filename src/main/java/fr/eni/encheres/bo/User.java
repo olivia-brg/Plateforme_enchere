@@ -8,7 +8,7 @@ public class User {
 	private int id;
 	private String userName;
 	private String lastName;
-	private String firsName;
+	private String firstName;
 	private String email;
 	private String phoneNumber;
 	private String street;
@@ -28,7 +28,7 @@ public class User {
 		this.id = id;
 		this.userName = pseudo;
 		this.lastName = name;
-		this.firsName = prenom;
+		this.firstName = prenom;
 		this.email = email;
 		this.phoneNumber = phoneNumber;
 		this.street = street;
@@ -74,13 +74,13 @@ public class User {
 	}
 
 
-	public String getFirsName() {
-		return firsName;
+	public String getFirstName() {
+		return firstName;
 	}
 
 
-	public void setFirsName(String firsName) {
-		this.firsName = firsName;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
 
