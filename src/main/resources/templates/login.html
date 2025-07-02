@@ -10,6 +10,12 @@
 
 <body>
     <h1>ENI-Enchères</h1>
+    <div th:if="${errorMessages}">
+    <ul>
+        <li th:each="msg : ${errorMessages}" th:text="${msg}"></li>
+    </ul>
+	</div>
+    
     <form action="/login" method="post">
         <label for="userName">Identifiant :</label>
         <input type="text" id="userName" name="userName" required>

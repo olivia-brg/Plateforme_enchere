@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 @Repository
 public class UserDAOImpl implements UserDAO{
-	private final String FIND_USER_NAME = "SELECT userName FROM auctionUsers WHERE  id = :id";
+	private final String FIND_USER_NAME = "SELECT COUNT(*) FROM auctionUsers WHERE userName = :userName";
 
     private final String FIND_USER = """
         SELECT id,
@@ -47,12 +47,13 @@ public class UserDAOImpl implements UserDAO{
         return jdbcTemplate.queryForObject(FIND_USER, mapSqlParameterSource, new UserRowMapper());
     }
     @Override
-	public boolean findId(String userName) {
-		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-		mapSqlParameterSource.addValue("userName", userName);
-		int val = jdbcTemplate.queryForObject(FIND_USER_NAME, mapSqlParameterSource, Integer.class);
-		return val >= 1;
-	}
+    public boolean findId(String userName) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("userName", userName);
+
+        int count = jdbcTemplate.queryForObject(FIND_USER_NAME, mapSqlParameterSource, Integer.class);
+        return count >= 1;
+    }
 
 
     class UserRowMapper implements RowMapper<User> {

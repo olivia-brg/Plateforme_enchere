@@ -33,12 +33,10 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public boolean isUserExisting(String userName, BusinessException be) {
 		
-		if(this.userDAO.findId(userName)) {
-			be.add("L'utilisateur n'existe pas");
-			return false;
-		}
-		
-		return true;
-		
+    	if(!this.userDAO.findId(userName)) {
+    	    be.add("L'utilisateur n'existe pas");
+    	    return false;
+    	}
+    	return true;
 	}
 }

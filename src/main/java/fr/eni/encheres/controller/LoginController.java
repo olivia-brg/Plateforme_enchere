@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @SessionAttributes({"connectedUser"})
@@ -33,7 +34,7 @@ public class LoginController {
     @PostMapping("/login")
     public String login(@RequestParam(name = "userName", required = true) String userName,
                         @RequestParam(name = "password", required = true) String password,
-                        @ModelAttribute("connectedUser") User connectedUser) {
+                        @ModelAttribute("connectedUser") User connectedUser, RedirectAttributes redirectAttributes) {
 
         User user = new User();
 		try {
@@ -67,8 +68,8 @@ public class LoginController {
 	        return "redirect:/index";
 		} catch (BusinessException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "redirect:/login";
+			redirectAttributes.addFlashAttribute("errorMessages", e.getMessages());
+	        return "redirect:/login";
 
 		}
         
