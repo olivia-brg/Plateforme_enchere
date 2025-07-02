@@ -1,14 +1,20 @@
+
+
+
+
+
 <form action="/profile/newProduct" method="post" th:fragment="newArticleFormFrag" th:object="${article}">
     <div class="form-group">
         <label for="article">Article:</label>
         <input type="text" id="article" th:field="*{name}">
     </div>
     <div class="form-group">
+
         <label for="category">Catégorie:</label>
         <!-- aller chercher les catégories dans la bdd-->
-        <select id="category" th:field="*{category}" data-th-value="*{category.id}">Toutes
-            <option th:each="categoryFromList : ${listeCategories}" data-th-value="*{categoryFromList.id}"
-                    data-th-text="${categoryFromList}"></option>
+        <select id="category" th:field="*{category}">Toutes
+            <option th:each="categoryFromList : ${listeCategories}" data-th-value="${categoryFromList.getId()}"
+                    data-th-text="${categoryFromList.getName()}"></option>
         </select>
     </div>
     <div class="form-group">

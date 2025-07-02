@@ -80,4 +80,9 @@ public class ArticleServiceImpl implements ArticleService{
 		return adressDAO.findAddressById(id);
 	}
 
+	@Override
+	public void createArticle(Article article, int userId, int deliveryAddressId) {
+
+	}
+
 }

@@ -31,7 +31,7 @@ public class CategoryDAOImpl implements CategoryDAO{
 
 	@Override
 	public List<Category> readAll() {
-		return jdbcTemplate.getJdbcTemplate().query(FIND_ALL, new BeanPropertyRowMapper<>(Category.class));
+		return jdbcTemplate.getJdbcOperations().query(FIND_ALL, new BeanPropertyRowMapper<>(Category.class));
 	}
 
 

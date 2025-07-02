@@ -24,4 +24,6 @@ public interface ArticleService {
 
 	public Adress consultAdressById(int id);
 
+	public void createArticle(Article article,int userId, int deliveryAddressId);
+
 }
