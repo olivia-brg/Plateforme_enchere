@@ -74,4 +74,9 @@ public class ArticleServiceImpl implements ArticleService{
 		return adressDAO.read(id);
 	}
 
+	@Override
+	public void createArticle(Article article, int userId, int deliveryAddressId) {
+
+	}
+
 }

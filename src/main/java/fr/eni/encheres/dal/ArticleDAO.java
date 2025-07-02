@@ -9,5 +9,6 @@ public interface ArticleDAO {
 	List<Article> findAll();
 
 	Article read(long id);
-	
+
+	int create(Article article, int userId, int deliveryAddressId);
 }
