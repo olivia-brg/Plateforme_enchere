@@ -1,11 +1,15 @@
 package fr.eni.encheres.bll.user;
 
 import fr.eni.encheres.bo.User;
+import fr.eni.encheres.exception.BusinessException;
 
 public interface UserService {
-    User load(String username, String password);
+
+
     User readById(int id);
+    User load(String username, String password)throws BusinessException;
 
     void update(User user);
     boolean isPasswordCorrect(String username, String password);
+    boolean isUserExisting(String userName, BusinessException be) ;
 }

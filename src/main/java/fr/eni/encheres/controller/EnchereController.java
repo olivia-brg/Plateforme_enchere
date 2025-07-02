@@ -8,6 +8,8 @@ import fr.eni.encheres.bo.Category;
 import fr.eni.encheres.bo.User;
 
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
@@ -28,14 +30,21 @@ import java.util.List;
 @SessionAttributes({"connectedUser"})
 public class EnchereController {
 
+	
     private ArticleService articleService;
+    
+    EnchereController(ArticleService articleService) {
+		this.articleService = articleService ;
+	}
 
     EnchereController(ArticleService articleService) {
         this.articleService = articleService;
     }
 
     @RequestMapping(path = {"/", "/index"}, method = {RequestMethod.GET, RequestMethod.POST})
-    public String accueil(@ModelAttribute("connectedUser") User connectedUser) {
+    public String accueil(@ModelAttribute("connectedUser") User connectedUser, Model model) {
+    	List<Article> articles = articleService.consultArticles();
+		model.addAttribute("article", articles);
         return "index";
     }
 
@@ -47,7 +56,8 @@ public class EnchereController {
         model.addAttribute("listeCategories", listeCategories);
         return "new-product";
     }
-
+    
+   
 
     @GetMapping("/detailArticle")
     public String afficherUnArticle(@RequestParam(name = "id") int id, Model model) {

@@ -16,6 +16,7 @@ public class Adress {
 		this.city = city;
 	}
 
+
 //	Empty constructor
 	public Adress() {
 	}
@@ -31,6 +32,9 @@ public class Adress {
 	public String getStreet() {
 		return street;
 	}
+
+	
+
 
 	public void setStreet(String street) {
 		this.street = street;

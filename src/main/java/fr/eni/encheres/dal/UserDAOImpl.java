@@ -1,9 +1,16 @@
 package fr.eni.encheres.dal;
 
+import fr.eni.encheres.bo.Bid;
 import fr.eni.encheres.bo.User;
+
+
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -13,9 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Repository
-public class UserDAOImpl implements UserDAO {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserDAOImpl.class);
 
     private final String FIND_USER_BY_ID = """
     SELECT id,
@@ -33,7 +38,14 @@ public class UserDAOImpl implements UserDAO {
     WHERE id = ?
             """;
 
-    private final String FIND_USER = """
+
+public class UserDAOImpl implements UserDAO{
+	
+	private static final Logger logger = LoggerFactory.getLogger(UserDAOImpl.class);
+	
+	private final String FIND_USER_NAME = "SELECT COUNT(*) FROM auctionUsers WHERE userName = :userName";
+
+  private final String FIND_USER = """
                 SELECT id,
                        userName,
                        firstName,
@@ -87,6 +99,15 @@ public class UserDAOImpl implements UserDAO {
         logger.info(user.toString());
         return user;
     }
+    @Override
+    public boolean findId(String userName) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("userName", userName);
+
+        int count = jdbcTemplate.queryForObject(FIND_USER_NAME, mapSqlParameterSource, Integer.class);
+        return count >= 1;
+    }
+
 
     @Override
     public void update(User user) {
