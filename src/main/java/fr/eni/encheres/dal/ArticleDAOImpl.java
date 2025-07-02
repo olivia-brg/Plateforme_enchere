@@ -13,10 +13,10 @@ import fr.eni.encheres.bo.Adress;
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Category;
 import fr.eni.encheres.bo.User;
+import org.springframework.stereotype.Repository;
 
 
-
-
+@Repository
 public class ArticleDAOImpl implements ArticleDAO{
 	
 	private final String FIND_ALL = "SELECT ID, NAME, DESCRIPTION, AUCTIONSTARTDATE, AUCTIONENDDATE, STARTINGPRICE, SOLDPRICE, ISONSALE, CATEGORYID, DELIVERYADRESSEID, USERID FROM ARTICLES";
