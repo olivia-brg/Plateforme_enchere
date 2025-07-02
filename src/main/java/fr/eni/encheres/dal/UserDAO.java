@@ -10,5 +10,7 @@ public interface UserDAO {
     boolean isPasswordCorrect(String username, String password);
     User findByUsername(String username);
     User findUserById(int id);
+    
+
 
 }

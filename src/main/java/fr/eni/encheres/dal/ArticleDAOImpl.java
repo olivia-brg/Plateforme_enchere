@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 public class ArticleDAOImpl implements ArticleDAO{
 	
 	private final String FIND_ALL = "SELECT ID, NAME, DESCRIPTION, AUCTIONSTARTDATE, AUCTIONENDDATE, STARTINGPRICE, SOLDPRICE, ISONSALE, CATEGORYID, DELIVERYADDRESSID, USERID FROM ARTICLES";
-	
+	private final String FIND_BY_ID = "SELECT ID, NAME, DESCRIPTION, AUCTIONSTARTDATE, AUCTIONENDDATE, STARTINGPRICE, SOLDPRICE, ISONSALE, CATEGORYID, DELIVERYADDRESSID, USERID FROM ARTICLES ID = :id";
 	@Autowired
 	private NamedParameterJdbcTemplate jdbcTemplate;
 	
@@ -33,7 +33,7 @@ public class ArticleDAOImpl implements ArticleDAO{
 	public Article read(long id) {
 		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 		mapSqlParameterSource.addValue("id", id);
-		return jdbcTemplate.queryForObject(FIND_ALL, mapSqlParameterSource, new ArticleRowMapper());
+		return jdbcTemplate.queryForObject(FIND_BY_ID, mapSqlParameterSource, new ArticleRowMapper());
 	}
 	
 	

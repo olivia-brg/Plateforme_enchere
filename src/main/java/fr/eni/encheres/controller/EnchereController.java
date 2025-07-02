@@ -6,7 +6,7 @@ import fr.eni.encheres.bll.article.ArticleServiceImpl;
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Category;
 import fr.eni.encheres.bo.User;
-
+import fr.eni.encheres.exception.BusinessException;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class EnchereController {
 	}
 
     @RequestMapping(path = {"/", "/index"}, method = {RequestMethod.GET, RequestMethod.POST})
-    public String accueil(@ModelAttribute("connectedUser") User connectedUser, Model model) {
+    public String accueil(@ModelAttribute("connectedUser") User connectedUser, Model model) throws BusinessException {
     	List<Article> articles = articleService.consultArticles();
 		model.addAttribute("article", articles);
         return "index";
