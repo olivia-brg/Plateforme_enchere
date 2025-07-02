@@ -4,6 +4,7 @@ package fr.eni.encheres.controller;
 import fr.eni.encheres.bll.article.ArticleService;
 import fr.eni.encheres.bll.article.ArticleServiceImpl;
 import fr.eni.encheres.bo.Article;
+import fr.eni.encheres.bo.Category;
 import fr.eni.encheres.bo.User;
 
 
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import java.util.List;
+
 
 @Controller
 @SessionAttributes({"connectedUser"})
@@ -34,6 +37,10 @@ public class EnchereController {
 		this.articleService = articleService ;
 	}
 
+    EnchereController(ArticleService articleService) {
+        this.articleService = articleService;
+    }
+
     @RequestMapping(path = {"/", "/index"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String accueil(@ModelAttribute("connectedUser") User connectedUser, Model model) {
     	List<Article> articles = articleService.consultArticles();
@@ -43,8 +50,10 @@ public class EnchereController {
 
     @GetMapping("/newProduct")
     public String newArticle(Model model){
+        List<Category> listeCategories = articleService.consultCategories();
         Article article = new Article();
-        model.addAttribute(article);
+        model.addAttribute("article", article);
+        model.addAttribute("listeCategories", listeCategories);
         return "new-product";
     }
     
@@ -58,9 +67,7 @@ public class EnchereController {
             System.out.println(current);
             model.addAttribute("article", current);
         }else
-            System.out.println("Article inconnu!!");
-
-
+        {System.out.println("Article inconnu!!");}
         return "detail-vente";
     }
 
