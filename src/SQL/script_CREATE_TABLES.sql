@@ -17,12 +17,11 @@ CREATE TABLE auctionUsers (
 
 CREATE TABLE deliveryAddress (
                                  id INT IDENTITY NOT NULL,
-                                 articleId INT NOT NULL,
                                  street VARCHAR(100),
-                                 zipCode VARCHAR(6),
+                                 postalCode VARCHAR(6),
                                  city VARCHAR(50),
                                  CONSTRAINT pk_deliveryLocation PRIMARY KEY(id),
-    --CONSTRAINT fk_delivery_article FOREIGN KEY(articleId) REFERENCES articles(id) ON DELETE,
+
 );
 
 CREATE TABLE categories (

@@ -15,7 +15,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class AdresseDAOImpl implements AdresseDAO{
 
-	private final String FIND_BY_ID = "SELECT ID, ARTICLEID, STREET, ZIPCODE, CITY FROM DELIVERYADDRESS WHERE ID = :id";
+	private final String FIND_BY_ID = "SELECT ID, STREET, POSTALCODE, CITY FROM DELIVERYADDRESS WHERE ID = :id";
+	private final String CREATE_ADRESS = """
+	INSERT INTO DELIVERYADDRESS(street, postalCode, city)
+	VALUES(:street, :postalCode, :city)
+	""";
 
 	
 	@Autowired
@@ -30,11 +34,11 @@ public class AdresseDAOImpl implements AdresseDAO{
 
 	@Override
 	public int create(Adress adress) {
-		return 0;
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("street", adress.getStreet());
+		namedParameters.addValue("postalCode", adress.getPostalCode());
+		namedParameters.addValue("city", adress.getCity());
+		return jdbcTemplate.update(CREATE_ADRESS,namedParameters);
 	}
-
-
-
-		}
 
 }

@@ -72,9 +72,9 @@ public class EnchereController {
         adress.setCity(connectedUser.getCity());
         adress.setPostalCode(connectedUser.getPostalCode());
 
+        adresseDAO.create(adress);
 
-
-        articleDAO.create(article, connectedUser.getId(), adress.getDeliveryAdressId() )
+        articleDAO.create(article, connectedUser.getId(), adress.getDeliveryAdressId());
 
         return "detail-vente";
     }
