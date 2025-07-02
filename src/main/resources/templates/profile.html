@@ -9,56 +9,50 @@
 </head>
 
 <body>
-    <h1>ENI-Auctions</h1>
-    <h2>My Profile</h2>
+<h1>ENI-Auctions</h1>
+<h2 th:text="${userFetched.userName} + '\'s profile'"></h2>
 
-    <form action="profile/update" method="post">
-        <div class="form-group">
+<form xmlns:th="http://www.thymeleaf.org" data-th-object="${userFetched}">
+
+    <div class="form-group">
         <label for="userName">Username:</label>
-        <input type="text" id="userName" name="userName" th:value="${connectedUser.userName}" readonly>
-        </div>
-        <div class="form-group">
+        <input type="text" id="userName" name="userName" th:value="*{userName}" readonly>
+    </div>
+    <div class="form-group">
         <label for="lastName">Last Name:</label>
-        <input type="text" id="lastName" name="lastName" th:value="${connectedUser.lastName}" required>
-        </div>
-        <div class="form-group">
+        <input type="text" id="lastName" name="lastName" th:value="*{lastName}" readonly>
+    </div>
+    <div class="form-group">
         <label for="firstName">First Name:</label>
-        <input type="text" id="firstName" name="firstName" th:value="${connectedUser.firstName}" required>
-        </div>
-        <div class="form-group">
+        <input type="text" id="firstName" name="firstName" th:value="*{firstName}" readonly>
+    </div>
+    <div class="form-group">
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" th:value="${connectedUser.email}" required>
-        </div>
-        <div class="form-group">
+        <input type="email" id="email" name="email" th:value="*{email}" readonly>
+    </div>
+    <div class="form-group">
         <label for="phone">Phone:</label>
-        <input type="tel" id="phone" name="phone" th:value="${connectedUser.phoneNumber}">
-        </div>
-        <div class="form-group">
+        <input type="tel" id="phone" name="phone" th:value="*{phoneNumber}" readonly>
+    </div>
+    <div class="form-group">
         <label for="street">Street:</label>
-        <input type="text" id="street" name="street" th:value="${connectedUser.street}">
-        </div>
-        <div class="form-group">
+        <input type="text" id="street" name="street" th:value="*{street}" readonly>
+    </div>
+    <div class="form-group">
         <label for="postalCode">Postal Code:</label>
-        <input type="text" id="postalCode" name="postalCode" th:value="${connectedUser.postalCode}">
-        </div>
-        <div class="form-group">
+        <input type="text" id="postalCode" name="postalCode" th:value="*{postalCode}" readonly>
+    </div>
+    <div class="form-group">
         <label for="city">City:</label>
-        <input type="text" id="city" name="city" th:value="${connectedUser.city}">
-        </div>
-        <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password">
-        </div>
-        <div class="form-group">
-        <label for="confirmPassword">Confirm Password:</label>
-        <input type="password" id="confirmPassword" name="confirmPassword">
-        </div>
-        <p>Credit: <span th:text="${connectedUser.credit}"></span></p>
+        <input type="text" id="city" name="city" th:value="*{city}" readonly>
+    </div>
+    <th:block th:if="${(userFetched.userName).equals(connectedUser.userName)}" readonly>
+    <p>Credit: <span th:text="*{credit}"></span></p>
+            <button type="button" onclick="window.location.href='/profile/update'">Update</button>
 
-        <button type="submit">Save</button>
-        <button type="button" onclick="window.location.href='/profile/delete'">Delete my account</button>
-        <button type="button" onclick="window.location.href='/'">Back</button>
-    </form>
+    </th:block>
+
+</form>
 </body>
 
 </html>

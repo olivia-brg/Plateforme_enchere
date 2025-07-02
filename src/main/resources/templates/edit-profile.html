@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENI-Auctions - My Profile</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>ENI-Auctions</h1>
+    <h2>My Profile</h2>
+
+    <form action="/profile/update" method="post" data-th-object="${connectedUser}">
+        <div class="form-group">
+            <label for="userName">Username:</label>
+            <input type="text" id="userName" name="userName" th:value="*{userName}">
+        </div>
+        <div class="form-group">
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" th:value="*{lastName}">
+        </div>
+        <div class="form-group">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" th:value="*{firstName}">
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" th:value="*{email}">
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone:</label>
+            <input type="tel" id="phone" name="phone" th:value="*{phoneNumber}">
+        </div>
+        <div class="form-group">
+            <label for="street">Street:</label>
+            <input type="text" id="street" name="street" th:value="*{street}">
+        </div>
+        <div class="form-group">
+            <label for="postalCode">Postal Code:</label>
+            <input type="text" id="postalCode" name="postalCode" th:value="*{postalCode}">
+        </div>
+        <div class="form-group">
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city" th:value="*{city}">
+        </div>
+
+<!--        <div class="form-group">-->
+<!--            <label for="oldPassword">Previous password:</label>-->
+<!--            <input type="password" id="oldPassword" name="oldPassword">-->
+<!--        </div>-->
+
+<!--        <div class="form-group">-->
+<!--            <label for="newPassword">New password:</label>-->
+<!--            <input type="password" id="newPassword" name="password">-->
+<!--        </div>-->
+
+<!--        <div class="form-group">-->
+<!--            <label for="confirmPassword">Confirm Password:</label>-->
+<!--            <input type="password" id="confirmPassword" name="confirmPassword">-->
+<!--        </div>-->
+        <p>Credit: <span th:text="*{credit}"></span></p>
+        <button type="submit">Save</button>
+        <button type="button" onclick="window.location.href='/profile/delete'">Delete my account</button>
+        <button type="button" onclick="window.location.href='/'">Back</button>
+        
+    </form>
+</body>
+
+</html>

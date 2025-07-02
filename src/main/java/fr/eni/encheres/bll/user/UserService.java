@@ -5,11 +5,11 @@ import fr.eni.encheres.exception.BusinessException;
 
 public interface UserService {
 
-
     User readById(int id);
     User load(String username, String password)throws BusinessException;
-
     void update(User user);
     boolean isPasswordCorrect(String username, String password);
+    User findByUsername(String username);
     boolean isUserExisting(String userName, BusinessException be) ;
+
 }

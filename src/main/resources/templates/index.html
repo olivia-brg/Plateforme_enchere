@@ -10,7 +10,7 @@
         <a href="logout">
             <p>Se déconnecter</p>
         </a>
-        <a href="profile">
+        <a data-th-href="@{profile(username=${connectedUser.userName})}">
             <p>Mon profil</p>
         </a>
     </th:block>
