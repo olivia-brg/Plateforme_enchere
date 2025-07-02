@@ -14,6 +14,7 @@ import fr.eni.encheres.dal.ArticleDAO;
 import fr.eni.encheres.dal.BidDAO;
 import fr.eni.encheres.dal.CategoryDAO;
 import fr.eni.encheres.dal.UserDAO;
+import fr.eni.encheres.exception.BusinessException;
 
 @Service
 public class ArticleServiceImpl implements ArticleService{
@@ -40,11 +41,16 @@ public class ArticleServiceImpl implements ArticleService{
 	}
 
 	@Override
-	public List<Article> consultArticles() {
+	public List<Article> consultArticles() throws BusinessException {
 		List<Article> articles = this.articleDAO.findAll();
+		
 		for (Article article : articles) {
-			
+			User user = userDAO.findUserById(article.getUser().getId());
+//			Adress adress = adressDAO.findAddressById(article.getWithdrawalAdress().getDeliveryAdressId());
+			article.setUser(user);
+//			article.setWithdrawalAdress(adress);
 		}
+		
 		
 		return articles;
 	}
@@ -70,8 +76,8 @@ public class ArticleServiceImpl implements ArticleService{
 	}
 
 	@Override
-	public Adress consultAdressById(int id) {
-		return adressDAO.read(id);
+	public Adress consultAdressById(int id){
+		return adressDAO.findAddressById(id);
 	}
 
 }
