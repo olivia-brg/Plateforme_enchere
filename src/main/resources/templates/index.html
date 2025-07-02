@@ -10,7 +10,7 @@
         <a href="logout">
             <p>Se déconnecter</p>
         </a>
-        <a href="profile">
+        <a data-th-href="@{profile(username=${connectedUser.userName})}">
             <p>Mon profil</p>
         </a>
     </th:block>
@@ -44,9 +44,10 @@
             <h5 th:text="${a.name}">Exemple</h5>
             <p>Prix: </p>
             <p>Classement: </p>
-            <!--  <p th:text="'Fin de l'enchère : ' + ${a.auctionEndDate}">Fin de l'enchère: </p>-->
-            <p th:text="'Retrait : ' + ${a.withdrawalAdress.street} + ' ' + ${a.withdrawalAdress.city} + ' ' + ${a.withdrawalAdress.postalCode}">Retrait: </p>
+          	<p th:text="${'Fin de lenchère : ' + a.auctionEndDate}">Fin de l'enchère: </p>
+            <!--<p th:text="'Retrait : ' + ${a.withdrawalAddress.street} + ' ' + ${a.withdrawalAddress.city} + ' ' + ${a.withdrawalAddress.postalCode}">Retrait: </p>-->
             <p th:text="'Vendeur : ' + ${a.user.firstName} + ' ' + ${a.user.lastName}">Vendeur: </p>
+            <button th:href="@{/detailArticle(id=${a.id})}">Détail de la vente</button>
         </div>
     </div>
    
