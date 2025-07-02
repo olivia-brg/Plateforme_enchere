@@ -22,7 +22,8 @@ public class LoginController {
 
     @GetMapping("/login")
     public String login(){
-        return "login";
+        System.out.println("blablabla");
+    	return "login";
     }
 
     @ModelAttribute("connectedUser")

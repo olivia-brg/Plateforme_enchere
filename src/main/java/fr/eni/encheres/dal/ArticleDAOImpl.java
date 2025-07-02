@@ -13,6 +13,8 @@ import fr.eni.encheres.bo.Adress;
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Category;
 import fr.eni.encheres.bo.User;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 
@@ -20,7 +22,15 @@ import org.springframework.stereotype.Repository;
 public class ArticleDAOImpl implements ArticleDAO{
 	
 	private final String FIND_ALL = "SELECT ID, NAME, DESCRIPTION, AUCTIONSTARTDATE, AUCTIONENDDATE, STARTINGPRICE, SOLDPRICE, ISONSALE, CATEGORYID, DELIVERYADDRESSID, USERID FROM ARTICLES";
-	
+
+	private final String INSERT_NEW_ARTICLE = """
+				INSERT INTO articles(userID,categoryId,deliveryAddressId,name,description,auctionStartDate,auctionEndDate,startingPrice,isOnSale)
+			             VALUES(:userId,:categoryId,:deliveryAddressId,:name,:description,:auctionStartDate,:auctionEndDate,:startingPrice,1);			
+			""";
+
+
+	private final String FIND_BY_ID = "SELECT ID, NAME, DESCRIPTION, AUCTIONSTARTDATE, AUCTIONENDDATE, STARTINGPRICE, SOLDPRICE, ISONSALE, CATEGORYID, DELIVERYADDRESSID, USERID FROM ARTICLES ID = :id";
+
 	@Autowired
 	private NamedParameterJdbcTemplate jdbcTemplate;
 	
@@ -33,10 +43,29 @@ public class ArticleDAOImpl implements ArticleDAO{
 	public Article read(long id) {
 		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 		mapSqlParameterSource.addValue("id", id);
-		return jdbcTemplate.queryForObject(FIND_ALL, mapSqlParameterSource, new ArticleRowMapper());
+		return jdbcTemplate.queryForObject(FIND_BY_ID, mapSqlParameterSource, new ArticleRowMapper());
 	}
-	
-	
+
+	@Override
+	public int create(Article article, int userId, int deliveryAddressId) {
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("deliveryAddressId", deliveryAddressId);
+		namedParameters.addValue("userId", userId);
+		namedParameters.addValue("name", article.getName());
+		namedParameters.addValue("categoryId", article.getCategory().getId());
+		namedParameters.addValue("description", article.getDescription());
+		namedParameters.addValue("auctionStartDate", article.getAuctionStartDate());
+		namedParameters.addValue("auctionEndDate", article.getAuctionEndDate());
+		namedParameters.addValue("startingPrice", article.getStartingPrice());
+
+
+		return jdbcTemplate.update(INSERT_NEW_ARTICLE, namedParameters);
+	}
+
+
+
+
 	class ArticleRowMapper implements RowMapper<Article>{
 
 		@Override
