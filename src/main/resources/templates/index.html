@@ -10,6 +10,9 @@
         <a href="logout">
             <p>Se déconnecter</p>
         </a>
+        <a href="profile">
+            <p>Mon profil</p>
+        </a>
     </th:block>
     <th:block data-th-unless="${connectedUser != null && connectedUser.getId() > 0}">
         <a href="signIn">

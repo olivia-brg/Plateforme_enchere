@@ -1,13 +1,9 @@
-package fr.eni.encheres.dal;
+package fr.eni.encheres.bll.user;
 
 import fr.eni.encheres.bo.User;
 
-public interface UserDAO {
-
-    User login(String username, String password);
-
+public interface UserService {
+    User load(String username, String password);
     void update(User user);
-
     boolean isPasswordCorrect(String username, String password);
-
 }

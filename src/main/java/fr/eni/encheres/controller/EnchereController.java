@@ -22,4 +22,11 @@ public class EnchereController {
         model.addAttribute(article);
         return "new-product";
     };
+
+
+
+
+
+
+
 }
