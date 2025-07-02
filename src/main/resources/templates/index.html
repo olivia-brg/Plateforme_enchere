@@ -1,56 +1,46 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<html xmlns:th="http://www.thymeleaf.org"
+      data-th-replace="~{layouts/layout :: layout-eni-auction(title=~{:: title},
+                                                              content=~{:: main},
+                                                              ressourcesSupp=~{})}">
 
-<head th:replace="~{fragments/headfrag :: head('ENI Auctionszeer')}"></head>
+<head>
+    <title>Auctions List</title>
+</head>
 
 <body>
-<h1>ENI-Auctions</h1>
-<div class="sIsU">
-    <th:block data-th-if="${connectedUser != null && connectedUser.getId() > 0}">
-        <a href="logout">
-            <p>Se déconnecter</p>
-        </a>
-        <a data-th-href="@{profile(username=${connectedUser.userName})}">
-            <p>Mon profil</p>
-        </a>
-    </th:block>
-    <th:block data-th-unless="${connectedUser != null && connectedUser.getId() > 0}">
-        <a href="signIn">
-            <p>S'inscrire</p>
-        </a>
-        <p>-</p>
-        <a href="login">
-            <p>Se connecter</p>
-        </a>
-    </th:block>
-</div>
-<div class="filtres">
-    <h2>Filtres :</h2>
-    <label for="cat">Catégories</label>
-    <select name="cat" id="cat">
-        <option value="informatique">Informatique</option>
-        <option value="ameublement">Ameublement</option>
-        <option value="vetement">Vêtement</option>
-        <option value="s&l">Sports & loisirs</option>
-    </select>
-    <input type="text" placeholder="Search..">
-    <button type="submit">rechercher</button>
+<main>
+    <h1>ENI-Auctions</h1>
 
-</div>
-<div class="articles">
-    <div class="single-article" th:each="a : ${article}">
-        <img src="img/pic.jpg" alt="">
-        <div class="article-infos">
-            <h5 th:text="${a.name}">Exemple</h5>
-            <p>Prix: </p>
-            <p>Classement: </p>
-            <!--  <p th:text="'Fin de l'enchère : ' + ${a.auctionEndDate}">Fin de l'enchère: </p>-->
-            <p th:text="'Retrait : ' + ${a.withdrawalAdress.street} + ' ' + ${a.withdrawalAdress.city} + ' ' + ${a.withdrawalAdress.postalCode}">Retrait: </p>
-            <p th:text="'Vendeur : ' + ${a.user.firstName} + ' ' + ${a.user.lastName}">Vendeur: </p>
-        </div>
+    <div class="filtres">
+        <h2>Filtres :</h2>
+        <label for="cat">Catégories</label>
+        <select name="cat" id="cat">
+            <option value="informatique">Informatique</option>
+            <option value="ameublement">Ameublement</option>
+            <option value="vetement">Vêtement</option>
+            <option value="s&l">Sports & loisirs</option>
+        </select>
+        <input type="text" placeholder="Search..">
+        <button type="submit">rechercher</button>
+
     </div>
-   
-</div>
+    <div class="articles">
+        <div class="single-article" th:each="a : ${article}">
+            <img src="img/pic.jpg" alt="">
+            <div class="article-infos">
+                <h5 th:text="${a.name}">Exemple</h5>
+                <p>Prix: </p>
+                <p>Classement: </p>
+                <!--  <p th:text="'Fin de l'enchère : ' + ${a.auctionEndDate}">Fin de l'enchère: </p>-->
+                <p th:text="'Retrait : ' + ${a.withdrawalAdress.street} + ' ' + ${a.withdrawalAdress.city} + ' ' + ${a.withdrawalAdress.postalCode}">
+                    Retrait: </p>
+                <p th:text="'Vendeur : ' + ${a.user.firstName} + ' ' + ${a.user.lastName}">Vendeur: </p>
+            </div>
+        </div>
+
+    </div>
+</main>
 </body>
 
 </html>
