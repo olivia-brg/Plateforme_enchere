@@ -8,4 +8,6 @@ public interface ArticleDAO {
 
 	List<Article> findAll();
 
+	Article read(long id);
+	
 }
