@@ -6,7 +6,11 @@
 <body>
     <h1>ENI-Auctions</h1>
     <h2>Create an Account</h2>
-	
+    <div class="exception" th:if="${errorMessages}">
+
+        <span th:each="msg : ${errorMessages}" th:text="${msg}"></span>
+
+    </div>
     <form data-th-replace="~{fragments/newUserFormFrag :: newUserFormFrag}"></form>
 
 </body>
