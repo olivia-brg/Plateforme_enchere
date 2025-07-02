@@ -34,4 +34,9 @@ public class UserServiceImpl implements UserService {
     public boolean isPasswordCorrect(String username, String password) {
         return this.userDAO.isPasswordCorrect(username, password);
     }
+
+    @Override
+    public User findByUsername(String username) {
+        return this.userDAO.findByUsername(username);
+    }
 }

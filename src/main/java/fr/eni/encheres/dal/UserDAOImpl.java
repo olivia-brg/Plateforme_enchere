@@ -33,6 +33,21 @@ public class UserDAOImpl implements UserDAO {
                       password = :password
             """;
 
+    private final String FIND_USER_BY_USERNAME = """
+                SELECT id,
+                       userName,
+                       firstName,
+                       lastName,
+                       email,
+                       phoneNumber,
+                       street,
+                       city,
+                       postalCode,
+                       credit
+                from auctionUsers
+                WHERE userName = :userName
+            """;
+
     private final String UPDATE_USER = """
                 UPDATE auctionUsers SET firstName = :firstName,
                                         lastName = :lastName,
@@ -40,8 +55,7 @@ public class UserDAOImpl implements UserDAO {
                                         phoneNumber = :phoneNumber,
                                         street = :street,
                                         city = :city,
-                                        postalCode = :postalCode,
-                                        password = :password
+                                        postalCode = :postalCode
                 WHERE userName = :userName
             """;
 
@@ -63,7 +77,7 @@ public class UserDAOImpl implements UserDAO {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("userName", username);
         mapSqlParameterSource.addValue("password", password);
-        User user = jdbcTemplate.queryForObject(FIND_USER, mapSqlParameterSource, new UserRowMapper());
+        User user = jdbcTemplate.queryForObject(FIND_USER, mapSqlParameterSource, new UserLoginRowMapper());
         assert user != null;
         logger.info(user.toString());
         return user;
@@ -111,8 +125,18 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    @Override
+    public User findByUsername(String username) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("userName", username);
+        User user = jdbcTemplate.queryForObject(FIND_USER_BY_USERNAME, mapSqlParameterSource, new UserFetchRowMapper());
+        assert user != null;
+        logger.info(user.toString());
+        return user;
+    }
 
-    class UserRowMapper implements RowMapper<User> {
+
+    class UserLoginRowMapper implements RowMapper<User> {
         @Override
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
             User user = new User();
@@ -127,6 +151,25 @@ public class UserDAOImpl implements UserDAO {
             user.setPostalCode(rs.getString("postalCode"));
             user.setCredit(rs.getFloat("credit"));
             user.setAdmin(rs.getBoolean("isAdmin"));
+            logger.info(user.toString());
+            return user;
+        }
+    }
+
+    class UserFetchRowMapper implements RowMapper<User> {
+        @Override
+        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+            User user = new User();
+            user.setId(rs.getInt("id"));
+            user.setUserName(rs.getString("userName"));
+            user.setFirstName(rs.getString("firstName"));
+            user.setLastName(rs.getString("lastName"));
+            user.setEmail(rs.getString("email"));
+            user.setPhoneNumber(rs.getString("phoneNumber"));
+            user.setStreet(rs.getString("street"));
+            user.setCity(rs.getString("city"));
+            user.setPostalCode(rs.getString("postalCode"));
+            user.setCredit(rs.getFloat("credit"));
             logger.info(user.toString());
             return user;
         }
