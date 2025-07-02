@@ -2,6 +2,8 @@ package fr.eni.encheres.bll.article;
 
 import java.util.List;
 
+import fr.eni.encheres.bo.Adress;
+import fr.eni.encheres.bo.Bid;
 import org.springframework.stereotype.Service;
 
 import fr.eni.encheres.bo.Article;
@@ -50,6 +52,21 @@ public class ArticleServiceImpl implements ArticleService{
 	@Override
 	public Category consultCategoryById(int id) {
 		return categoryDAO.read(id);
+	}
+
+	@Override
+	public Bid consultBidById(int id) {
+		return bidDAO.read(id);
+	}
+
+	@Override
+	public List<Bid> consultBidsByArticleId(int id) {
+		return bidDAO.readAllFromArticleId(id);
+	}
+
+	@Override
+	public Adress consultAdressById(int id) {
+		return adressDAO.read(id);
 	}
 
 }

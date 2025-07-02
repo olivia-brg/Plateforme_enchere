@@ -8,4 +8,5 @@ public interface UserService {
 
     void update(User user);
     boolean isPasswordCorrect(String username, String password);
+
 }
