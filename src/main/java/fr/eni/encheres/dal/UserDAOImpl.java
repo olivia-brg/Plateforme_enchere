@@ -20,32 +20,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Repository
-
-
-    private final String FIND_USER_BY_ID = """
-    SELECT id,
-    userName,
-    firstName,
-    lastName,
-    email,
-    phoneNumber,
-    street,
-    city,
-    postalCode,
-    credit,
-    isAdmin
-    from auctionUsers
-    WHERE id = ?
-            """;
-
-
 public class UserDAOImpl implements UserDAO{
 	
 	private static final Logger logger = LoggerFactory.getLogger(UserDAOImpl.class);
-	
+
 	private final String FIND_USER_NAME = "SELECT COUNT(*) FROM auctionUsers WHERE userName = :userName";
 
-  private final String FIND_USER = """
+    private final String FIND_USER = """
                 SELECT id,
                        userName,
                        firstName,
@@ -80,6 +61,23 @@ public class UserDAOImpl implements UserDAO{
                 WHERE username = :userName AND
                       password = :password
             """;
+
+    private final String FIND_USER_BY_ID = """
+            SELECT id,
+            userName,
+            firstName,
+            lastName,
+            email,
+            phoneNumber,
+            street,
+            city,
+            postalCode,
+            credit,
+            isAdmin
+            from auctionUsers
+            WHERE id = ?
+            """;
+
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private NamedParameterJdbcTemplate jdbcTemplate;

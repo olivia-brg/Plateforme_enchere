@@ -37,10 +37,6 @@ public class EnchereController {
 		this.articleService = articleService ;
 	}
 
-    EnchereController(ArticleService articleService) {
-        this.articleService = articleService;
-    }
-
     @RequestMapping(path = {"/", "/index"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String accueil(@ModelAttribute("connectedUser") User connectedUser, Model model) {
     	List<Article> articles = articleService.consultArticles();
