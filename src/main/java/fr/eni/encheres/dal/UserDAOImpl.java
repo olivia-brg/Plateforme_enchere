@@ -17,8 +17,11 @@ import java.sql.SQLException;
 public class UserDAOImpl implements UserDAO {
 
     private static final Logger logger = LoggerFactory.getLogger(UserDAOImpl.class);
-
 	private final String FIND_USER_NAME = "SELECT COUNT(*) FROM auctionUsers WHERE userName = :userName";
+    private final String DELETE_USER_BY_USERNAME = """
+                DELETE FROM auctionUsers 
+                WHERE userName = :userName
+            """;
 
     private final String FIND_USER = """
                 SELECT id,
@@ -102,6 +105,7 @@ public class UserDAOImpl implements UserDAO {
         logger.info(user.toString());
         return user;
     }
+
     @Override
     public boolean findId(String userName) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
@@ -110,7 +114,6 @@ public class UserDAOImpl implements UserDAO {
         int count = jdbcTemplate.queryForObject(FIND_USER_NAME, mapSqlParameterSource, Integer.class);
         return count >= 1;
     }
-
 
     @Override
     public void update(User user) {
@@ -169,7 +172,19 @@ public class UserDAOImpl implements UserDAO {
         return user;
     }
 
+    @Override
+    public boolean deleteUserById(String username) {
+        logger.info("deleteUserById : " + username);
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("userName", username);
+        int tmp = jdbcTemplate.update(DELETE_USER_BY_USERNAME, mapSqlParameterSource);
+        logger.info("tmp = " + tmp);
+        logger.info("User " + username + " deleted");
+        return jdbcTemplate.update(DELETE_USER_BY_USERNAME, mapSqlParameterSource) == 1;
+    }
+
     class UserLoginRowMapper implements RowMapper<User> {
+
         @Override
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
             User user = new User();
@@ -188,8 +203,8 @@ public class UserDAOImpl implements UserDAO {
             return user;
         }
     }
-
     class UserFetchRowMapper implements RowMapper<User> {
+
         @Override
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
             User user = new User();

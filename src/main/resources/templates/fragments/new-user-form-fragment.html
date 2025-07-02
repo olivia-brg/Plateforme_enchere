@@ -1,0 +1,34 @@
+<form th:action="@{/register}" method="post" th:object="${user}" th:fragment="new-user-form-frag">
+    <label for="userName">Username:</label>
+    <input type="text" id="userName" th:field="*{userName}" required>
+
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" th:field="*{lastName}" required>
+
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" th:field="*{firstName}" required>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" th:field="*{email}" required>
+
+    <label for="phone">Phone:</label>
+    <input type="tel" id="phone" th:value="*{phoneNumber}">
+
+    <label for="street">Street:</label>
+    <input type="text" id="street" th:value="*{street}">
+
+    <label for="postalCode">Postal Code:</label>
+    <input type="text" id="postalCode" th:value="*{postalCode}">
+
+    <label for="city">City:</label>
+    <input type="text" id="city" th:value="*{city}">
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" th:value="${password}" required>
+    <label for="confirmPassword">Confirm Password:</label>
+    <input type="password" id="confirmPassword" name="confirmPassword" required>
+    <div class="bu">
+        <button type="submit">Create</button>
+        <button type="button" onclick="window.location.href='/'">Cancel</button>
+    </div>
+</form>
