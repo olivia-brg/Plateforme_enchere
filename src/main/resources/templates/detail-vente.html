@@ -16,7 +16,7 @@
         <img src="pic.jpg" alt="">
         <div class="form-group">
             <label for="description">Description:</label>
-            <input type="text" id="description" name="description" readonly th:value="${article.descritption}">
+            <input type="text" id="description" name="description" readonly th:value="${article.description}">
         </div>
         <div class="form-group">
             <label for="category">Catégorie:</label>
@@ -40,7 +40,7 @@
         </div>
         <div class="form-group">
             <label for="seller">Vendeur: </label>
-            <input type="text" id="seller" name="seller" readonly th:value="${article.user.firstName}+ ' ' +${article.user.lasttName">
+            <input type="text" id="seller" name="seller" readonly th:value="${article.user.firstName+ ' ' +article.user.lastName}">
         </div>
         <div class="form-group">
             <label for="user-bid">Ma propositon </label>
@@ -48,7 +48,7 @@
             <button type="submit">Enchérir</button>
         </div>
         <div class="form-group">
-           <button type="submit">Back</button>
+           <button type="submit"><a href="index">Back</a></button>
         </div>
     </div>
    

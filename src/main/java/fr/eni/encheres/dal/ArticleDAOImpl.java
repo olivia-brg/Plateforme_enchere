@@ -29,7 +29,7 @@ public class ArticleDAOImpl implements ArticleDAO{
 			""";
 
 
-	private final String FIND_BY_ID = "SELECT ID, NAME, DESCRIPTION, AUCTIONSTARTDATE, AUCTIONENDDATE, STARTINGPRICE, SOLDPRICE, ISONSALE, CATEGORYID, DELIVERYADDRESSID, USERID FROM ARTICLES ID = :id";
+	private final String FIND_BY_ID = "SELECT ID, NAME, DESCRIPTION, AUCTIONSTARTDATE, AUCTIONENDDATE, STARTINGPRICE, SOLDPRICE, ISONSALE, CATEGORYID, DELIVERYADDRESSID, USERID FROM ARTICLES WHERE ID = :id";
 
 	@Autowired
 	private NamedParameterJdbcTemplate jdbcTemplate;
@@ -40,7 +40,7 @@ public class ArticleDAOImpl implements ArticleDAO{
 	}
 	
 	@Override
-	public Article read(long id) {
+	public Article findArticleById(long id) {
 		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 		mapSqlParameterSource.addValue("id", id);
 		return jdbcTemplate.queryForObject(FIND_BY_ID, mapSqlParameterSource, new ArticleRowMapper());
