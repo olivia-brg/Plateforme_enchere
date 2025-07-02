@@ -1,6 +1,6 @@
 package fr.eni.encheres.controller;
 
-import fr.eni.encheres.bll.login.LoginService;
+import fr.eni.encheres.bll.user.UserService;
 import fr.eni.encheres.bo.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.support.SessionStatus;
 @SessionAttributes({"connectedUser"})
 public class LoginController {
 
-    private final LoginService loginService;
+    private final UserService loginService;
 
-    public LoginController(LoginService loginService) {
+    public LoginController(UserService loginService) {
         this.loginService = loginService;
     }
 
@@ -24,7 +24,6 @@ public class LoginController {
 
     @ModelAttribute("connectedUser")
     public User AddUser(){
-        System.out.println("Add Attribut User to Session");
         return new User();
     }
 
@@ -76,17 +75,10 @@ public class LoginController {
         return "redirect:/index";
     }
 
-
-    @ModelAttribute("connectedUser")
-    public User AddUser(){
-        System.out.println("Add Attribut User to Session");
-        return new User();
-
     @GetMapping("/logout")
     public String finSession(SessionStatus status) {
         // Suppression des attributs de @SessionAttributs
         status.setComplete();
         return "redirect:/index";
-
     }
 }
