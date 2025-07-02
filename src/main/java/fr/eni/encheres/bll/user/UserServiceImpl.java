@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User load(String username, String password) {
         User user = this.userDAO.login(username, password);
-        logger.error("load : " + user.toString());
+        logger.info("load : " + user.toString());
         return user;
     }
 
