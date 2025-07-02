@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ArticleDAOImpl implements ArticleDAO{
 	
-	private final String FIND_ALL = "SELECT ID, NAME, DESCRIPTION, AUCTIONSTARTDATE, AUCTIONENDDATE, STARTINGPRICE, SOLDPRICE, ISONSALE, CATEGORYID, DELIVERYADRESSEID, USERID FROM ARTICLES";
+	private final String FIND_ALL = "SELECT ID, NAME, DESCRIPTION, AUCTIONSTARTDATE, AUCTIONENDDATE, STARTINGPRICE, SOLDPRICE, ISONSALE, CATEGORYID, DELIVERYADDRESSID, USERID FROM ARTICLES";
 	
 	@Autowired
 	private NamedParameterJdbcTemplate jdbcTemplate;
@@ -59,7 +59,7 @@ public class ArticleDAOImpl implements ArticleDAO{
 
 			// Adress's Association
 			Adress adress = new Adress();
-			adress.setDeliveryAdressId(rs.getInt("DELIVERYADRESSEID"));
+			adress.setDeliveryAdressId(rs.getInt("DELIVERYADDRESSID"));
 			a.setWithdrawalAdress(adress);
 			
 			User user = new User();
