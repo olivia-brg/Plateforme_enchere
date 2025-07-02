@@ -1,18 +1,23 @@
-package fr.eni.encheres.bll.login;
+package fr.eni.encheres.bll.user;
 
 import fr.eni.encheres.bo.User;
 import fr.eni.encheres.dal.UserDAO;
+import fr.eni.encheres.dal.UserDAOImpl;
 import fr.eni.encheres.exception.BusinessException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class LoginServiceImpl implements LoginService {
+public class UserServiceImpl implements UserService {
 
     private UserDAO userDAO;
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    public LoginServiceImpl(UserDAO userDAO) {
+
+    public UserServiceImpl(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
 
@@ -25,7 +30,7 @@ public class LoginServiceImpl implements LoginService {
     		return this.userDAO.login(username, password);
     	}
     	else {
-    		be.add("user unknown");
+    		
     		throw be;
     	}
     	
@@ -34,9 +39,19 @@ public class LoginServiceImpl implements LoginService {
     public boolean isUserExisting(String userName, BusinessException be) {
 		
     	if(!this.userDAO.findId(userName)) {
-    	    
+    		be.add("user unknown");
     	    return false;
     	}
     	return true;
 	}
+
+    @Override
+    public void update(User user) {
+        this.userDAO.update(user);
+    }
+
+    @Override
+    public boolean isPasswordCorrect(String username, String password) {
+        return this.userDAO.isPasswordCorrect(username, password);
+    }
 }

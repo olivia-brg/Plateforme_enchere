@@ -1,6 +1,6 @@
 package fr.eni.encheres.controller;
 
-import fr.eni.encheres.bll.login.LoginService;
+import fr.eni.encheres.bll.user.UserService;
 import fr.eni.encheres.bo.User;
 import fr.eni.encheres.exception.BusinessException;
 
@@ -14,10 +14,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @SessionAttributes({"connectedUser"})
 public class LoginController {
 
-    private final LoginService loginService;
+    private final UserService userService;
 
-    public LoginController(LoginService loginService) {
-        this.loginService = loginService;
+    public LoginController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/login")
@@ -27,7 +27,6 @@ public class LoginController {
 
     @ModelAttribute("connectedUser")
     public User AddUser(){
-        System.out.println("Add Attribut User to Session");
         return new User();
     }
 
@@ -38,7 +37,7 @@ public class LoginController {
 
         User user = new User();
 		try {
-			user = this.loginService.load(userName, password);
+			user = this.userService.load(userName, password);
 			if (user != null) {
 	            connectedUser.setId(user.getId());
 	            connectedUser.setUserName(user.getUserName());
@@ -91,12 +90,10 @@ public class LoginController {
     }
 
 
-  
     @GetMapping("/logout")
     public String finSession(SessionStatus status) {
         // Suppression des attributs de @SessionAttributs
         status.setComplete();
         return "redirect:/index";
-
     }
 }
