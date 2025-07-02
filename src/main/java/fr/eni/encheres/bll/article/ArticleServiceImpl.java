@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Category;
+import fr.eni.encheres.bo.User;
 import fr.eni.encheres.dal.AdresseDAO;
 import fr.eni.encheres.dal.ArticleDAO;
 import fr.eni.encheres.dal.BidDAO;
@@ -19,17 +20,17 @@ public class ArticleServiceImpl implements ArticleService{
 	private AdresseDAO adressDAO;
 	private BidDAO bidDAO;
 	private CategoryDAO categoryDAO;
-	private UserDAO user;
+	private UserDAO userDAO;
 	
 	
 	public ArticleServiceImpl(ArticleDAO articleDAO, AdresseDAO adressDAO, BidDAO bidDAO, CategoryDAO categoryDAO,
-			UserDAO user) {
+			UserDAO userDAO) {
 		
 		this.articleDAO = articleDAO;
 		this.adressDAO = adressDAO;
 		this.bidDAO = bidDAO;
 		this.categoryDAO = categoryDAO;
-		this.user = user;
+		this.userDAO = userDAO;
 	}
 	
 	public Article consultArticleById(int id) {
@@ -39,6 +40,10 @@ public class ArticleServiceImpl implements ArticleService{
 	@Override
 	public List<Article> consultArticles() {
 		List<Article> articles = this.articleDAO.findAll();
+		for (Article article : articles) {
+			
+		}
+		
 		return articles;
 	}
 	
