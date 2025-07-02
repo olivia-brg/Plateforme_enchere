@@ -2,10 +2,15 @@ package fr.eni.encheres.bll.user;
 
 import fr.eni.encheres.bo.User;
 import fr.eni.encheres.dal.UserDAO;
+
 import fr.eni.encheres.dal.UserDAOImpl;
+import fr.eni.encheres.exception.BusinessException;
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -19,11 +24,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User load(String username, String password) {
-        User user = this.userDAO.login(username, password);
-        logger.info("load : " + user.toString());
-        return user;
+    @Transactional(rollbackFor = BusinessException.class)
+    public User load(String username, String password) throws BusinessException{
+    	BusinessException be = new BusinessException();
+    	boolean userExists = isUserExisting(username, be);
+    	if(userExists) {
+    		return this.userDAO.login(username, password);
+    	}
+    	else {
+    		
+    		throw be;
+    	}
+    	
     }
+    @Override
+    public boolean isUserExisting(String userName, BusinessException be) {
+		
+    	if(!this.userDAO.findId(userName)) {
+    		be.add("user unknown");
+    	    return false;
+    	}
+    	return true;
+	}
+
+    @Override
+    public User readById(int id) {
+        return userDAO.findUserById(id);
+    }
+
 
     @Override
     public void update(User user) {

@@ -1,6 +1,8 @@
 package fr.eni.encheres.dal;
 
+import fr.eni.encheres.bo.Bid;
 import fr.eni.encheres.bo.User;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,6 +17,8 @@ import java.sql.SQLException;
 public class UserDAOImpl implements UserDAO {
 
     private static final Logger logger = LoggerFactory.getLogger(UserDAOImpl.class);
+
+	private final String FIND_USER_NAME = "SELECT COUNT(*) FROM auctionUsers WHERE userName = :userName";
 
     private final String FIND_USER = """
                 SELECT id,
@@ -66,6 +70,22 @@ public class UserDAOImpl implements UserDAO {
                       password = :password
             """;
 
+    private final String FIND_USER_BY_ID = """
+            SELECT id,
+            userName,
+            firstName,
+            lastName,
+            email,
+            phoneNumber,
+            street,
+            city,
+            postalCode,
+            credit,
+            isAdmin
+            from auctionUsers
+            WHERE id = ?
+            """;
+
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     public UserDAOImpl(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -82,6 +102,15 @@ public class UserDAOImpl implements UserDAO {
         logger.info(user.toString());
         return user;
     }
+    @Override
+    public boolean findId(String userName) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("userName", userName);
+
+        int count = jdbcTemplate.queryForObject(FIND_USER_NAME, mapSqlParameterSource, Integer.class);
+        return count >= 1;
+    }
+
 
     @Override
     public void update(User user) {
@@ -126,6 +155,11 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
+    public User findUserById(int id) {
+        return jdbcTemplate.getJdbcTemplate().queryForObject(FIND_USER_BY_ID,new BeanPropertyRowMapper<>(User.class), id);
+    }
+
+    @Override
     public User findByUsername(String username) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("userName", username);
@@ -134,7 +168,6 @@ public class UserDAOImpl implements UserDAO {
         logger.info(user.toString());
         return user;
     }
-
 
     class UserLoginRowMapper implements RowMapper<User> {
         @Override

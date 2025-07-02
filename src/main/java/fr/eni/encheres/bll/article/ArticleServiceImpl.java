@@ -1,10 +1,77 @@
 package fr.eni.encheres.bll.article;
 
-import fr.eni.encheres.dal.ArticleDAO;
+import java.util.List;
 
+import fr.eni.encheres.bo.Adress;
+import fr.eni.encheres.bo.Bid;
+import org.springframework.stereotype.Service;
+
+import fr.eni.encheres.bo.Article;
+import fr.eni.encheres.bo.Category;
+import fr.eni.encheres.bo.User;
+import fr.eni.encheres.dal.AdresseDAO;
+import fr.eni.encheres.dal.ArticleDAO;
+import fr.eni.encheres.dal.BidDAO;
+import fr.eni.encheres.dal.CategoryDAO;
+import fr.eni.encheres.dal.UserDAO;
+
+@Service
 public class ArticleServiceImpl implements ArticleService{
 
 	private ArticleDAO articleDAO;
+	private AdresseDAO adressDAO;
+	private BidDAO bidDAO;
+	private CategoryDAO categoryDAO;
+	private UserDAO userDAO;
 	
 	
+	public ArticleServiceImpl(ArticleDAO articleDAO, AdresseDAO adressDAO, BidDAO bidDAO, CategoryDAO categoryDAO,
+			UserDAO userDAO) {
+		
+		this.articleDAO = articleDAO;
+		this.adressDAO = adressDAO;
+		this.bidDAO = bidDAO;
+		this.categoryDAO = categoryDAO;
+		this.userDAO = userDAO;
+	}
+	
+	public Article consultArticleById(int id) {
+		return this.articleDAO.read(id);
+	}
+
+	@Override
+	public List<Article> consultArticles() {
+		List<Article> articles = this.articleDAO.findAll();
+		for (Article article : articles) {
+			
+		}
+		
+		return articles;
+	}
+
+	@Override
+	public List<Category> consultCategories() {
+		return categoryDAO.readAll();
+	}
+
+	@Override
+	public Category consultCategoryById(int id) {
+		return categoryDAO.read(id);
+	}
+
+	@Override
+	public Bid consultBidById(int id) {
+		return bidDAO.read(id);
+	}
+
+	@Override
+	public List<Bid> consultBidsByArticleId(int id) {
+		return bidDAO.readAllFromArticleId(id);
+	}
+
+	@Override
+	public Adress consultAdressById(int id) {
+		return adressDAO.read(id);
+	}
+
 }
