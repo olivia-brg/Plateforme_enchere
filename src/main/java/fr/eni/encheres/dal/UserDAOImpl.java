@@ -3,6 +3,7 @@ package fr.eni.encheres.dal;
 import fr.eni.encheres.bo.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -15,6 +16,22 @@ import java.sql.SQLException;
 public class UserDAOImpl implements UserDAO {
 
     private static final Logger logger = LoggerFactory.getLogger(UserDAOImpl.class);
+
+    private final String FIND_USER_BY_ID = """
+    SELECT id,
+    userName,
+    firstName,
+    lastName,
+    email,
+    phoneNumber,
+    street,
+    city,
+    postalCode,
+    credit,
+    isAdmin
+    from auctionUsers
+    WHERE id = ?
+            """;
 
     private final String FIND_USER = """
                 SELECT id,
@@ -51,11 +68,13 @@ public class UserDAOImpl implements UserDAO {
                 WHERE username = :userName AND
                       password = :password
             """;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    public UserDAOImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+    public UserDAOImpl(NamedParameterJdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     @Override
@@ -109,6 +128,11 @@ public class UserDAOImpl implements UserDAO {
             logger.error("Erreur lors de la vérification du mot de passe", e);
             return false;
         }
+    }
+
+    @Override
+    public User findUserById(int id) {
+        return namedParameterJdbcTemplate.getJdbcTemplate().queryForObject(FIND_USER_BY_ID,new BeanPropertyRowMapper<>(User.class), id);
     }
 
 

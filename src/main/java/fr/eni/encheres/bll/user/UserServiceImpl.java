@@ -2,7 +2,6 @@ package fr.eni.encheres.bll.user;
 
 import fr.eni.encheres.bo.User;
 import fr.eni.encheres.dal.UserDAO;
-import fr.eni.encheres.dal.UserDAOImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -24,6 +23,12 @@ public class UserServiceImpl implements UserService {
         logger.info("load : " + user.toString());
         return user;
     }
+
+    @Override
+    public User readById(int id) {
+        return userDAO.findUserById(id);
+    }
+
 
     @Override
     public void update(User user) {

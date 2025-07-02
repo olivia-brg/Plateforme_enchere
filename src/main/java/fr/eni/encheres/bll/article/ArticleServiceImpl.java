@@ -41,5 +41,15 @@ public class ArticleServiceImpl implements ArticleService{
 		List<Article> articles = this.articleDAO.findAll();
 		return articles;
 	}
-	
+
+	@Override
+	public List<Category> consultCategories() {
+		return categoryDAO.readAll();
+	}
+
+	@Override
+	public Category consultCategoryById(int id) {
+		return categoryDAO.read(id);
+	}
+
 }
