@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html data-th-fragment="layout-eni-auction(title, content, ressourcesSupp)">
+
+<!--<div th:replace="~{fragments/headfrag :: frag-head('titre de test')}"></div>-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title data-th-replace="${title}">ENI-Auction</title>
+    <link rel="stylesheet" href="css/style.css">
+    <th:block data-th-replace="${ressourcesSupp} ?: ~{}"></th:block>
+    <!--    <link rel="icon" data-th-href="@{/images/logoENI.png}" sizes="32x32">-->
+</head>
+
+<body>
+<div data-th-replace="~{fragments/fragment-header :: frag-header}"></div>
+
+<main data-th-replace="${content} ?: ~{}">Page content</main>
+
+</body>
+</html>
