@@ -1,21 +1,16 @@
 package fr.eni.encheres.dal;
 
+import fr.eni.encheres.bo.Adress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-
-import fr.eni.encheres.bo.Adress;
-
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
-public class AdresseDAOImpl implements AdresseDAO{
+public class AdresseDAOImpl implements AdresseDAO {
 
 	private final String FIND_BY_ID = "SELECT ID, STREET, POSTALCODE, CITY FROM DELIVERYADDRESS WHERE ID = :id";
 	private final String CREATE_ADDRESS = """

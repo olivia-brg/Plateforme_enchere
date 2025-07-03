@@ -37,7 +37,6 @@ public class LoginController {
     public String login(@RequestParam(name = "userName", required = true) String userName,
                         @RequestParam(name = "password", required = true) String password,
                         @ModelAttribute("connectedUser") User connectedUser, RedirectAttributes redirectAttributes) {
-
         User user = new User();
 		try {
 			user = this.userService.load(userName, password);
@@ -74,8 +73,6 @@ public class LoginController {
 	        return "redirect:/login";
 
 		}
-        
-
     }
 
     @GetMapping(path="/signIn")
@@ -83,6 +80,12 @@ public class LoginController {
         model.addAttribute("user", new User());
         return "signIn";
     }
+
+	@GetMapping(path="/home")
+	public String returnToIndex(Model model){
+		model.addAttribute("user", new User());
+		return "redirect:/index";
+	}
 
 
     @PostMapping(path="/signIn")

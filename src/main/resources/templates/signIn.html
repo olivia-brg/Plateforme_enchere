@@ -1,18 +1,23 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<html xmlns:th="http://www.thymeleaf.org"
+      data-th-replace="~{layouts/layout :: layout-eni-auction(title=~{:: title},
+                                                              content=~{:: main},
+                                                              ressourcesSupp=~{})}">
 
-<head th:replace="~{fragments/headfrag :: head('ENI Auctionszeer')}"></head>
-
+<head>
+    <title>Create an Account</title>
+</head>
 <body>
+<main>
     <h1>ENI-Auctions</h1>
     <h2>Create an Account</h2>
+
     <div class="exception" th:if="${errorMessages}">
-
         <span th:each="msg : ${errorMessages}" th:text="${msg}"></span>
-
     </div>
-    <form data-th-replace="~{fragments/newUserFormFrag :: newUserFormFrag}"></form>
 
+    <form data-th-replace="~{fragments/new-user-form-fragment :: new-user-form-frag}"></form>
+</main>
 </body>
 
 </html>

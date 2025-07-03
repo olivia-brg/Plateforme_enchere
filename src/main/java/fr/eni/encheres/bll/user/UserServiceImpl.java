@@ -49,6 +49,12 @@ public class UserServiceImpl implements UserService {
 	}
 
     @Override
+    public boolean deleteUserById(String username) {
+        logger.info("deleteUserById : " + username);
+        return this.userDAO.deleteUserById(username);
+    }
+
+    @Override
     public User readById(int id) {
         return userDAO.findUserById(id);
     }
@@ -83,4 +89,6 @@ public class UserServiceImpl implements UserService {
     public User findByUsername(String username) {
         return this.userDAO.findByUsername(username);
     }
+
+
 }

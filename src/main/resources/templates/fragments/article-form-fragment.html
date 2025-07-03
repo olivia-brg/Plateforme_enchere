@@ -3,7 +3,7 @@
 
 
 
-<form action="/newProduct" method="post" th:fragment="newArticleFormFrag" th:object="${article}">
+<form action="/profile/newProduct" method="post" th:fragment="article-form-frag" th:object="${article}">
     <div class="form-group">
         <label for="article">Article:</label>
         <input type="text" id="article" th:field="*{name}">
