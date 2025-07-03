@@ -1,11 +1,23 @@
 package fr.eni.encheres.bo;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
+
 import java.time.LocalDate;
 
 public class Bid {
 
+	@NotNull(message = "La date de l'enchère est obligatoire.")
+	@PastOrPresent(message = "La date de l'enchère ne peut pas être dans le futur.")
 	private LocalDate bidDate;
+
+	@Positive(message = "Le montant de l'enchère doit être strictement positif.")
 	private float bidAmount;
+
+	@Valid
+	@NotNull(message = "L'article est obligatoire.")
 	private Article article;
 	
 //	Full constructor
@@ -15,17 +27,15 @@ public class Bid {
 		this.bidAmount = auctionAmount;
 		this.article = article;
 	}
-	
-//	Empty constructor
+
 	public Bid() {
 	}
-	
+
+
 //	List setter and getter
-	
 	public LocalDate getAuctionDate() {
 		return bidDate;
 	}
-
 	public void setAuctionDate(LocalDate auctionDate) {
 		this.bidDate = auctionDate;
 	}
@@ -33,7 +43,6 @@ public class Bid {
 	public float getAuctionAmount() {
 		return bidAmount;
 	}
-
 	public void setAuctionAmount(float auctionAmount) {
 		this.bidAmount = auctionAmount;
 	}
@@ -41,7 +50,6 @@ public class Bid {
 	public Article getArticle() {
 		return article;
 	}
-
 	public void setArticle(Article article) {
 		this.article = article;
 	}

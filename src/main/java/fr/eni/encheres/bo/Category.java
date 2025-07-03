@@ -1,8 +1,14 @@
 package fr.eni.encheres.bo;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class Category {
 
 	private int id;
+
+	@NotBlank(message = "Le nom est obligatoire.")
+	@Size(min = 3, max = 100, message = "Le nom doit contenir entre 3 et 100 caractères.")
 	private String name;
 	
 //	Full constructor

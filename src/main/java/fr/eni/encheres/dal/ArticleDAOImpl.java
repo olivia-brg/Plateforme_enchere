@@ -88,7 +88,7 @@ public class ArticleDAOImpl implements ArticleDAO{
 
 			// Adress's Association
 			Adress adress = new Adress();
-			adress.setDeliveryAdressId(rs.getInt("DELIVERYADDRESSID"));
+			adress.setDeliveryAddressId(rs.getInt("DELIVERYADDRESSID"));
 			a.setWithdrawalAdress(adress);
 			
 			User user = new User();
