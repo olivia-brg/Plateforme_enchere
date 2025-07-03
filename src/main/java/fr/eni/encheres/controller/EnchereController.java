@@ -3,6 +3,7 @@ package fr.eni.encheres.controller;
 
 import fr.eni.encheres.bll.article.ArticleService;
 
+import fr.eni.encheres.bll.user.UserService;
 import fr.eni.encheres.bo.Adress;
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Category;
@@ -36,16 +37,18 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 public class EnchereController {
 
 
+    private final UserService userService;
     private ArticleDAO articleDAO;
     private ArticleService articleService;
     private AdresseDAO adresseDAO;
     private CategoryDAO categoryDAO;
 
-    EnchereController(ArticleService articleService, ArticleDAO articleDAO, AdresseDAO adresseDAO, CategoryDAO categoryDAO) {
+    EnchereController(ArticleService articleService, ArticleDAO articleDAO, AdresseDAO adresseDAO, CategoryDAO categoryDAO, UserService userService) {
 		this.articleService = articleService ;
         this.articleDAO = articleDAO;
         this.adresseDAO = adresseDAO;
         this.categoryDAO = categoryDAO;
+        this.userService = userService;
     }
 
     @RequestMapping(path = {"/", "/encheres"}, method = {RequestMethod.GET, RequestMethod.POST})
@@ -66,7 +69,7 @@ public class EnchereController {
         return "encheres";
     }
 
-    @GetMapping("/newProduct")
+    @GetMapping("/sell")
     public String newArticle(Model model){
         List<Category> listeCategories = articleService.consultCategories();
         Article article = new Article();
@@ -75,7 +78,7 @@ public class EnchereController {
         return "new-product";
     }
 
-    @PostMapping(path="/newProduct")
+    @PostMapping(path="/sell")
     String insererArticle(@ModelAttribute("article") Article article, @ModelAttribute("connectedUser") User connectedUser ){
         //On crée une adresse avec les attributs adresse de l'utilisateur
         Adress adress = new Adress();
@@ -88,7 +91,6 @@ public class EnchereController {
         //On appelle la méthode du service qui créera l'article
         articleService.createArticle(article, connectedUser.getId());
 
-        articleDAO.create(article, connectedUser.getId(), adress.getDeliveryAdressId() );
 
         return "detail-vente";
     }
@@ -99,7 +101,12 @@ public class EnchereController {
     public String afficherUnArticle(@RequestParam(name = "id") int id, Model model) {
 
         Article current = articleService.consultArticleById(id);
+
         if (current != null) {
+            User vendeur = userService.readById(current.getUser().getId());
+            Adress adress = articleService.consultAdressById(current.getWithdrawalAdress().getDeliveryAdressId());
+            current.setUser(vendeur);
+            current.setWithdrawalAdress(adress);
             System.out.println(current);
             model.addAttribute("article", current);
         }else

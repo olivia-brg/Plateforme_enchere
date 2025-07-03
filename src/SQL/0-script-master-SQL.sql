@@ -1,3 +1,10 @@
+DROP TABLE IF EXISTS bids;
+DROP TABLE IF EXISTS articles;
+DROP TABLE IF EXISTS auctionUsers;
+DROP TABLE IF EXISTS deliveryAddress;
+DROP TABLE IF EXISTS categories;
+
+
 CREATE TABLE auctionUsers (
                               id INT IDENTITY NOT NULL,
                               userName VARCHAR(25) NOT NULL,
@@ -32,7 +39,7 @@ CREATE TABLE categories (
 
 CREATE TABLE articles (
                           id INT IDENTITY NOT NULL,
-                          deliveryAddressId INT NULL,
+                          deliveryAddressId INT NOT NULL,
                           userId INT NOT NULL,
                           categoryId INT NOT NULL,
                           name VARCHAR(50),
@@ -67,4 +74,27 @@ CREATE TABLE bids (
 
 
 
+
+DELETE FROM auctionUsers WHERE id > 0;
+
+INSERT INTO auctionUsers(userName,firstName,LastName,email,phoneNumber,street,city,postalCode,password,credit,isAdmin)
+VALUES('makusu','maxime','jeannin','max.jeannin@hotmail.com','0245856335','boulevard du massacre','Nantes','44100','maxime',100,1);
+
+INSERT INTO auctionUsers(userName,firstName,LastName,email,phoneNumber,street,city,postalCode,password,credit,isAdmin)
+VALUES('HappyBeer','pierrick','rouxel','pierrick.rouxel@hotmail.com','0245858435','rue du houblon','Nantes','44100','pierrick',100,0);
+
+
+INSERT INTO categories(name) VALUES('bière')
+INSERT INTO categories(name) VALUES('Informatique')
+INSERT INTO categories(name) VALUES('Ameublement')
+INSERT INTO categories(name) VALUES('Vêtement')
+INSERT INTO categories(name) VALUES('Sports & loisirs')
+
+INSERT INTO deliveryAddress(street, postalCode, city) VALUES ('boulevard du massacre','44100','Nantes');
+
+INSERT INTO articles(userID,deliveryAddressId,categoryId,name,description,auctionStartDate,auctionEndDate,startingPrice,isOnSale)
+VALUES(1,1,1,'Fût de Cantillon','Bière, assemblage de lambic','2025-07-02 10:00:00','2025-07-09 10:00:00',450,1);
+
+INSERT INTO articles(userID,deliveryAddressId,categoryId,name,description,auctionStartDate,auctionEndDate,startingPrice,isOnSale)
+VALUES(1,1,1,'Fût de Dremwell','Bière bretonne, se vend bien chez les chauvins','2025-08-02 10:00:00','2025-08-09 10:00:00',400,1);
 

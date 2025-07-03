@@ -1,29 +1,18 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<html xmlns:th="http://www.thymeleaf.org"
+      data-th-replace="~{layouts/layout :: layout-eni-auction(title=~{:: title},
+                                                              content=~{:: main},
+                                                              ressourcesSupp=~{})}">
 
-<head th:replace="~{fragments/headfrag :: head('ENI Auctionszeer')}"></head>
+<head>
+    <title>Auctions List</title>
+</head>
 
 <body>
-<h1>ENI-Auctions</h1>
-<div class="sIsU">
-    <th:block data-th-if="${connectedUser != null && connectedUser.getId() > 0}">
-        <a href="logout">
-            <p>Se déconnecter</p>
-        </a>
-        <a data-th-href="@{profile(username=${connectedUser.userName})}">
-            <p>Mon profil</p>
-        </a>
-    </th:block>
-    <th:block data-th-unless="${connectedUser != null && connectedUser.getId() > 0}">
-        <a href="signIn">
-            <p>S'inscrire</p>
-        </a>
-        <p>-</p>
-        <a href="login">
-            <p>Se connecter</p>
-        </a>
-    </th:block>
-</div>
+
+<main>
+    <h1>ENI-Auctions</h1>
+  
 <div class="filtres">
     <h2>Filtres :</h2>
     <form method="get" th:action="@{/encheres}">
@@ -40,8 +29,8 @@
         <input type="text" placeholder="Search.." name = "search">
         <button type="submit">rechercher</button>
     </form>
-
 </div>
+  
 <div class="articles">
     <div class="single-article" th:each="a : ${article}" th:if="${category == null or a.category.id == category}">
         <img src="img/pic.jpg" alt="">
@@ -53,11 +42,10 @@
             <!--<p th:text="'Retrait : ' + ${a.withdrawalAddress.street} + ' ' + ${a.withdrawalAddress.city} + ' ' + ${a.withdrawalAddress.postalCode}">Retrait: </p>-->
             <p th:text="'Vendeur : ' + ${a.user.firstName} + ' ' + ${a.user.lastName}">Vendeur: </p>
             <a th:href="@{/detailArticle(id=${a.id})}">Détail de la vente</a>
-
+            </div>
         </div>
     </div>
-   
-</div>
+</main>
 </body>
 
 </html>

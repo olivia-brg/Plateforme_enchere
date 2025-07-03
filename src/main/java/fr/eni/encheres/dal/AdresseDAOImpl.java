@@ -1,18 +1,13 @@
 package fr.eni.encheres.dal;
 
+import fr.eni.encheres.bo.Adress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-
-import fr.eni.encheres.bo.Adress;
-
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public class AdresseDAOImpl implements AdresseDAO {
@@ -64,6 +59,7 @@ public class AdresseDAOImpl implements AdresseDAO {
 		return count > 0;
 	}
 
+
 	@Override
 	public int create(Adress adress) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -71,12 +67,11 @@ public class AdresseDAOImpl implements AdresseDAO {
 		namedParameters.addValue("street", adress.getStreet());
 		namedParameters.addValue("postalCode", adress.getPostalCode());
 		namedParameters.addValue("city", adress.getCity());
-		int result = jdbcTemplate.update(CREATE_ADDRESS, namedParameters);
-		if (keyHolder != null && keyHolder.getKey() != null) {
-			adress.setDeliveryAdressId(keyHolder.getKey().intValue());
-		}
+
+		int result = jdbcTemplate.update(CREATE_ADDRESS,namedParameters);
 		return result;
 	}
+
 }
 
 
