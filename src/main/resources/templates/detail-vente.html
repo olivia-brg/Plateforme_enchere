@@ -9,16 +9,52 @@
 </head>
 
 <body>
-<main>
-<h1>ENI-Enchères</h1>
-<h2>Détail vente</h2>
-<div class="detail-objet" th:object=${article}>
-    <h3>nom de l'objet</h3>
-    <img src="pic.jpg" alt="">
-    <div class="form-group">
-        <label for="description">Description:</label>
-        <input type="text" id="description" readonly th:field="*{description}">
+
+    <h1>ENI-Enchères</h1>
+    <h2>Détail vente</h2>
+    <div class="detail-objet" th:object="${article}">
+        <h3>nom de l'objet</h3>
+        <img src="pic.jpg" alt="">
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <input type="text" id="description" name="description" readonly th:value="${article.description}">
+        </div>
+        <div class="form-group">
+            <label for="category">Catégorie:</label>
+            <input type="text" id="category" name="category"  readonly th:value="${article.category}">
+        </div>
+        <div class="form-group">
+            <label for="best-bid">Meilleur offre:</label>
+            <input type="text" id="best-bid" name="best-bid" readonly th:value="${article.soldPrice}">
+        </div>
+        <div class="form-group">
+            <label for="intial-price">Mise à prix:</label>
+            <input type="number" id="intial-price" name="intial-price" readonly th:value="${article.startingPrice}">
+        </div>
+        <div class="form-group">
+            <label for="auction-end">Fin de l'enchère:</label>
+            <input type="datetime" id="auction-end" name="auction-end" readonly th:value="${article.auctionEndDate}">
+        </div>
+        <div class="form-group">
+            <label for="delivery-address">Retrait: </label>
+            <input type="text" id="delivery-address" name="delivery-address" readonly th:value="${article.withdrawalAdress}">
+        </div>
+        <div class="form-group">
+            <label for="seller">Vendeur: </label>
+
+            <input type="text" id="seller" name="seller" readonly th:value="${article.user.firstName+ ' ' +article.user.lastName}">
+
+        </div>
+        <div class="form-group">
+            <label for="user-bid">Ma propositon </label>
+            <input type="number" name="user-bid" id="user-bid"  th:value="${article.soldPrice}" th:value="${article.soldPrice > article.startingPrice} ? ${article.soldPrice} : ${article.startingPrice}">
+            <button type="submit">Enchérir</button>
+        </div>
+        <div class="form-group">
+           <button type="submit"><a href="index">Back</a></button>
+        </div>
     </div>
+<<<<<<< HEAD
     <div class="form-group">
         <label for="category">Catégorie:</label>
         <input type="text" id="category" th:name="category" readonly th:value="${article.category.name}">
@@ -53,6 +89,8 @@
     </div>
 </div>
 </main>
+=======
+>>>>>>> develop
 
 </body>
 

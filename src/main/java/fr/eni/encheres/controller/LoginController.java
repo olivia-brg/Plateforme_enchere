@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -18,10 +19,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class LoginController {
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
     private final UserService userService;
+	private final StandardServletMultipartResolver standardServletMultipartResolver;
 
-    public LoginController(UserService userService) {
+	public LoginController(UserService userService, StandardServletMultipartResolver standardServletMultipartResolver) {
         this.userService = userService;
-    }
+		this.standardServletMultipartResolver = standardServletMultipartResolver;
+	}
 
     @GetMapping("/login")
     public String login(){
@@ -68,7 +71,6 @@ public class LoginController {
 	        System.out.println(connectedUser);
 	        return "redirect:/";
 		} catch (BusinessException e) {
-			// TODO Auto-generated catch block
 			redirectAttributes.addFlashAttribute("errorMessages", e.getMessages());
 	        return "redirect:/login";
 
@@ -84,7 +86,9 @@ public class LoginController {
 	@GetMapping(path="/home")
 	public String returnToIndex(Model model){
 		model.addAttribute("user", new User());
-		return "redirect:/encheres";
+
+		return "redirect:/";
+
 	}
 
 
@@ -109,6 +113,7 @@ public class LoginController {
 
 
     	try {
+			System.out.println(user.getEmail());
 			this.userService.createNewUser(user);
 			return "redirect:/";
 		} catch (BusinessException e) {

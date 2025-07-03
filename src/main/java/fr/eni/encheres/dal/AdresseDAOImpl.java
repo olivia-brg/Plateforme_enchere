@@ -14,7 +14,8 @@ public class AdresseDAOImpl implements AdresseDAO {
 
 	private final String FIND_BY_ID = "SELECT ID, STREET, POSTALCODE, CITY FROM DELIVERYADDRESS WHERE ID = :id";
 	private final String CREATE_ADDRESS = """
-	INSERT INTO DELIVERYADDRESS(street, postalCode, city)
+	
+			INSERT INTO DELIVERYADDRESS(street, postalCode, city)
 	VALUES(:street, :postalCode, :city)
 	""";
 	private final String FIND_IF_EXISTS = """
@@ -44,7 +45,7 @@ public class AdresseDAOImpl implements AdresseDAO {
 		namedParameters.addValue("postalCode", adress.getPostalCode());
 		namedParameters.addValue("city", adress.getCity());
 		int result = jdbcTemplate.queryForObject(FIND_ID_BY_ADDRESS, namedParameters, Integer.class);
-		System.out.println("id de l\'adresse requêtée"+ result);
+		System.out.println("id de l\'adresse requêté e"+ result);
 		return result;
 	}
 
@@ -66,10 +67,10 @@ public class AdresseDAOImpl implements AdresseDAO {
 		namedParameters.addValue("street", adress.getStreet());
 		namedParameters.addValue("postalCode", adress.getPostalCode());
 		namedParameters.addValue("city", adress.getCity());
+
 		int result = jdbcTemplate.update(CREATE_ADDRESS,namedParameters);
 		return result;
 	}
-
 
 }
 
