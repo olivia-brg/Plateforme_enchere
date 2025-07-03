@@ -1,0 +1,40 @@
+<header xmlns:th="http://www.thymeleaf.org"
+        data-th-fragment="header-frag">
+    <section id="nav-title">
+        <h1>
+            <a href="/"><img data-th-src="@{/images/logo.png}">
+                <span>ENI auction</span>
+            </a>
+        </h1>
+    </section>
+
+    <nav>
+    <div class="sIsU">
+        <th:block data-th-if="${connectedUser != null && connectedUser.getId() > 0}">
+            <a href="/home">
+                <p>Enchères</p>
+            </a>
+            <p>-</p>
+            <a href="/sell">
+                <p>Vendre un article</p>
+            </a>
+            <p>-</p>
+            <a data-th-href="@{profile(username=${connectedUser.userName})}">
+                <p>Mon profil</p>
+            </a>
+            <p>-</p>
+            <a href="/logout">
+                <p>Déconnexion</p>
+            </a>
+        </th:block>
+        <th:block data-th-unless="${connectedUser != null && connectedUser.getId() > 0}">
+            <a href="/signIn">
+                <p>S'inscrire</p>
+            </a>
+            <p>-</p>
+            <a href="/login">
+                <p>Se connecter</p>
+            </a>
+        </th:block>
+    </div>
+</header>
