@@ -10,6 +10,7 @@ import fr.eni.encheres.bo.Category;
 import fr.eni.encheres.bo.User;
 import fr.eni.encheres.exception.BusinessException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -88,6 +89,8 @@ public class EnchereController {
 
         //On implémente cette adresse à l'article.
         article.setWithdrawalAdress(adress);
+        article.setUser(connectedUser);
+        article.setAuctionStartDate(LocalDateTime.now());
         //On appelle la méthode du service qui créera l'article
         articleService.createArticle(article, connectedUser.getId());
 
@@ -105,8 +108,10 @@ public class EnchereController {
         if (current != null) {
             User vendeur = userService.readById(current.getUser().getId());
             Adress adress = articleService.consultAdressById(current.getWithdrawalAdress().getDeliveryAdressId());
+            Category category = articleService.consultCategoryById(current.getCategory().getId());
             current.setUser(vendeur);
             current.setWithdrawalAdress(adress);
+            current.setCategory(category);
             System.out.println(current);
             model.addAttribute("article", current);
         }else
