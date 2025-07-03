@@ -76,7 +76,6 @@ public class EnchereController {
         //On appelle la méthode du service qui créera l'article
         articleService.createArticle(article, connectedUser.getId());
 
-        articleDAO.create(article, connectedUser.getId(), adress.getDeliveryAdressId() );
 
         return "detail-vente";
     }
