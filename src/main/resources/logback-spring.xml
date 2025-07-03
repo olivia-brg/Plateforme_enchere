@@ -54,8 +54,7 @@
         </encoder>
     </appender>
 
-    <!-- Profil dev avec appender multiple -->
-    <springProfile name="dev">
+    <springProfile name="debug">
         <root level="DEBUG">
             <appender-ref ref="DEBUG_APPENDER"/>
             <appender-ref ref="INFO_APPENDER"/>
@@ -64,7 +63,14 @@
         </root>
     </springProfile>
 
-    <!-- Profil prod avec appender multiple -->
+    <springProfile name="dev">
+        <root level="DEBUG">
+            <appender-ref ref="INFO_APPENDER"/>
+            <appender-ref ref="WARN_APPENDER"/>
+            <appender-ref ref="ERROR_APPENDER"/>
+        </root>
+    </springProfile>
+
     <springProfile name="prod">
         <root level="DEBUG">
             <appender-ref ref="WARN_APPENDER"/>
