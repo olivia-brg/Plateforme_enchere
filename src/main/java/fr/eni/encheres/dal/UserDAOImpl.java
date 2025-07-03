@@ -116,12 +116,14 @@ public class UserDAOImpl implements UserDAO{
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("userName", userName);
 
+        logger.info("findId : " + userName);
+
         int count = jdbcTemplate.queryForObject(FIND_USER_NAME, mapSqlParameterSource, Integer.class);
         return count >= 1;
     }
 
     @Override
-    public void update(User user) {
+    public boolean update(User user) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 
         mapSqlParameterSource.addValue("userName", user.getUserName());
@@ -133,7 +135,7 @@ public class UserDAOImpl implements UserDAO{
         mapSqlParameterSource.addValue("city", user.getCity());
         mapSqlParameterSource.addValue("postalCode", user.getPostalCode());
         mapSqlParameterSource.addValue("password", user.getPassword());
-        jdbcTemplate.update(UPDATE_USER, mapSqlParameterSource);
+        return jdbcTemplate.update(UPDATE_USER, mapSqlParameterSource) == 1;
 
     }
 

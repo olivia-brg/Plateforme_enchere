@@ -55,14 +55,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User readById(int id) {
+    public User findById(int id) {
         return userDAO.findUserById(id);
     }
 
 
     @Override
-    public void update(User user) {
-        this.userDAO.update(user);
+    public boolean update(User user) throws BusinessException {
+        logger.info("update : " + user.toString());
+        return this.userDAO.update(user);
     }
 
     @Override
