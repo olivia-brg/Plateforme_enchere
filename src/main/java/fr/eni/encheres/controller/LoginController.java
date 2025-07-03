@@ -66,7 +66,9 @@ public class LoginController {
 	            connectedUser.setAdmin(false);
 	        }
 	        System.out.println(connectedUser);
+
 	        return "redirect:/";
+
 		} catch (BusinessException e) {
 			// TODO Auto-generated catch block
 			redirectAttributes.addFlashAttribute("errorMessages", e.getMessages());
@@ -92,7 +94,9 @@ public class LoginController {
     public String addUser(Model model){
         model.addAttribute("user", new User());
         //ajouter articleService
+
         return "redirect:/";
+
     }
 
 
@@ -100,7 +104,9 @@ public class LoginController {
     public String finSession(SessionStatus status) {
         // Suppression des attributs de @SessionAttributs
         status.setComplete();
+
         return "redirect:/";
+
     }
 
     @PostMapping("/register")
@@ -110,7 +116,9 @@ public class LoginController {
 
     	try {
 			this.userService.createNewUser(user);
+
 			return "redirect:/";
+
 		} catch (BusinessException e) {
 
 			redirectAttributes.addFlashAttribute("errorMessages", e.getMessages());
