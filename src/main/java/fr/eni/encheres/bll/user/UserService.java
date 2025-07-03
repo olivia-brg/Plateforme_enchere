@@ -11,5 +11,6 @@ public interface UserService {
     boolean isPasswordCorrect(String username, String password);
     User findByUsername(String username);
     boolean isUserExisting(String userName, BusinessException be) ;
+    void createNewUser (User user)throws BusinessException;
 
 }

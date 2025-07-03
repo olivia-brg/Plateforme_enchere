@@ -1,21 +1,35 @@
 package fr.eni.encheres.dal;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import fr.eni.encheres.bo.Adress;
-import fr.eni.encheres.bo.Category;
-import fr.eni.encheres.exception.BusinessException;
 
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class AdresseDAOImpl implements AdresseDAO{
 
-	private final String FIND_BY_ID = "SELECT ID, ARTICLEID, STREET, ZIPCODE, CITY FROM DELIVERYADDRESS WHERE ID = :id";
+	private final String FIND_BY_ID = "SELECT ID, STREET, POSTALCODE, CITY FROM DELIVERYADDRESS WHERE ID = :id";
+	private final String CREATE_ADDRESS = """
+	INSERT INTO DELIVERYADDRESS(street, postalCode, city)
+	VALUES(:street, :postalCode, :city)
+	""";
+	private final String FIND_IF_EXISTS = """
+			SELECT COUNT(*) FROM DELIVERYADDRESS WHERE STREET = :street AND  POSTALCODE = :postalCode
+			AND CITY = :city
+			""";
+	private final String FIND_ID_BY_ADDRESS = """
+			SELECT ID FROM DELIVERYADDRESS WHERE STREET = :street AND  POSTALCODE = :postalCode
+			AND CITY = :city
+			""";
 
 	
 	@Autowired
@@ -29,12 +43,38 @@ public class AdresseDAOImpl implements AdresseDAO{
 	}
 
 	@Override
-	public int create(Adress adress) {
-		return 0;
+	public int findIdByAdress(Adress adress) {
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("street", adress.getStreet());
+		namedParameters.addValue("postalCode", adress.getPostalCode());
+		namedParameters.addValue("city", adress.getCity());
+		int result = jdbcTemplate.queryForObject(FIND_ID_BY_ADDRESS, namedParameters, Integer.class);
+		System.out.println("id de l\'adresse requêtée"+ result);
+		return result;
 	}
 
+	@Override
+	public Boolean findIfExists(Adress adress) {
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("street", adress.getStreet());
+		namedParameters.addValue("postalCode", adress.getPostalCode());
+		namedParameters.addValue("city", adress.getCity());
+		int count=jdbcTemplate.queryForObject(FIND_IF_EXISTS, namedParameters, Integer.class);
+		return count > 0;
+	}
 
-
+	@Override
+	public int create(Adress adress) {
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("street", adress.getStreet());
+		namedParameters.addValue("postalCode", adress.getPostalCode());
+		namedParameters.addValue("city", adress.getCity());
+		int result = jdbcTemplate.update(CREATE_ADDRESS,namedParameters);
+		if (keyHolder!=null && keyHolder.getKey() != null){
+			adress.setDeliveryAdressId(keyHolder.getKey().intValue());
 		}
+		return result;
+	}
 
 
