@@ -3,7 +3,6 @@ package fr.eni.encheres.controller;
 import fr.eni.encheres.bll.user.UserService;
 import fr.eni.encheres.bo.User;
 import fr.eni.encheres.exception.BusinessException;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
@@ -34,6 +32,7 @@ public class ProfilController {
         User userFetched = this.userService.findById(id);
         if (userFetched != null) {
             model.addAttribute("userFetched", userFetched);
+            logger.info("USER FOUND : {}", userFetched);
             return "profile";
         } else logger.info("Unknown user");
 
@@ -48,32 +47,30 @@ public class ProfilController {
     }
 
     @PostMapping("/update")
-    public String updateProfil(@Valid @ModelAttribute("updateUserInfo") User updateUserInfo,
+    public String updateProfil(@Valid @ModelAttribute("updatedUser") User updatedUser,
                                BindingResult bindingResult,
                                @ModelAttribute("connectedUser") User connectedUser,
-                               Model model) {
-        User user = userService.findById(connectedUser.getId());
+                               Model model) throws BusinessException {
 
-//        if (bindingResult.hasErrors()) {
-//            model.addAttribute("user", connectedUser);
-//            return "edit-profile";
-//        } else {
+        model.addAttribute("user", connectedUser);
+        if (bindingResult.hasErrors()) {
+            logger.error("updateProfil : {}", bindingResult.getAllErrors());
+            return "edit-profile";
+        } else {
             try {
-                if (this.userService.update(updateUserInfo)) {
-                    connectedUser = updateUserInfo;
-                    User userFetched = this.userService.findById(connectedUser.getId());
-                    model.addAttribute("userFetched", userFetched);
-                }
+                logger.info("updateProfil : {} updated", updatedUser.getUserName());
+                this.userService.update(updatedUser);
                 return "redirect:/profile?id=" + connectedUser.getId();
+
             } catch (BusinessException e) {
                 e.getMessages().forEach(m -> {
                     ObjectError error = new ObjectError("globalError", m);
                     bindingResult.addError(error);
                 });
-                model.addAttribute("user", connectedUser);
                 return "edit-profile";
             }
-//        }
+        }
+    }
 
 
 //        @RequestParam(name = "oldPassword", required = false) String oldPassword,
@@ -88,19 +85,18 @@ public class ProfilController {
 //            logger.info("updateProfil : Veuillez saisir le même mot de passe");
 //        }
 
-    }
 
-    @GetMapping("/delete")
-    public String deleteUser(@ModelAttribute("connectedUser") User connectedUser,
-                             SessionStatus status) {
-        if (this.userService.deleteUserById(connectedUser.getUserName())) {
-            logger.info("deleteUser : {} deleted", connectedUser.getUserName());
-            status.setComplete();
-            return "redirect:/encheres";
+        @GetMapping("/delete")
+        public String deleteUser (@ModelAttribute("connectedUser") User connectedUser,
+                SessionStatus status){
+            if (this.userService.deleteUserById(connectedUser.getUserName())) {
+                logger.info("deleteUser : {} deleted", connectedUser.getUserName());
+                status.setComplete();
+                return "redirect:/encheres";
+            }
+            logger.info("deleteUser : {} not deleted", connectedUser.getUserName());
+            return "redirect:/profile?id=" + connectedUser.getId();
         }
-        logger.info("deleteUser : {} not deleted", connectedUser.getUserName());
-        return "redirect:/profile?id=" + connectedUser.getId();
+
+
     }
-
-
-}

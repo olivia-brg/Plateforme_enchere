@@ -10,6 +10,7 @@ public interface UserDAO {
     boolean isPasswordCorrect(String username, String password);
     void insertNewUser(User user);
     User findByUsername(String username);
+    boolean doesUsernameExist(String username);
     User findUserById(int id);
     boolean deleteUserById(String username);
 

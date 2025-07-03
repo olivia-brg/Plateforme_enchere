@@ -52,7 +52,6 @@ public class LoginController {
 	        System.out.println(connectedUser);
 	        return "redirect:/";
 		} catch (BusinessException e) {
-			// TODO Auto-generated catch block
 			redirectAttributes.addFlashAttribute("errorMessages", e.getMessages());
 	        return "redirect:/login";
 

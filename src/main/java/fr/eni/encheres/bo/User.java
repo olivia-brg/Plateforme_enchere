@@ -25,7 +25,6 @@ public class User {
 	@Email(message = "Le format de l'email est invalide.")
 	private String email;
 
-	@NotBlank(message = "Le numéro de téléphone est obligatoire.")
 	@Pattern(regexp = "^[0-9]{10}$", message = "Le numéro de téléphone doit contenir exactement 10 chiffres.")
 	private String phoneNumber;
 
@@ -41,8 +40,8 @@ public class User {
 	@Size(min = 2, max = 100, message = "La ville doit contenir entre 2 et 100 caractères.")
 	private String city;
 
-	@NotBlank(message = "Le mot de passe est obligatoire.")
-	@Size(min = 8, max = 100, message = "Le mot de passe doit contenir entre 8 et 100 caractères.")
+//	@NotBlank(message = "Le mot de passe est obligatoire.")
+//	@Size(min = 8, max = 100, message = "Le mot de passe doit contenir entre 8 et 100 caractères.")
 	private String password;
 
 	@PositiveOrZero(message = "Le crédit ne peut pas être négatif.")

@@ -63,11 +63,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean update(User user) throws BusinessException {
         logger.info("update : " + user.toString());
+        BusinessException be = new BusinessException();
+        boolean isValid = !doesUsernameExist(user.getUserName(), be);
+//        isValid &= validerGenre(film.getGenre(), be);
+//        isValid &= validerActeurs(film.getActeurs(), be);
+//        isValid &= validerRealisateur(film.getRealisateur(), be);
         return this.userDAO.update(user);
     }
 
     @Override
-    public boolean isPasswordCorrect(String username, String password) {
+    public boolean isPasswordCorrect(String username, String password, BusinessException be) {
         return this.userDAO.isPasswordCorrect(username, password);
     }
 
@@ -77,18 +82,25 @@ public class UserServiceImpl implements UserService {
 		BusinessException be = new BusinessException();
 		boolean userExists = isUserExisting(user.getUserName(), be);
 
-		if (userExists) {
-			throw be;
-		}
-		else {
-
-		userDAO.insertNewUser(user);}
+		if (userExists) throw be;
+		else userDAO.insertNewUser(user);
 
 	}
 
     @Override
     public User findByUsername(String username) {
         return this.userDAO.findByUsername(username);
+    }
+
+    private boolean doesUsernameExist(String username, BusinessException be) {
+
+        boolean usernameExist = userDAO.doesUsernameExist(username);
+        if (usernameExist) {
+            be.add("L'username existe déjà");
+            return false;
+        }
+
+        return true;
     }
 
 

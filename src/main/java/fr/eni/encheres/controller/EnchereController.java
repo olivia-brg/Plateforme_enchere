@@ -92,7 +92,7 @@ public class EnchereController {
 
         if (current != null) {
             User vendeur = userService.findById(current.getUser().getId());
-            Adress adress = articleService.consultAdressById(current.getWithdrawalAdress().getDeliveryAdressId());
+            Adress adress = articleService.consultAdressById(current.getWithdrawalAdress().getDeliveryAddressId());
             current.setUser(vendeur);
             current.setWithdrawalAdress(adress);
             System.out.println(current);

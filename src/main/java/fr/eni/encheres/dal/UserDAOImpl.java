@@ -20,13 +20,31 @@ public class UserDAOImpl implements UserDAO{
 
 	private static final Logger logger = LoggerFactory.getLogger(UserDAOImpl.class);
 
-	private final String INSERT_NEW_USER = "INSERT INTO auctionUsers(userName, firstName, LastName, email, phoneNumber, street, city, postalCode, password, credit) "
-	        + "VALUES (:userName, :firstName, :LastName, :email, :phoneNumber, :street, :city, :postalCode, :password, 100)";
-	private final String FIND_USER_NAME = "SELECT COUNT(*) FROM auctionUsers WHERE userName = :userName";
-    private final String DELETE_USER_BY_USERNAME = """
-                DELETE FROM auctionUsers
-                WHERE userName = :userName
-            """;
+    private final String DELETE_USER_BY_USERNAME = "DELETE FROM auctionUsers WHERE userName = :userName";
+    private final String FIND_USERNAME_BY_ID = "SELECT COUNT(*) FROM auctionUsers WHERE userName = :userName";
+    private final String FIND_IF_USERNAME_EXIST = "SELECT COUNT(*) FROM auctionUsers WHERE userName = :userName AND id != :id";
+
+    private final String INSERT_NEW_USER = """
+            INSERT INTO auctionUsers(userName,
+	                                    firstName,
+	                                    LastName,
+	                                    email,
+	                                    phoneNumber,
+	                                    street,
+	                                    city,
+	                                    postalCode,
+	                                    password,
+	                                    credit)
+	        VALUES (:userName,
+	                :firstName,
+	                :LastName,
+	                :email, 
+	                :phoneNumber,
+	                :street,
+	                :city,
+	                :postalCode,
+	                :password,
+	                100)""";
 
     private final String FIND_USER = """
                 SELECT id,
@@ -118,7 +136,7 @@ public class UserDAOImpl implements UserDAO{
 
         logger.info("findId : " + userName);
 
-        int count = jdbcTemplate.queryForObject(FIND_USER_NAME, mapSqlParameterSource, Integer.class);
+        int count = jdbcTemplate.queryForObject(FIND_USERNAME_BY_ID, mapSqlParameterSource, Integer.class);
         return count >= 1;
     }
 
@@ -177,6 +195,16 @@ public class UserDAOImpl implements UserDAO{
         assert user != null;
         logger.info(user.toString());
         return user;
+    }
+
+    @Override
+    public boolean doesUsernameExist(String username) {
+        //TODO: finir d'implémenter la méthode (la requete fonctionne bien, changer le 1 par un id dynamique)
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("userName", username);
+        params.addValue("id", 1);
+        Integer count = jdbcTemplate.queryForObject(FIND_IF_USERNAME_EXIST, params, Integer.class);
+        return count != null && count > 0;
     }
 
     @Override
