@@ -13,6 +13,7 @@ public class Article {
 	private float soldPrice;
 	private float startingPrice;
 	private boolean isOnSale;
+	private String imageURL;
 	//association
 	private Category category;
 	private Adress withdrawalAdress;
@@ -84,6 +85,7 @@ public class Article {
 	public void setOnSale(boolean isOnSale) {
 		this.isOnSale = isOnSale;
 	}
+	//Associations
 	public Category getCategory() {
 		return category;
 	}
@@ -102,8 +104,13 @@ public class Article {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
-//	List setter and getter
+	public String getImageURL() {
+		return imageURL;
+	}
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
+	}
+	//	List setter and getter
 
 
 	@Override

@@ -48,8 +48,7 @@ CREATE TABLE articles (
                           auctionEndDate DATETIME2,
                           startingPrice NUMERIC(8,2),
                           soldPrice NUMERIC(8,2),
-                          ImageData VARBINARY(MAX),
-    --state VARCHAR DEFAULT 'saved' CONSTRAINT chk_state CHECK (state IN ('saved','in_auction','sold')),
+                          ImageURL VARCHAR(100),
                           isOnSale bit,
                           CONSTRAINT pk_article PRIMARY KEY(id),
                           CONSTRAINT fk_article_user FOREIGN KEY(userId) REFERENCES auctionUsers(id),
@@ -74,7 +73,6 @@ CREATE TABLE bids (
 
 
 
-
 DELETE FROM auctionUsers WHERE id > 0;
 
 INSERT INTO auctionUsers(userName,firstName,LastName,email,phoneNumber,street,city,postalCode,password,credit,isAdmin)
@@ -92,9 +90,9 @@ INSERT INTO categories(name) VALUES('Sports & loisirs')
 
 INSERT INTO deliveryAddress(street, postalCode, city) VALUES ('boulevard du massacre','44100','Nantes');
 
-INSERT INTO articles(userID,deliveryAddressId,categoryId,name,description,auctionStartDate,auctionEndDate,startingPrice,isOnSale)
-VALUES(1,1,1,'Fût de Cantillon','Bière, assemblage de lambic','2025-07-02 10:00:00','2025-07-09 10:00:00',450,1);
+INSERT INTO articles(userID,deliveryAddressId,categoryId,name,description,auctionStartDate,auctionEndDate,startingPrice,isOnSale,ImageURL)
+VALUES(1,1,1,'Fût de Cantillon','Bière, assemblage de lambic','2025-07-02 10:00:00','2025-07-09 10:00:00',450,1,'/img/cantillon-gueuze-bio_800x-191546988.jpg');
 
-INSERT INTO articles(userID,deliveryAddressId,categoryId,name,description,auctionStartDate,auctionEndDate,startingPrice,isOnSale)
-VALUES(1,1,1,'Fût de Dremwell','Bière bretonne, se vend bien chez les chauvins','2025-08-02 10:00:00','2025-08-09 10:00:00',400,1);
+INSERT INTO articles(userID,deliveryAddressId,categoryId,name,description,auctionStartDate,auctionEndDate,startingPrice,isOnSale,ImageURL)
+VALUES(1,1,1,'Fût de Dremwell','Bière bretonne, se vend bien chez les chauvins','2025-08-02 10:00:00','2025-08-09 10:00:00',400,1,'/img/3760010132661_A1L1_5193220_S12-770217217.png');
 

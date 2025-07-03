@@ -27,7 +27,7 @@
     </div>
     <div class="articles">
         <div class="single-article" th:each="a : ${article}">
-            <img src="img/pic.jpg" alt="">
+            <img th:src="${a.getImageURL()}" th:alt="${a.getDescription()}">
             <div class="article-infos">
                 <h5 th:text="${a.name}">Exemple</h5>
                 <p>Prix: </p>

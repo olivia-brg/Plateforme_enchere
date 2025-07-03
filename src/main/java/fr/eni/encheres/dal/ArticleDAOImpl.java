@@ -21,15 +21,15 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ArticleDAOImpl implements ArticleDAO{
 	
-	private final String FIND_ALL = "SELECT ID, NAME, DESCRIPTION, AUCTIONSTARTDATE, AUCTIONENDDATE, STARTINGPRICE, SOLDPRICE, ISONSALE, CATEGORYID, DELIVERYADDRESSID, USERID FROM ARTICLES";
+	private final String FIND_ALL = "SELECT ID, NAME, DESCRIPTION, AUCTIONSTARTDATE, AUCTIONENDDATE, STARTINGPRICE, SOLDPRICE, ISONSALE, CATEGORYID, DELIVERYADDRESSID, USERID, ImageURL FROM ARTICLES";
 
 	private final String INSERT_NEW_ARTICLE = """
-				INSERT INTO articles(userID,categoryId,deliveryAddressId,name,description,auctionStartDate,auctionEndDate,startingPrice,isOnSale)
-			             VALUES(:userId,:categoryId,:deliveryAddressId,:name,:description,:auctionStartDate,:auctionEndDate,:startingPrice,1);			
+				INSERT INTO articles(userID,categoryId,deliveryAddressId,name,description,auctionStartDate,auctionEndDate,startingPrice,isOnSale,IMAGEURL)
+			             VALUES(:userId,:categoryId,:deliveryAddressId,:name,:description,:auctionStartDate,:auctionEndDate,:startingPrice,1,:imageURL);			
 			""";
 
 
-	private final String FIND_BY_ID = "SELECT ID, NAME, DESCRIPTION, AUCTIONSTARTDATE, AUCTIONENDDATE, STARTINGPRICE, SOLDPRICE, ISONSALE, CATEGORYID, DELIVERYADDRESSID, USERID FROM ARTICLES WHERE ID = :id";
+	private final String FIND_BY_ID = "SELECT ID, NAME, DESCRIPTION, AUCTIONSTARTDATE, AUCTIONENDDATE, STARTINGPRICE, SOLDPRICE, ISONSALE, CATEGORYID, DELIVERYADDRESSID, USERID, IMAGEURL FROM ARTICLES WHERE ID = :id";
 
 	@Autowired
 	private NamedParameterJdbcTemplate jdbcTemplate;
@@ -58,6 +58,7 @@ public class ArticleDAOImpl implements ArticleDAO{
 		namedParameters.addValue("auctionStartDate", article.getAuctionStartDate());
 		namedParameters.addValue("auctionEndDate", article.getAuctionEndDate());
 		namedParameters.addValue("startingPrice", article.getStartingPrice());
+		namedParameters.addValue("imageURL", article.getImageURL());
 		System.out.println("L'article ajouté : "+article.toString());
 		// les dates sont nulles pour le moment
 		return jdbcTemplate.update(INSERT_NEW_ARTICLE, namedParameters);
@@ -80,6 +81,7 @@ public class ArticleDAOImpl implements ArticleDAO{
 			a.setStartingPrice(rs.getFloat("STARTINGPRICE"));
 			a.setSoldPrice(rs.getFloat("SOLDPRICE"));
 			a.setOnSale(rs.getBoolean("ISONSALE"));
+			a.setImageURL(rs.getString("ImageURL"));
 		
 
 			// Catgory's Association
