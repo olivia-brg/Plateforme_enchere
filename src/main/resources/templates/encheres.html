@@ -26,19 +26,18 @@
 </div>
 <div class="filtres">
     <h2>Filtres :</h2>
-    <label for="cat">Catégories</label>
-    <select name="cat" id="cat">
-        <option value="informatique">Informatique</option>
-        <option value="ameublement">Ameublement</option>
-        <option value="vetement">Vêtement</option>
-        <option value="s&l">Sports & loisirs</option>
+    <label for="category">Catégories </label>
+    <select id="category">Toutes
+        <option th:each="categoryFromList : ${listeCategories}" data-th-value="${categoryFromList.getId()}"
+                data-th-text="${categoryFromList.getName()}"></option>
     </select>
     <input type="text" placeholder="Search..">
     <button type="submit">rechercher</button>
 
+
 </div>
 <div class="articles">
-    <div class="single-article" th:each="a : ${article}">
+    <div class="single-article" th:each="a : ${article}" th:if="${selectCategory != null or a.category.id == selectCategory}">
         <img src="img/pic.jpg" alt="">
         <div class="article-infos">
             <h5 th:text="${a.name}">Exemple</h5>

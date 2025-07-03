@@ -48,9 +48,12 @@ public class EnchereController {
     }
 
     @RequestMapping(path = {"/", "/encheres"}, method = {RequestMethod.GET, RequestMethod.POST})
-    public String accueil(@ModelAttribute("connectedUser") User connectedUser, Model model) throws BusinessException {
+    public String accueil(@ModelAttribute("connectedUser") User connectedUser,@RequestParam(required = false) Long category, Model model) throws BusinessException {
     	List<Article> articles = articleService.consultArticles();
+        List<Category> listeCategories = articleService.consultCategories();
 		model.addAttribute("article", articles);
+        model.addAttribute("listeCategories", listeCategories);
+        model.addAttribute("selectCategory", category);
         return "encheres";
     }
 
