@@ -35,7 +35,7 @@ public class ProfilController {
             return "profile";
         } else logger.info("Unknown user");
 
-        return "redirect:/index";
+        return "redirect:/encheres";
     }
 
     @GetMapping("/update")
