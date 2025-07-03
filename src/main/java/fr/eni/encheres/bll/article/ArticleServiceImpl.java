@@ -37,7 +37,10 @@ public class ArticleServiceImpl implements ArticleService{
 	}
 	
 	public Article consultArticleById(int id) {
-		return this.articleDAO.read(id);
+		Article article = this.articleDAO.findArticleById(id);
+		User user = userDAO.findUserById(article.getUser().getId());
+		article.setUser(user);
+		return article;
 	}
 
 	@Override
@@ -54,6 +57,7 @@ public class ArticleServiceImpl implements ArticleService{
 		
 		return articles;
 	}
+	
 
 	@Override
 	public List<Category> consultCategories() {

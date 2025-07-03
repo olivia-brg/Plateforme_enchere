@@ -9,36 +9,41 @@
 </head>
 
 <body>
+
 <main>
     <h1>ENI-Auctions</h1>
+  
+<div class="filtres">
+    <h2>Filtres :</h2>
+    <form method="get" th:action="@{/encheres}">
+        <label for="category">Catégories </label>
+        <select id="category" name="category">
 
-    <div class="filtres">
-        <h2>Filtres :</h2>
-        <label for="cat">Catégories</label>
-        <select name="cat" id="cat">
-            <option value="informatique">Informatique</option>
-            <option value="ameublement">Ameublement</option>
-            <option value="vetement">Vêtement</option>
-            <option value="s&l">Sports & loisirs</option>
+            <option value="" th:selected="${category == null}">Toutes</option>
+            <option th:each="categoryFromList : ${listeCategories}"
+                    th:value="${categoryFromList.id}"
+                    th:text="${categoryFromList.name}"
+                    th:selected="${categoryFromList.id == category}">
+            </option>
         </select>
-        <input type="text" placeholder="Search..">
+        <input type="text" placeholder="Search.." name = "search">
         <button type="submit">rechercher</button>
-
-    </div>
-    <div class="articles">
-        <div class="single-article" th:each="a : ${article}">
-            <img src="img/pic.jpg" alt="">
-            <div class="article-infos">
-                <h5 th:text="${a.name}">Exemple</h5>
-                <p>Prix: </p>
-                <p>Classement: </p>
-                <p th:text="${'Fin de l''enchère : ' + a.auctionEndDate}">Fin de l'enchère: </p>
-                <!--<p th:text="'Retrait : ' + ${a.withdrawalAddress.street} + ' ' + ${a.withdrawalAddress.city} + ' ' + ${a.withdrawalAddress.postalCode}">Retrait: </p>-->
-                <p th:text="'Vendeur : ' + ${a.user.firstName} + ' ' + ${a.user.lastName}">Vendeur: </p>
-                <a th:href="@{/detailArticle(id=${a.id})}">Détail de la vente</a>
+    </form>
+</div>
+  
+<div class="articles">
+    <div class="single-article" th:each="a : ${article}" th:if="${category == null or a.category.id == category}">
+        <img src="img/pic.jpg" alt="">
+        <div class="article-infos">
+            <h5 th:text="${a.name}">Exemple</h5>
+            <p>Prix: </p>
+            <p>Classement: </p>
+          	<p th:text="${'Fin de lenchère : ' + a.auctionEndDate}">Fin de l'enchère: </p>
+            <!--<p th:text="'Retrait : ' + ${a.withdrawalAddress.street} + ' ' + ${a.withdrawalAddress.city} + ' ' + ${a.withdrawalAddress.postalCode}">Retrait: </p>-->
+            <p th:text="'Vendeur : ' + ${a.user.firstName} + ' ' + ${a.user.lastName}">Vendeur: </p>
+            <a th:href="@{/detailArticle(id=${a.id})}">Détail de la vente</a>
             </div>
         </div>
-
     </div>
 </main>
 </body>

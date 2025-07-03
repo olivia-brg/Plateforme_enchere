@@ -11,6 +11,7 @@ import fr.eni.encheres.bo.User;
 import fr.eni.encheres.exception.BusinessException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import fr.eni.encheres.dal.AdresseDAO;
 import fr.eni.encheres.dal.ArticleDAO;
@@ -51,9 +52,20 @@ public class EnchereController {
     }
 
     @RequestMapping(path = {"/", "/encheres"}, method = {RequestMethod.GET, RequestMethod.POST})
-    public String accueil(@ModelAttribute("connectedUser") User connectedUser, Model model) throws BusinessException {
+    public String accueil(@ModelAttribute("connectedUser") User connectedUser,@RequestParam(required = false) Long category,@RequestParam(required = false) String search, Model model) throws BusinessException {
     	List<Article> articles = articleService.consultArticles();
-		model.addAttribute("article", articles);
+        List<Category> listeCategories = articleService.consultCategories();
+
+        model.addAttribute("listeCategories", listeCategories);
+        model.addAttribute("category", category);
+
+        if (search != null && !search.isBlank()) {
+            articles = articles.stream().filter( article ->article.getName().toLowerCase().contains(search.toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+
+        model.addAttribute("article", articles);
+        
         return "encheres";
     }
 
