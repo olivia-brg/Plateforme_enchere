@@ -84,7 +84,7 @@ public class LoginController {
 	@GetMapping(path="/home")
 	public String returnToIndex(Model model){
 		model.addAttribute("user", new User());
-		return "redirect:/index";
+		return "redirect:/encheres";
 	}
 
 
