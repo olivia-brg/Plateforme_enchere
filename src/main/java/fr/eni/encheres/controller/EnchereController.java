@@ -66,16 +66,15 @@ public class EnchereController {
 
     @PostMapping(path="/newProduct")
     String insererArticle(@ModelAttribute("article") Article article, @ModelAttribute("connectedUser") User connectedUser ){
-
+        //On crée une adresse avec les attributs adresse de l'utilisateur
         Adress adress = new Adress();
         adress.setStreet(connectedUser.getStreet());
         adress.setCity(connectedUser.getCity());
         adress.setPostalCode(connectedUser.getPostalCode());
-
-        adresseDAO.create(adress);
-
-        articleDAO.create(article, connectedUser.getId(), adress.getDeliveryAdressId());
-
+        //On implémente cette adresse à l'article.
+        article.setWithdrawalAdress(adress);
+        //On appelle la méthode du service qui créera l'article
+        articleService.createArticle(article, connectedUser.getId());
         return "detail-vente";
     }
     
