@@ -26,18 +26,24 @@
 </div>
 <div class="filtres">
     <h2>Filtres :</h2>
-    <label for="category">Catégories </label>
-    <select id="category">Toutes
-        <option th:each="categoryFromList : ${listeCategories}" data-th-value="${categoryFromList.getId()}"
-                data-th-text="${categoryFromList.getName()}"></option>
-    </select>
-    <input type="text" placeholder="Search..">
-    <button type="submit">rechercher</button>
+    <form method="get" th:action="@{/encheres}">
+        <label for="category">Catégories </label>
+        <select id="category" name="category">
 
+            <option value="" th:selected="${category == null}">Toutes</option>
+            <option th:each="categoryFromList : ${listeCategories}"
+                    th:value="${categoryFromList.id}"
+                    th:text="${categoryFromList.name}"
+                    th:selected="${categoryFromList.id == category}">
+            </option>
+        </select>
+        <input type="text" placeholder="Search.." name = "search">
+        <button type="submit">rechercher</button>
+    </form>
 
 </div>
 <div class="articles">
-    <div class="single-article" th:each="a : ${article}" th:if="${selectCategory != null or a.category.id == selectCategory}">
+    <div class="single-article" th:each="a : ${article}" th:if="${category == null or a.category.id == category}">
         <img src="img/pic.jpg" alt="">
         <div class="article-infos">
             <h5 th:text="${a.name}">Exemple</h5>
@@ -47,6 +53,7 @@
             <!--<p th:text="'Retrait : ' + ${a.withdrawalAddress.street} + ' ' + ${a.withdrawalAddress.city} + ' ' + ${a.withdrawalAddress.postalCode}">Retrait: </p>-->
             <p th:text="'Vendeur : ' + ${a.user.firstName} + ' ' + ${a.user.lastName}">Vendeur: </p>
             <a th:href="@{/detailArticle(id=${a.id})}">Détail de la vente</a>
+
         </div>
     </div>
    
