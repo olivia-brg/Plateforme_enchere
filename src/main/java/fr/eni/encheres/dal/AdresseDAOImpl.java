@@ -5,29 +5,71 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class AdresseDAOImpl implements AdresseDAO {
 
-    private final String FIND_BY_ID = "SELECT ID, ARTICLEID, STREET, ZIPCODE, CITY FROM DELIVERYADDRESS WHERE ID = :id";
+	private final String FIND_BY_ID = "SELECT ID, STREET, POSTALCODE, CITY FROM DELIVERYADDRESS WHERE ID = :id";
+	private final String CREATE_ADDRESS = """
+	INSERT INTO DELIVERYADDRESS(street, postalCode, city)
+	VALUES(:street, :postalCode, :city)
+	""";
+	private final String FIND_IF_EXISTS = """
+			SELECT COUNT(*) FROM DELIVERYADDRESS WHERE STREET = :street AND  POSTALCODE = :postalCode
+			AND CITY = :city
+			""";
+	private final String FIND_ID_BY_ADDRESS = """
+			SELECT ID FROM DELIVERYADDRESS WHERE STREET = :street AND  POSTALCODE = :postalCode
+			AND CITY = :city
+			""";
 
+	
+	@Autowired
+	private NamedParameterJdbcTemplate jdbcTemplate;
+	
+	@Override
+	public Adress findAddressById(long id){
+		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+		mapSqlParameterSource.addValue("id", id);
+		return jdbcTemplate.queryForObject(FIND_BY_ID, mapSqlParameterSource, new BeanPropertyRowMapper<>(Adress.class));
+	}
 
-    @Autowired
-    private NamedParameterJdbcTemplate jdbcTemplate;
+	@Override
+	public int findIdByAdress(Adress adress) {
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("street", adress.getStreet());
+		namedParameters.addValue("postalCode", adress.getPostalCode());
+		namedParameters.addValue("city", adress.getCity());
+		int result = jdbcTemplate.queryForObject(FIND_ID_BY_ADDRESS, namedParameters, Integer.class);
+		System.out.println("id de l\'adresse requêtée"+ result);
+		return result;
+	}
 
-    @Override
-    public Adress findAddressById(long id) {
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("id", id);
-        return jdbcTemplate.queryForObject(FIND_BY_ID, mapSqlParameterSource, new BeanPropertyRowMapper<>(Adress.class));
-    }
+	@Override
+	public Boolean findIfExists(Adress adress) {
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("street", adress.getStreet());
+		namedParameters.addValue("postalCode", adress.getPostalCode());
+		namedParameters.addValue("city", adress.getCity());
+		int count=jdbcTemplate.queryForObject(FIND_IF_EXISTS, namedParameters, Integer.class);
+		return count > 0;
+	}
 
-    @Override
-    public int create(Adress adress) {
-        return 0;
-    }
-
+	@Override
+	public int create(Adress adress) {
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("street", adress.getStreet());
+		namedParameters.addValue("postalCode", adress.getPostalCode());
+		namedParameters.addValue("city", adress.getCity());
+		int result = jdbcTemplate.update(CREATE_ADDRESS,namedParameters);
+		if (keyHolder!=null && keyHolder.getKey() != null){
+			adress.setDeliveryAdressId(keyHolder.getKey().intValue());
+		}
+		return result;
+	}
 
 }
-
