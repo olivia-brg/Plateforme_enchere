@@ -1,14 +1,15 @@
 package fr.eni.encheres.bo;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Article {
 	// Attribut
 	private int id;
 	private String name;
 	private String description;
-	private LocalDate auctionStartDate;
-	private LocalDate auctionEndDate;
+	private LocalDateTime auctionStartDate;
+	private LocalDateTime auctionEndDate;
 	private float soldPrice;
 	private float startingPrice;
 	private boolean isOnSale;
@@ -18,7 +19,7 @@ public class Article {
 	private User user;
 	
 //	Full constructor
-	public Article(int id, String name, String description, LocalDate auctionStartDate, LocalDate auctionEndDate,
+	public Article(int id, String name, String description, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate,
 			float minBid, float actualPrice, boolean isOnSale, Category category, Adress withdrawalAdress, User user) {
 		this.id = id;
 		this.name = name;
@@ -53,16 +54,16 @@ public class Article {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public LocalDate getAuctionStartDate() {
+	public LocalDateTime getAuctionStartDate() {
 		return auctionStartDate;
 	}
-	public void setAuctionStartDate(LocalDate auctionStartDate) {
+	public void setAuctionStartDate(LocalDateTime auctionStartDate) {
 		this.auctionStartDate = auctionStartDate;
 	}
-	public LocalDate getAuctionEndDate() {
+	public LocalDateTime getAuctionEndDate() {
 		return auctionEndDate;
 	}
-	public void setAuctionEndDate(LocalDate auctionEndDate) {
+	public void setAuctionEndDate(LocalDateTime auctionEndDate) {
 		this.auctionEndDate = auctionEndDate;
 	}
 	public float getSoldPrice() {
@@ -105,7 +106,20 @@ public class Article {
 //	List setter and getter
 
 
-	
-	
-	
+	@Override
+	public String toString() {
+		return "Article{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", description='" + description + '\'' +
+				", auctionStartDate=" + auctionStartDate +
+				", auctionEndDate=" + auctionEndDate +
+				", soldPrice=" + soldPrice +
+				", startingPrice=" + startingPrice +
+				", isOnSale=" + isOnSale +
+				", category=" + category +
+				", withdrawalAdress=" + withdrawalAdress +
+				", user=" + user +
+				'}';
+	}
 }
