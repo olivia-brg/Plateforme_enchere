@@ -28,11 +28,14 @@ public class UserServiceImpl implements UserService {
     public User load(String username, String password) throws BusinessException{
     	BusinessException be = new BusinessException();
     	boolean userExists = isUserExisting(username, be);
-    	if(userExists) {
-    		return this.userDAO.login(username, password);
-    	}
+        boolean isPasscorrect = isPasswordCorrect(username, password, be);
+    	if(userExists && isPasscorrect) {
+
+    		return this.userDAO.login(username, password);}
+
+
     	else {
-    		
+    		be.add("wrong informations");
     		throw be;
     	}
     	
@@ -41,10 +44,10 @@ public class UserServiceImpl implements UserService {
     public boolean isUserExisting(String userName, BusinessException be) {
 		
     	if(!this.userDAO.findId(userName)) {
-    		be.add("user unknown");
+
     	    return false;
     	}
-    	be.add("user name already existing");
+
     	return true;
 	}
 
@@ -66,8 +69,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isPasswordCorrect(String username, String password) {
-        return this.userDAO.isPasswordCorrect(username, password);
+    public boolean isPasswordCorrect(String username, String password, BusinessException be) {
+        if (this.userDAO.isPasswordCorrect(username, password)){
+            return true;
+        }
+        else{
+
+            return false;
+        }
     }
 
 	@Override
@@ -77,6 +86,7 @@ public class UserServiceImpl implements UserService {
 		boolean userExists = isUserExisting(user.getUserName(), be);
 
 		if (userExists) {
+            be.add("user name already exists");
 			throw be;
 		}
 		else {
