@@ -179,12 +179,9 @@ public class UserDAOImpl implements UserDAO{
 
     @Override
     public boolean deleteUserById(String username) {
-        logger.info("deleteUserById : {}", username);
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("userName", username);
-        int tmp = jdbcTemplate.update(DELETE_USER_BY_USERNAME, mapSqlParameterSource);
-        logger.info("tmp = {}", tmp);
-        logger.info("User {} deleted", username);
+        logger.info("Deleting {}", username);
         return jdbcTemplate.update(DELETE_USER_BY_USERNAME, mapSqlParameterSource) == 1;
     }
 
@@ -223,7 +220,6 @@ public class UserDAOImpl implements UserDAO{
             user.setPostalCode(rs.getString("postalCode"));
             user.setCredit(rs.getFloat("credit"));
             user.setAdmin(rs.getBoolean("isAdmin"));
-            logger.info(user.toString());
             return user;
         }
 
@@ -244,7 +240,6 @@ public class UserDAOImpl implements UserDAO{
             user.setCity(rs.getString("city"));
             user.setPostalCode(rs.getString("postalCode"));
             user.setCredit(rs.getFloat("credit"));
-            logger.info(user.toString());
             return user;
         }
     }

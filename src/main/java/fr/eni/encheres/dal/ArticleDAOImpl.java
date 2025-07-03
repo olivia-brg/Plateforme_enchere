@@ -58,8 +58,8 @@ public class ArticleDAOImpl implements ArticleDAO{
 		namedParameters.addValue("auctionStartDate", article.getAuctionStartDate());
 		namedParameters.addValue("auctionEndDate", article.getAuctionEndDate());
 		namedParameters.addValue("startingPrice", article.getStartingPrice());
-
-
+		System.out.println("L'article ajouté : "+article.toString());
+		// les dates sont nulles pour le moment
 		return jdbcTemplate.update(INSERT_NEW_ARTICLE, namedParameters);
 	}
 
@@ -74,8 +74,9 @@ public class ArticleDAOImpl implements ArticleDAO{
 			a.setId(rs.getInt("ID"));
 			a.setName(rs.getString("NAME"));
 			a.setDescription(rs.getString("DESCRIPTION"));
-			a.setAuctionStartDate(rs.getDate("AUCTIONSTARTDATE").toLocalDate());
-			a.setAuctionEndDate(rs.getDate("AUCTIONENDDATE").toLocalDate());
+
+			a.setAuctionStartDate(rs.getTimestamp("AUCTIONSTARTDATE").toLocalDateTime());
+			a.setAuctionEndDate(rs.getTimestamp("AUCTIONENDDATE").toLocalDateTime());
 			a.setStartingPrice(rs.getFloat("STARTINGPRICE"));
 			a.setSoldPrice(rs.getFloat("SOLDPRICE"));
 			a.setOnSale(rs.getBoolean("ISONSALE"));

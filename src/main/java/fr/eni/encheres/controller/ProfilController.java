@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 
 @Controller
 @RequestMapping("/profile")
@@ -67,9 +68,14 @@ public class ProfilController {
     }
 
     @GetMapping("/delete")
-    public String deleteUser( @ModelAttribute("connectedUser") User connectedUser){
-        logger.info("deleteUser : " + connectedUser.toString());
-        if (this.userService.deleteUserById(connectedUser.getUserName())) return "redirect:/index";
+    public String deleteUser( @ModelAttribute("connectedUser") User connectedUser,
+                              SessionStatus status){
+        if (this.userService.deleteUserById(connectedUser.getUserName())){
+            logger.info("deleteUser : {} deleted", connectedUser.getUserName());
+            status.setComplete();
+            return "redirect:/encheres";
+        }
+        logger.info("deleteUser : {} not deleted", connectedUser.getUserName());
         return "redirect:/profile?username=" + connectedUser.getUserName();
     }
 
