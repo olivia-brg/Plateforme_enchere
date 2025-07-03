@@ -12,12 +12,17 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Repository
-public class UserDAOImpl implements UserDAO {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserDAOImpl.class);
-
+public class UserDAOImpl implements UserDAO{
+	
+	private static final Logger logger = LoggerFactory.getLogger(UserDAOImpl.class);
+	
+	private final String INSERT_NEW_USER = "INSERT INTO auctionUsers(userName, firstName, LastName, email, phoneNumber, street, city, postalCode, password, credit) "
+	        + "VALUES (:userName, :firstName, :LastName, :email, :phoneNumber, :street, :city, :postalCode, :password, 100)";
 	private final String FIND_USER_NAME = "SELECT COUNT(*) FROM auctionUsers WHERE userName = :userName";
 
     private final String FIND_USER = """
@@ -187,6 +192,25 @@ public class UserDAOImpl implements UserDAO {
             logger.info(user.toString());
             return user;
         }
+    }
+
+
+    @Override
+    public void insertNewUser(User user) {
+    	logger.warn("call to insert methode");
+    	
+        Map<String, Object> params = new HashMap<>();
+        params.put("userName", user.getUserName());
+        params.put("firstName", user.getFirstName());
+        params.put("LastName", user.getLastName());
+        params.put("email", user.getEmail());
+        params.put("phoneNumber", user.getPhoneNumber());
+        params.put("street", user.getStreet());
+        params.put("city", user.getCity());
+        params.put("postalCode", user.getPostalCode());
+        params.put("password", user.getPassword());  // Make sure password is hashed in real app
+
+        jdbcTemplate.update(INSERT_NEW_USER, params);
     }
 
     class UserFetchRowMapper implements RowMapper<User> {

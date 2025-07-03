@@ -1,9 +1,12 @@
 package fr.eni.encheres.controller;
 
 import fr.eni.encheres.bll.user.UserService;
+import fr.eni.encheres.bll.user.UserServiceImpl;
 import fr.eni.encheres.bo.User;
 import fr.eni.encheres.exception.BusinessException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @SessionAttributes({"connectedUser"})
 public class LoginController {
-
+	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
     private final UserService userService;
 
     public LoginController(UserService userService) {
@@ -22,8 +25,7 @@ public class LoginController {
 
     @GetMapping("/login")
     public String login(){
-        System.out.println("blablabla");
-    	return "login";
+        return "login";
     }
 
     @ModelAttribute("connectedUser")
@@ -96,5 +98,23 @@ public class LoginController {
         // Suppression des attributs de @SessionAttributs
         status.setComplete();
         return "redirect:/index";
+    }
+
+    @PostMapping("/register")
+    public String registred(@ModelAttribute User user, Model model, RedirectAttributes redirectAttributes) {
+    	System.out.println("méthode registred workin");
+
+
+    	try {
+			this.userService.createNewUser(user);
+			return "redirect:/index";
+		} catch (BusinessException e) {
+
+			redirectAttributes.addFlashAttribute("errorMessages", e.getMessages());
+			logger.warn("exception username already used");
+			return "redirect:/signIn";
+		}
+
+
     }
 }

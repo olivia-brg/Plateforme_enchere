@@ -2,7 +2,7 @@ package fr.eni.encheres.controller;
 
 
 import fr.eni.encheres.bll.article.ArticleService;
-import fr.eni.encheres.bll.article.ArticleServiceImpl;
+
 import fr.eni.encheres.bo.Adress;
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Category;
@@ -13,7 +13,7 @@ import java.util.List;
 
 import fr.eni.encheres.dal.AdresseDAO;
 import fr.eni.encheres.dal.ArticleDAO;
-import fr.eni.encheres.dal.ArticleDAOImpl;
+
 import fr.eni.encheres.dal.CategoryDAO;
 import org.springframework.stereotype.Controller;
 
@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import java.util.List;
 
 
 @Controller
@@ -40,7 +39,7 @@ public class EnchereController {
     private ArticleService articleService;
     private AdresseDAO adresseDAO;
     private CategoryDAO categoryDAO;
-    
+
     EnchereController(ArticleService articleService, ArticleDAO articleDAO, AdresseDAO adresseDAO, CategoryDAO categoryDAO) {
 		this.articleService = articleService ;
         this.articleDAO = articleDAO;
@@ -48,11 +47,11 @@ public class EnchereController {
         this.categoryDAO = categoryDAO;
     }
 
-    @RequestMapping(path = {"/", "/index"}, method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(path = {"/", "/encheres"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String accueil(@ModelAttribute("connectedUser") User connectedUser, Model model) throws BusinessException {
     	List<Article> articles = articleService.consultArticles();
 		model.addAttribute("article", articles);
-        return "index";
+        return "encheres";
     }
 
     @GetMapping("/newProduct")
@@ -71,14 +70,18 @@ public class EnchereController {
         adress.setStreet(connectedUser.getStreet());
         adress.setCity(connectedUser.getCity());
         adress.setPostalCode(connectedUser.getPostalCode());
+
         //On implémente cette adresse à l'article.
         article.setWithdrawalAdress(adress);
         //On appelle la méthode du service qui créera l'article
         articleService.createArticle(article, connectedUser.getId());
+
+        articleDAO.create(article, connectedUser.getId(), adress.getDeliveryAdressId() );
+
         return "detail-vente";
     }
-    
-   
+
+
 
     @GetMapping("/detailArticle")
     public String afficherUnArticle(@RequestParam(name = "id") int id, Model model) {
