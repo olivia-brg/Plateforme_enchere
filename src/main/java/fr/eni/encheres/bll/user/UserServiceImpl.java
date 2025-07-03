@@ -2,8 +2,10 @@ package fr.eni.encheres.bll.user;
 
 import fr.eni.encheres.bo.User;
 import fr.eni.encheres.dal.UserDAO;
+
 import fr.eni.encheres.dal.UserDAOImpl;
 import fr.eni.encheres.exception.BusinessException;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +49,12 @@ public class UserServiceImpl implements UserService {
 	}
 
     @Override
+    public User readById(int id) {
+        return userDAO.findUserById(id);
+    }
+
+
+    @Override
     public void update(User user) {
         this.userDAO.update(user);
     }
@@ -66,8 +74,13 @@ public class UserServiceImpl implements UserService {
 			throw be;
 		}
 		else {
-		
+
 		userDAO.insertNewUser(user);}
-		
+
 	}
+
+    @Override
+    public User findByUsername(String username) {
+        return this.userDAO.findByUsername(username);
+    }
 }

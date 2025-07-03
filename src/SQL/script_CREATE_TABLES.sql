@@ -42,6 +42,7 @@ CREATE TABLE articles (
                           auctionEndDate DATETIME2,
                           startingPrice NUMERIC(8,2),
                           soldPrice NUMERIC(8,2),
+                          ImageData VARBINARY(MAX),
     --state VARCHAR DEFAULT 'saved' CONSTRAINT chk_state CHECK (state IN ('saved','in_auction','sold')),
                           isOnSale bit,
                           CONSTRAINT pk_article PRIMARY KEY(id),

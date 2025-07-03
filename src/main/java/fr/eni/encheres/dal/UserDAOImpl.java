@@ -2,13 +2,9 @@ package fr.eni.encheres.dal;
 
 import fr.eni.encheres.bo.Bid;
 import fr.eni.encheres.bo.User;
-
-
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -28,6 +24,7 @@ public class UserDAOImpl implements UserDAO{
 	private final String INSERT_NEW_USER = "INSERT INTO auctionUsers(userName, firstName, LastName, email, phoneNumber, street, city, postalCode, password, credit) "
 	        + "VALUES (:userName, :firstName, :LastName, :email, :phoneNumber, :street, :city, :postalCode, :password, 100)";
 	private final String FIND_USER_NAME = "SELECT COUNT(*) FROM auctionUsers WHERE userName = :userName";
+
     private final String FIND_USER = """
                 SELECT id,
                        userName,
@@ -45,6 +42,21 @@ public class UserDAOImpl implements UserDAO{
                       password = :password
             """;
 
+    private final String FIND_USER_BY_USERNAME = """
+                SELECT id,
+                       userName,
+                       firstName,
+                       lastName,
+                       email,
+                       phoneNumber,
+                       street,
+                       city,
+                       postalCode,
+                       credit
+                from auctionUsers
+                WHERE userName = :userName
+            """;
+
     private final String UPDATE_USER = """
                 UPDATE auctionUsers SET firstName = :firstName,
                                         lastName = :lastName,
@@ -52,8 +64,7 @@ public class UserDAOImpl implements UserDAO{
                                         phoneNumber = :phoneNumber,
                                         street = :street,
                                         city = :city,
-                                        postalCode = :postalCode,
-                                        password = :password
+                                        postalCode = :postalCode
                 WHERE userName = :userName
             """;
 
@@ -62,6 +73,22 @@ public class UserDAOImpl implements UserDAO{
                 FROM auctionUsers
                 WHERE username = :userName AND
                       password = :password
+            """;
+
+    private final String FIND_USER_BY_ID = """
+            SELECT id,
+            userName,
+            firstName,
+            lastName,
+            email,
+            phoneNumber,
+            street,
+            city,
+            postalCode,
+            credit,
+            isAdmin
+            from auctionUsers
+            WHERE id = ?
             """;
 
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -75,7 +102,7 @@ public class UserDAOImpl implements UserDAO{
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("userName", username);
         mapSqlParameterSource.addValue("password", password);
-        User user = jdbcTemplate.queryForObject(FIND_USER, mapSqlParameterSource, new UserRowMapper());
+        User user = jdbcTemplate.queryForObject(FIND_USER, mapSqlParameterSource, new UserLoginRowMapper());
         assert user != null;
         logger.info(user.toString());
         return user;
@@ -132,8 +159,22 @@ public class UserDAOImpl implements UserDAO{
         }
     }
 
+    @Override
+    public User findUserById(int id) {
+        return jdbcTemplate.getJdbcTemplate().queryForObject(FIND_USER_BY_ID,new BeanPropertyRowMapper<>(User.class), id);
+    }
 
-    class UserRowMapper implements RowMapper<User> {
+    @Override
+    public User findByUsername(String username) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("userName", username);
+        User user = jdbcTemplate.queryForObject(FIND_USER_BY_USERNAME, mapSqlParameterSource, new UserFetchRowMapper());
+        assert user != null;
+        logger.info(user.toString());
+        return user;
+    }
+
+    class UserLoginRowMapper implements RowMapper<User> {
         @Override
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
             User user = new User();
@@ -170,5 +211,24 @@ public class UserDAOImpl implements UserDAO{
         params.put("password", user.getPassword());  // Make sure password is hashed in real app
 
         jdbcTemplate.update(INSERT_NEW_USER, params);
+    }
+
+    class UserFetchRowMapper implements RowMapper<User> {
+        @Override
+        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+            User user = new User();
+            user.setId(rs.getInt("id"));
+            user.setUserName(rs.getString("userName"));
+            user.setFirstName(rs.getString("firstName"));
+            user.setLastName(rs.getString("lastName"));
+            user.setEmail(rs.getString("email"));
+            user.setPhoneNumber(rs.getString("phoneNumber"));
+            user.setStreet(rs.getString("street"));
+            user.setCity(rs.getString("city"));
+            user.setPostalCode(rs.getString("postalCode"));
+            user.setCredit(rs.getFloat("credit"));
+            logger.info(user.toString());
+            return user;
+        }
     }
 }

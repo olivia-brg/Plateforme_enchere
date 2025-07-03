@@ -25,7 +25,6 @@ public class LoginController {
 
     @GetMapping("/login")
     public String login(){
-    	System.out.println("grevegrevegrevgevgrevegrevegreve9");
         return "login";
     }
 
@@ -100,17 +99,14 @@ public class LoginController {
         status.setComplete();
         return "redirect:/index";
     }
-    
+
     @PostMapping("/register")
     public String registred(@ModelAttribute User user, Model model, RedirectAttributes redirectAttributes) {
     	System.out.println("méthode registred workin");
 
-    	
+
     	try {
-
-
 			this.userService.createNewUser(user);
-			logger.warn("work well");
 			return "redirect:/index";
 		} catch (BusinessException e) {
 
@@ -118,7 +114,7 @@ public class LoginController {
 			logger.warn("exception username already used");
 			return "redirect:/signIn";
 		}
-    	
-    	
+
+
     }
 }
