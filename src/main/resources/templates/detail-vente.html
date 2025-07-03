@@ -11,7 +11,7 @@
 <body>
     <h1>ENI-Enchères</h1>
     <h2>Détail vente</h2>
-    <div class="detail-objet" th:object=${article}>
+    <div class="detail-objet" th:object="${article}">
         <h3>nom de l'objet</h3>
         <img src="pic.jpg" alt="">
         <div class="form-group">
@@ -40,11 +40,11 @@
         </div>
         <div class="form-group">
             <label for="seller">Vendeur: </label>
-            <input type="text" id="seller" name="seller" readonly th:value="${article.user.firstName}+ ' ' +${article.user.lasttName">
+            <input type="text" id="seller" name="seller" readonly th:value="${article.user.firstName}+ ' ' +${article.user.lasttName}">
         </div>
         <div class="form-group">
             <label for="user-bid">Ma propositon </label>
-            <select name="user-bid" id="user-bid"></select>
+            <input type="number" name="user-bid" id="user-bid"  th:value="${article.soldPrice}" th:value="${article.soldPrice > article.startingPrice} ? ${article.soldPrice} : ${article.startingPrice}">
             <button type="submit">Enchérir</button>
         </div>
         <div class="form-group">

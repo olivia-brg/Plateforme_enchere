@@ -70,7 +70,6 @@ public class LoginController {
 	        return "redirect:/";
 
 		} catch (BusinessException e) {
-			// TODO Auto-generated catch block
 			redirectAttributes.addFlashAttribute("errorMessages", e.getMessages());
 	        return "redirect:/login";
 
@@ -86,7 +85,7 @@ public class LoginController {
 	@GetMapping(path="/home")
 	public String returnToIndex(Model model){
 		model.addAttribute("user", new User());
-		return "redirect:/index";
+		return "redirect:/";
 	}
 
 
