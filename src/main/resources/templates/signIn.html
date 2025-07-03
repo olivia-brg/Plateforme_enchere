@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="fr">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ENI-Auctions - Create Account</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+<head th:replace="~{fragments/headfrag :: head('ENI Auctionszeer')}"></head>
 
 <body>
     <h1>ENI-Auctions</h1>
     <h2>Create an Account</h2>
+    <div class="exception" th:if="${errorMessages}">
 
+        <span th:each="msg : ${errorMessages}" th:text="${msg}"></span>
+
+    </div>
     <form data-th-replace="~{fragments/newUserFormFrag :: newUserFormFrag}"></form>
 
 </body>

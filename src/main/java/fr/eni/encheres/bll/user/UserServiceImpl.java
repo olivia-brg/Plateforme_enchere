@@ -44,6 +44,7 @@ public class UserServiceImpl implements UserService {
     		be.add("user unknown");
     	    return false;
     	}
+    	be.add("user name already existing");
     	return true;
 	}
 
@@ -62,6 +63,21 @@ public class UserServiceImpl implements UserService {
     public boolean isPasswordCorrect(String username, String password) {
         return this.userDAO.isPasswordCorrect(username, password);
     }
+
+	@Override
+	@Transactional(rollbackFor = BusinessException.class)
+	public void createNewUser(User user)throws BusinessException {
+		BusinessException be = new BusinessException();
+		boolean userExists = isUserExisting(user.getUserName(), be);
+
+		if (userExists) {
+			throw be;
+		}
+		else {
+
+		userDAO.insertNewUser(user);}
+
+	}
 
     @Override
     public User findByUsername(String username) {
