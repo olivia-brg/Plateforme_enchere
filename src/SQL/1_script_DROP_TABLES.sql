@@ -5,4 +5,3 @@ DROP TABLE IF EXISTS deliveryAddress;
 DROP TABLE IF EXISTS categories;
 
 
-

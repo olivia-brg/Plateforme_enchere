@@ -66,9 +66,6 @@ public class AdresseDAOImpl implements AdresseDAO {
 		namedParameters.addValue("postalCode", adress.getPostalCode());
 		namedParameters.addValue("city", adress.getCity());
 		int result = jdbcTemplate.update(CREATE_ADDRESS,namedParameters);
-		if (keyHolder!=null && keyHolder.getKey() != null){
-			adress.setDeliveryAdressId(keyHolder.getKey().intValue());
-		}
 		return result;
 	}
 
