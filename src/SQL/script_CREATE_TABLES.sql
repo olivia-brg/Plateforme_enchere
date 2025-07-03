@@ -45,7 +45,7 @@ CREATE TABLE articles (
     --state VARCHAR DEFAULT 'saved' CONSTRAINT chk_state CHECK (state IN ('saved','in_auction','sold')),
                           isOnSale bit,
                           CONSTRAINT pk_article PRIMARY KEY(id),
-                          CONSTRAINT fk_article_user FOREIGN KEY(userId) REFERENCES auctionUsers(id) ON DELETE CASCADE,
+                          CONSTRAINT fk_article_user FOREIGN KEY(userId) REFERENCES auctionUsers(id),
                           CONSTRAINT fk_article_category FOREIGN KEY(categoryId) REFERENCES categories(id),
                           CONSTRAINT fk_article_delivery FOREIGN KEY(deliveryAddressId) REFERENCES deliveryAddress(id) ON DELETE CASCADE,
 
@@ -59,7 +59,7 @@ CREATE TABLE bids (
                       userId int,
                       articleId int,
                       CONSTRAINT pk_bid PRIMARY KEY (bidId),
-                      CONSTRAINT fk_bid_user FOREIGN KEY(userId) REFERENCES auctionUsers(id) ON DELETE CASCADE,
+                      CONSTRAINT fk_bid_user FOREIGN KEY(userId) REFERENCES auctionUsers(id),
                       CONSTRAINT fk_bid_article FOREIGN KEY(articleId) REFERENCES articles(id),
 );
 
