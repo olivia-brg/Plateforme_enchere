@@ -13,4 +13,7 @@ public interface AdresseDAO {
 
 	int create(Adress adress);
 	Adress findAddressById(long id);
+	int findIdByAdress(Adress adress);
+	Boolean findIfExists(Adress adress);
+
 }

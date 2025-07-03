@@ -3,7 +3,7 @@
 
 
 
-<form action="/profile/newProduct" method="post" th:fragment="newArticleFormFrag" th:object="${article}">
+<form action="/newProduct" method="post" th:fragment="newArticleFormFrag" th:object="${article}">
     <div class="form-group">
         <label for="article">Article:</label>
         <input type="text" id="article" th:field="*{name}">
@@ -29,7 +29,7 @@
 
     <div class="form-group">
         <label for="price">Prix initial:</label>
-        <select th:field="*{startingPrice}" id="price"></select>
+        <input type="number" th:field="*{startingPrice}" id="price"></input>
     </div>
     <div class="form-group">
         <label for="bid-start">Début de l'enchère:</label>
@@ -39,10 +39,12 @@
         <label for="bid-end">Fin de l'enchère:</label>
         <input type="datetime-local" th:field="*{auctionEndDate}" id="bid-end">
     </div>
+    <!-- par défaut l'adresse est créée a partir du user connecté
     <div class="form-group">
         <label for="delivery-address">Retrait:</label>
         <input type="text" id="delivery-address" th:field="*{withdrawalAdress}" readonly>
     </div>
+    -->
     <div class="form-group">
         <button type="submit">Enregistrer</button>
         <button type="submit">Annuler</button>
