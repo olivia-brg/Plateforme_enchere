@@ -2,7 +2,6 @@ package fr.eni.encheres.controller;
 
 
 import fr.eni.encheres.bll.article.ArticleService;
-import fr.eni.encheres.bll.article.ArticleServiceImpl;
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.User;
 
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.*;
 
 
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,9 +25,9 @@ public class EnchereController {
 
     private ArticleService articleService;
 
-    @RequestMapping(path = {"/", "/index"}, method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(path = {"/", "/encheres"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String accueil(@ModelAttribute("connectedUser") User connectedUser) {
-        return "index";
+        return "encheres";
     }
 
     @GetMapping("/newProduct")
