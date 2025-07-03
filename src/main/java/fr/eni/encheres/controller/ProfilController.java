@@ -35,7 +35,7 @@ public class ProfilController {
             return "profile";
         } else logger.info("Unknown user");
 
-        return "redirect:/index";
+        return "redirect:/encheres";
     }
 
     @GetMapping("/update")
@@ -68,8 +68,11 @@ public class ProfilController {
 
     @GetMapping("/delete")
     public String deleteUser( @ModelAttribute("connectedUser") User connectedUser){
-        logger.info("deleteUser : " + connectedUser.toString());
-        if (this.userService.deleteUserById(connectedUser.getUserName())) return "redirect:/index";
+        if (this.userService.deleteUserById(connectedUser.getUserName())){
+            logger.info("deleteUser : {} deleted", connectedUser.getUserName());
+            return "redirect:/encheres";
+        }
+        logger.info("deleteUser : {} not deleted", connectedUser.getUserName());
         return "redirect:/profile?username=" + connectedUser.getUserName();
     }
 
