@@ -95,7 +95,7 @@ public class EnchereController {
         articleService.createArticle(article, connectedUser.getId());
 
 
-        return "redirect:/detailArticle";
+        return "redirect:/detailArticle(id=${article.id})";
         //"@{/detailArticle(id=${a.id})}" a essayer d'ajouter
     }
 

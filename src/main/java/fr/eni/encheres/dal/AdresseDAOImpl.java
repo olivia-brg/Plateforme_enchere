@@ -38,6 +38,7 @@ public class AdresseDAOImpl implements AdresseDAO {
 		return jdbcTemplate.queryForObject(FIND_BY_ID, mapSqlParameterSource, new BeanPropertyRowMapper<>(Adress.class));
 	}
 
+	//idem ici on a une erreur dès qu'on ne trouve aucun résultat. A modifier
 	@Override
 	public int findIdByAdress(Adress adress) {
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
