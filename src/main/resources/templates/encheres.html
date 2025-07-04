@@ -9,10 +9,9 @@
 </head>
 
 <body>
-
 <main>
     <h1>ENI-Auctions</h1>
-  
+
 <div class="filtres">
     <h2>Filtres :</h2>
     <form method="get" th:action="@{/encheres}">
@@ -28,12 +27,11 @@
         </select>
         <input type="text" placeholder="Search.." name = "search">
         <button type="submit">rechercher</button>
-<<<<<<< HEAD
 
     </div>
     <div class="articles">
-        <div class="single-article" th:each="a : ${article}">
-            <img th:src="${a.getImageURL()}" th:alt="${a.getDescription()}">
+        <div class="single-article" th:each="a : ${article}" th:if="${category == null or a.category.id == category}">
+            <img th:src="${a.getImageURL()}" th:alt="${a.getDescription()}" >
             <div class="article-infos">
                 <h5 th:text="${a.name}">Exemple</h5>
                 <p>Prix: </p>
@@ -42,24 +40,9 @@
                 <!--<p th:text="'Retrait : ' + ${a.withdrawalAddress.street} + ' ' + ${a.withdrawalAddress.city} + ' ' + ${a.withdrawalAddress.postalCode}">Retrait: </p>-->
                 <p th:text="'Vendeur : ' + ${a.user.firstName} + ' ' + ${a.user.lastName}">Vendeur: </p>
                 <a th:href="@{/detailArticle(id=${a.id})}">Détail de la vente</a>
-=======
-    </form>
-</div>
-  
-<div class="articles">
-    <div class="single-article" th:each="a : ${article}" th:if="${category == null or a.category.id == category}">
-        <img src="img/pic.jpg" alt="">
-        <div class="article-infos">
-            <h5 th:text="${a.name}">Exemple</h5>
-            <p>Prix: </p>
-            <p>Classement: </p>
-          	<p th:text="${'Fin de lenchère : ' + a.auctionEndDate}">Fin de l'enchère: </p>
-            <!--<p th:text="'Retrait : ' + ${a.withdrawalAddress.street} + ' ' + ${a.withdrawalAddress.city} + ' ' + ${a.withdrawalAddress.postalCode}">Retrait: </p>-->
-            <p th:text="'Vendeur : ' + ${a.user.firstName} + ' ' + ${a.user.lastName}">Vendeur: </p>
-            <a th:href="@{/detailArticle(id=${a.id})}">Détail de la vente</a>
->>>>>>> develop
             </div>
         </div>
+
     </div>
 </main>
 </body>
