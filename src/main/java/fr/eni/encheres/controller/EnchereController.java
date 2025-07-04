@@ -74,11 +74,11 @@ public class EnchereController {
     public String newArticle(@ModelAttribute("connectedUser") User connectedUser, Model model){
         List<Category> listeCategories = articleService.consultCategories();
         Article article = new Article();
-        Adress tempAdress = new Adress();
-        tempAdress.setCity(userService.readById(connectedUser.getId()).getCity());
-        tempAdress.setStreet(userService.readById(connectedUser.getId()).getStreet());
-        tempAdress.setPostalCode(userService.readById(connectedUser.getId()).getPostalCode());
-        article.setWithdrawalAdress(tempAdress);
+        Address tempAdress = new Address();
+        tempAdress.setCity(userService.findById(connectedUser.getId()).getCity());
+        tempAdress.setStreet(userService.findById(connectedUser.getId()).getStreet());
+        tempAdress.setPostalCode(userService.findById(connectedUser.getId()).getPostalCode());
+        article.setWithdrawalAddress(tempAdress);
         model.addAttribute("article", article);
         model.addAttribute("listeCategories", listeCategories);
         return "new-product";
