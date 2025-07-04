@@ -2,7 +2,7 @@ package fr.eni.encheres.bo;
 
 import jakarta.validation.constraints.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Article {
 	// Attribut
@@ -18,11 +18,11 @@ public class Article {
 
 	@NotNull(message = "La date de début de l'enchère est obligatoire.")
 	@FutureOrPresent(message = "La date de début de l'enchère doit être dans le présent ou le futur.")
-	private LocalDate auctionStartDate;
+	private LocalDateTime auctionStartDate;
 
 	@NotNull(message = "La date de fin de l'enchère est obligatoire.")
 	@FutureOrPresent(message = "La date de fin de l'enchère doit être dans le présent ou le futur.")
-	private LocalDate auctionEndDate;
+	private LocalDateTime auctionEndDate;
 
 	@Positive(message = "Le prix de départ doit être un nombre positif.")
 	private float startingPrice;
@@ -30,8 +30,8 @@ public class Article {
 	private float soldPrice; // Peut être 0 si pas encore vendu, donc pas de validation ici.
 
 	private boolean isOnSale;
-
-	// Associations
+	private String imageURL;
+	//association
 	@NotNull(message = "La catégorie est obligatoire.")
 	private Category category;
 
@@ -42,7 +42,7 @@ public class Article {
 	private User user;
 	
 //	Full constructor
-	public Article(int id, String name, String description, LocalDate auctionStartDate, LocalDate auctionEndDate,
+	public Article(int id, String name, String description, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate,
 			float minBid, float actualPrice, boolean isOnSale, Category category, Adress withdrawalAdress, User user) {
 		this.id = id;
 		this.name = name;
@@ -82,18 +82,16 @@ public class Article {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
-	public LocalDate getAuctionStartDate() {
+	public LocalDateTime getAuctionStartDate() {
 		return auctionStartDate;
 	}
-	public void setAuctionStartDate(LocalDate auctionStartDate) {
+	public void setAuctionStartDate(LocalDateTime auctionStartDate) {
 		this.auctionStartDate = auctionStartDate;
 	}
-
-	public LocalDate getAuctionEndDate() {
+	public LocalDateTime getAuctionEndDate() {
 		return auctionEndDate;
 	}
-	public void setAuctionEndDate(LocalDate auctionEndDate) {
+	public void setAuctionEndDate(LocalDateTime auctionEndDate) {
 		this.auctionEndDate = auctionEndDate;
 	}
 
@@ -118,6 +116,7 @@ public class Article {
 		this.isOnSale = isOnSale;
 	}
 
+	//Associations
 	public Category getCategory() {
 		return category;
 	}
@@ -128,7 +127,7 @@ public class Article {
 	public Adress getWithdrawalAdress() {
 		return withdrawalAdress;
 	}
-	public void setWithdrawalAdress(Adress withdrawalAdress) {
+	public void setWithdrawalAddress(Adress withdrawalAdress) {
 		this.withdrawalAdress = withdrawalAdress;
 	}
 
@@ -137,5 +136,30 @@ public class Article {
 	}
 	public void setUser(User user) {
 		this.user = user;
+	}
+	public String getImageURL() {
+		return imageURL;
+	}
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
+	}
+	//	List setter and getter
+
+
+	@Override
+	public String toString() {
+		return "Article{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", description='" + description + '\'' +
+				", auctionStartDate=" + auctionStartDate +
+				", auctionEndDate=" + auctionEndDate +
+				", soldPrice=" + soldPrice +
+				", startingPrice=" + startingPrice +
+				", isOnSale=" + isOnSale +
+				", category=" + category +
+				", withdrawalAdress=" + withdrawalAdress +
+				", user=" + user +
+				'}';
 	}
 }

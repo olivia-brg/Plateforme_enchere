@@ -37,7 +37,10 @@ public class ArticleServiceImpl implements ArticleService{
 	}
 	
 	public Article consultArticleById(int id) {
-		return this.articleDAO.read(id);
+		Article article = this.articleDAO.findArticleById(id);
+		User user = userDAO.findUserById(article.getUser().getId());
+		article.setUser(user);
+		return article;
 	}
 
 	@Override
@@ -83,15 +86,16 @@ public class ArticleServiceImpl implements ArticleService{
 	@Override
 	public void createArticle(Article article, int userId) {
 		//On extrait l'adresse pour la partie vérification
-		Adress adress = article.getWithdrawalAdress();
+		Adress adress = article.getWithdrawalAddress();
 		//Ola méthode suivante vérifie l'existence dans la BDD sur la base des trois attributs
 		Boolean adressExists=adressDAO.findIfExists(adress);
 		//Si l'adresse existe on lui attribue l'id existante
 		if(adressExists){adress.setDeliveryAddressId(adressDAO.findIdByAdress(adress));
-			System.out.println("id de l\'adresse existante"+adress.getDeliveryAddressId());}
-		//sinon on crée l'adresse
+			System.out.println("id de l\'adresse existante : "+adress.getDeliveryAddressId());}
+		//sinon on crée l'adresse (Fonctionne sur une première création d'article)
 		else{adressDAO.create(adress);
-			System.out.println("id de l\'adresse"+adress.getDeliveryAddressId());}
+			adress.setDeliveryAddressId(adressDAO.findIdByAdress(adress));
+			System.out.println("id de l\'adresse : "+ adress.getDeliveryAddressId());}
 		//enfin on crée l'article
 		articleDAO.create(article, userId, adress.getDeliveryAddressId());
 	}

@@ -14,8 +14,8 @@ public class AdresseDAOImpl implements AdresseDAO {
 
 	private final String FIND_BY_ID = "SELECT ID, STREET, POSTALCODE, CITY FROM DELIVERYADDRESS WHERE ID = :id";
 	private final String CREATE_ADDRESS = """
-	INSERT INTO DELIVERYADDRESS(street, postalCode, city)
-	VALUES(:street, :postalCode, :city)
+			INSERT INTO DELIVERYADDRESS(street, postalCode, city)
+			VALUES(:street, :postalCode, :city)
 	""";
 	private final String FIND_IF_EXISTS = """
 			SELECT COUNT(*) FROM DELIVERYADDRESS WHERE STREET = :street AND  POSTALCODE = :postalCode
@@ -37,6 +37,7 @@ public class AdresseDAOImpl implements AdresseDAO {
 		return jdbcTemplate.queryForObject(FIND_BY_ID, mapSqlParameterSource, new BeanPropertyRowMapper<>(Adress.class));
 	}
 
+	//idem ici on a une erreur dès qu'on ne trouve aucun résultat. A modifier
 	@Override
 	public int findIdByAdress(Adress adress) {
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
@@ -72,8 +73,6 @@ public class AdresseDAOImpl implements AdresseDAO {
 		}
 		return result;
 	}
-
-
 }
 
 
