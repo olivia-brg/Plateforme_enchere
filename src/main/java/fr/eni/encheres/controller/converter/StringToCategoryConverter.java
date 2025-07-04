@@ -5,6 +5,7 @@ import fr.eni.encheres.bll.article.ArticleServiceImpl;
 import fr.eni.encheres.bo.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -20,8 +21,8 @@ public class StringToCategoryConverter implements Converter<String, Category> {
     }
 
     @Override
-    public Category convert(String id) {
-        Integer TheId = Integer.parseInt(id);
-        return articleService.consultCategoryById(TheId);
+    public Category convert(@NonNull String id) {
+        int fetchId = Integer.parseInt(id);
+        return articleService.consultCategoryById(fetchId);
     }
 }

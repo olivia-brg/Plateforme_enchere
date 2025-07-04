@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/profile")
@@ -47,28 +48,20 @@ public class ProfilController {
     }
 
     @PostMapping("/update")
-    public String updateProfil(@Valid @ModelAttribute("updatedUser") User updatedUser,
+    public String updateProfil(@Valid @ModelAttribute("user") User updatedUser,
                                BindingResult bindingResult,
                                @ModelAttribute("connectedUser") User connectedUser,
                                Model model) throws BusinessException {
-
-        model.addAttribute("user", connectedUser);
         if (bindingResult.hasErrors()) {
-            logger.error("updateProfil : {}", bindingResult.getAllErrors());
             return "edit-profile";
-        } else {
-            try {
-                logger.info("updateProfil : {} updated", updatedUser.getUserName());
-                this.userService.update(updatedUser);
-                return "redirect:/profile?id=" + connectedUser.getId();
+        }
 
-            } catch (BusinessException e) {
-                e.getMessages().forEach(m -> {
-                    ObjectError error = new ObjectError("globalError", m);
-                    bindingResult.addError(error);
-                });
-                return "edit-profile";
-            }
+        try {
+            this.userService.update(updatedUser, connectedUser.getId());
+            return "redirect:/profile?id=" + connectedUser.getId();
+        } catch (BusinessException e) {
+            model.addAttribute("errorMessages", e.getMessages());
+            return "edit-profile";
         }
     }
 

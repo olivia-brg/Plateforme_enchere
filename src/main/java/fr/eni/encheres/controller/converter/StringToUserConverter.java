@@ -4,6 +4,7 @@ import fr.eni.encheres.bll.user.UserService;
 import fr.eni.encheres.bo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,8 +19,8 @@ public class StringToUserConverter implements Converter<String, User> {
     }
 
     @Override
-    public User convert(String id) {
-        Integer TheId = Integer.parseInt(id);
+    public User convert(@NonNull String id) {
+        int TheId = Integer.parseInt(id);
         return userService.findById(TheId) ;
     }
 }
