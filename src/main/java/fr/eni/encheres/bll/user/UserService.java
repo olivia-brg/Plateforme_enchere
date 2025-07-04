@@ -12,6 +12,6 @@ public interface UserService {
     User findByUsername(String username);
     boolean isUserExisting(String userName, BusinessException be);
     void createNewUser (User user)throws BusinessException;
-    boolean deleteUserById(String username);
+    boolean deleteUserById(int id);
 
 }

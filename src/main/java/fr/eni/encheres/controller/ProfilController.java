@@ -89,7 +89,7 @@ public class ProfilController {
         @GetMapping("/delete")
         public String deleteUser (@ModelAttribute("connectedUser") User connectedUser,
                 SessionStatus status){
-            if (this.userService.deleteUserById(connectedUser.getUserName())) {
+            if (this.userService.deleteUserById(connectedUser.getId())) {
                 logger.info("deleteUser : {} deleted", connectedUser.getUserName());
                 status.setComplete();
                 return "redirect:/encheres";

@@ -20,7 +20,7 @@ public class UserDAOImpl implements UserDAO{
 
 	private static final Logger logger = LoggerFactory.getLogger(UserDAOImpl.class);
 
-    private final String DELETE_USER_BY_USERNAME = "DELETE FROM auctionUsers WHERE userName = :userName";
+    private final String DELETE_USER_BY_USERNAME = "DELETE FROM auctionUsers WHERE id = :id";
     private final String FIND_USERNAME_BY_ID = "SELECT COUNT(*) FROM auctionUsers WHERE userName = :userName";
     private final String FIND_IF_USERNAME_EXIST = "SELECT COUNT(*) FROM auctionUsers WHERE userName = :userName AND id != :id";
 
@@ -208,10 +208,10 @@ public class UserDAOImpl implements UserDAO{
     }
 
     @Override
-    public boolean deleteUserById(String username) {
+    public boolean deleteUserById(int id) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("userName", username);
-        logger.info("Deleting {}", username);
+        mapSqlParameterSource.addValue("id", id);
+        logger.info("Deleting {}", id);
         return jdbcTemplate.update(DELETE_USER_BY_USERNAME, mapSqlParameterSource) == 1;
     }
 

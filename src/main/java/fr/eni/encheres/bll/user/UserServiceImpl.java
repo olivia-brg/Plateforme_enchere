@@ -49,9 +49,9 @@ public class UserServiceImpl implements UserService {
 	}
 
     @Override
-    public boolean deleteUserById(String username) {
-        logger.info("deleteUserById : " + username);
-        return this.userDAO.deleteUserById(username);
+    public boolean deleteUserById(int id) {
+        logger.info("deleteUserById : " + id);
+        return this.userDAO.deleteUserById(id);
     }
 
     @Override
