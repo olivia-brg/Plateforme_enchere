@@ -36,14 +36,14 @@ public class Article {
 	private Category category;
 
 	@NotNull(message = "L'adresse de retrait est obligatoire.")
-	private Adress withdrawalAdress;
+	private Address withdrawalAddress;
 
 	@NotNull(message = "L'utilisateur est obligatoire.")
 	private User user;
 	
 //	Full constructor
 	public Article(int id, String name, String description, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate,
-			float minBid, float actualPrice, boolean isOnSale, Category category, Adress withdrawalAdress, User user) {
+				   float minBid, float actualPrice, boolean isOnSale, Category category, Address withdrawalAddress, User user) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -53,7 +53,7 @@ public class Article {
 		this.startingPrice = actualPrice;
 		this.isOnSale = isOnSale;
 		this.category = category;
-		this.withdrawalAdress = withdrawalAdress;
+		this.withdrawalAddress = withdrawalAddress;
 		this.user = user;
 	}
 
@@ -82,12 +82,14 @@ public class Article {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
 	public LocalDateTime getAuctionStartDate() {
 		return auctionStartDate;
 	}
 	public void setAuctionStartDate(LocalDateTime auctionStartDate) {
 		this.auctionStartDate = auctionStartDate;
 	}
+
 	public LocalDateTime getAuctionEndDate() {
 		return auctionEndDate;
 	}
@@ -124,11 +126,11 @@ public class Article {
 		this.category = category;
 	}
 
-	public Adress getWithdrawalAdress() {
-		return withdrawalAdress;
+	public Address getWithdrawalAddress() {
+		return withdrawalAddress;
 	}
-	public void setWithdrawalAddress(Adress withdrawalAdress) {
-		this.withdrawalAdress = withdrawalAdress;
+	public void setWithdrawalAddress(Address withdrawalAddress) {
+		this.withdrawalAddress = withdrawalAddress;
 	}
 
 	public User getUser() {
@@ -137,14 +139,13 @@ public class Article {
 	public void setUser(User user) {
 		this.user = user;
 	}
+
 	public String getImageURL() {
 		return imageURL;
 	}
 	public void setImageURL(String imageURL) {
 		this.imageURL = imageURL;
 	}
-	//	List setter and getter
-
 
 	@Override
 	public String toString() {
@@ -158,7 +159,7 @@ public class Article {
 				", startingPrice=" + startingPrice +
 				", isOnSale=" + isOnSale +
 				", category=" + category +
-				", withdrawalAdress=" + withdrawalAdress +
+				", withdrawalAddress=" + withdrawalAddress +
 				", user=" + user +
 				'}';
 	}

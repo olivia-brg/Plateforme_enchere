@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public class Adress {
+public class Address {
 
 	private int deliveryAddressId;
 
@@ -22,15 +22,15 @@ public class Adress {
 	private String city;
 	
 //	Full constructor
-	public Adress( int deliveryAdressId, String street, String postalCode, String city) {
+	public Address(int deliveryAddressId, String street, String postalCode, String city) {
 		
-		this.deliveryAddressId = deliveryAdressId;
+		this.deliveryAddressId = deliveryAddressId;
 		this.street = street;
 		this.postalCode = postalCode;
 		this.city = city;
 	}
 
-	public Adress() {
+	public Address() {
 	}
 
 
