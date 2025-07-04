@@ -38,7 +38,7 @@ public class UserDAOImpl implements UserDAO{
 	        VALUES (:userName,
 	                :firstName,
 	                :LastName,
-	                :email, 
+	                :email,
 	                :phoneNumber,
 	                :street,
 	                :city,
@@ -79,14 +79,15 @@ public class UserDAOImpl implements UserDAO{
             """;
 
     private final String UPDATE_USER = """
-                UPDATE auctionUsers SET firstName = :firstName,
+                UPDATE auctionUsers SET userName = :userName,
+                                        firstName = :firstName,
                                         lastName = :lastName,
                                         email = :email,
                                         phoneNumber = :phoneNumber,
                                         street = :street,
                                         city = :city,
                                         postalCode = :postalCode
-                WHERE userName = :userName
+                WHERE id = :id
             """;
 
     private final String IS_PASSWORD_CORRECT = """
@@ -141,9 +142,10 @@ public class UserDAOImpl implements UserDAO{
     }
 
     @Override
-    public boolean update(User user) {
+    public boolean update(User user, int id) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 
+        mapSqlParameterSource.addValue("id", id);
         mapSqlParameterSource.addValue("userName", user.getUserName());
         mapSqlParameterSource.addValue("firstName", user.getFirstName());
         mapSqlParameterSource.addValue("lastName", user.getLastName());
@@ -153,6 +155,7 @@ public class UserDAOImpl implements UserDAO{
         mapSqlParameterSource.addValue("city", user.getCity());
         mapSqlParameterSource.addValue("postalCode", user.getPostalCode());
         mapSqlParameterSource.addValue("password", user.getPassword());
+        logger.info("update {} (id : {}) : {}", user.getUserName(), id, String.valueOf(jdbcTemplate.update(UPDATE_USER, mapSqlParameterSource) == 1));
         return jdbcTemplate.update(UPDATE_USER, mapSqlParameterSource) == 1;
 
     }
@@ -199,13 +202,12 @@ public class UserDAOImpl implements UserDAO{
     }
 
     @Override
-    public boolean doesUsernameExist(String username) {
-        //TODO: finir d'implémenter la méthode (la requete fonctionne bien, changer le 1 par un id dynamique)
+    public boolean isUsernameAvailable(String username, int id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userName", username);
-        params.addValue("id", 1);
+        params.addValue("id", id);
         Integer count = jdbcTemplate.queryForObject(FIND_IF_USERNAME_EXIST, params, Integer.class);
-        return count != null && count > 0;
+        return !(count != null && count > 0);
     }
 
     @Override

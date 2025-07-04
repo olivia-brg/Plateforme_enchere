@@ -3,7 +3,6 @@ package fr.eni.encheres.bll.user;
 import fr.eni.encheres.bo.User;
 import fr.eni.encheres.dal.UserDAO;
 
-import fr.eni.encheres.dal.UserDAOImpl;
 import fr.eni.encheres.exception.BusinessException;
 
 
@@ -62,14 +61,21 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public boolean update(User user) throws BusinessException {
+    @Transactional(rollbackFor = BusinessException.class)
+    public boolean update(User user, int id) throws BusinessException {
         logger.info("update : " + user.toString());
         BusinessException be = new BusinessException();
-        boolean isValid = !doesUsernameExist(user.getUserName(), be);
+        boolean isValid = isUsernameAvailable(user.getUserName(), id, be);
 //        isValid &= validerGenre(film.getGenre(), be);
 //        isValid &= validerActeurs(film.getActeurs(), be);
 //        isValid &= validerRealisateur(film.getRealisateur(), be);
-        return this.userDAO.update(user);
+        if (isValid) {
+            logger.info("update : " + user.toString());
+            return this.userDAO.update(user, id);
+        } else  {
+            logger.error("update : " + user.toString());
+            throw be;
+        }
     }
 
     @Override
@@ -85,7 +91,6 @@ public class UserServiceImpl implements UserService {
 
 		if (userExists) throw be;
 		else userDAO.insertNewUser(user);
-
 	}
 
     @Override
@@ -93,10 +98,10 @@ public class UserServiceImpl implements UserService {
         return this.userDAO.findByUsername(username);
     }
 
-    private boolean doesUsernameExist(String username, BusinessException be) {
+    public boolean isUsernameAvailable(String username, int id, BusinessException be) {
 
-        boolean usernameExist = userDAO.doesUsernameExist(username);
-        if (usernameExist) {
+        boolean usernameAvailable = userDAO.isUsernameAvailable(username, id);
+        if (!usernameAvailable) {
             be.add("L'username existe déjà");
             return false;
         }

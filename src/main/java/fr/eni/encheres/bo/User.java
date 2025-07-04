@@ -21,7 +21,7 @@ public class User {
 	@Size(max = 100, message = "Le prénom ne peut pas dépasser 100 caractères.")
 	private String firstName;
 
-	@NotBlank(message = "L'adresse email est obligatoire.")
+	@NotBlank(message = "Adresse email obligatoire.")
 	@Email(message = "Le format de l'email est invalide.")
 	private String email;
 
