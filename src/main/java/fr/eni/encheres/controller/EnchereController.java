@@ -71,9 +71,14 @@ public class EnchereController {
     }
 
     @GetMapping("/sell")
-    public String newArticle(Model model){
+    public String newArticle(@ModelAttribute("connectedUser") User connectedUser, Model model){
         List<Category> listeCategories = articleService.consultCategories();
         Article article = new Article();
+        Adress tempAdress = new Adress();
+        tempAdress.setCity(userService.readById(connectedUser.getId()).getCity());
+        tempAdress.setStreet(userService.readById(connectedUser.getId()).getStreet());
+        tempAdress.setPostalCode(userService.readById(connectedUser.getId()).getPostalCode());
+        article.setWithdrawalAdress(tempAdress);
         model.addAttribute("article", article);
         model.addAttribute("listeCategories", listeCategories);
         return "new-product";
@@ -95,11 +100,11 @@ public class EnchereController {
         articleService.createArticle(article, connectedUser.getId());
 
 
-        return "redirect:/detailArticle(id=${article.id})";
+        //redirection vers l'accueil pour le moment je n'arrive pas a renvoyer sur la page article en conservant l'id.
+        return "redirect:/";
+        //return "redirect:/detailArticle(id=${article.id})";
         //"@{/detailArticle(id=${a.id})}" a essayer d'ajouter
     }
-
-
 
     @GetMapping("/detailArticle")
     public String afficherUnArticle(@RequestParam(name = "id") int id, Model model) {
@@ -119,9 +124,6 @@ public class EnchereController {
         {System.out.println("Article inconnu!!");}
         return "detail-vente";
     }
-
-
-
 
     @ModelAttribute("connectedUser")
     public User AddUser() {
