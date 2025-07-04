@@ -32,18 +32,31 @@
             <input type="number" id="intial-price" name="intial-price" readonly th:value="${article.startingPrice}">
         </div>
         <div class="form-group">
-            <label for="auction-end">Fin de l'enchère:</label>
-            <input type="datetime" id="auction-end" name="auction-end" readonly th:value="${article.auctionEndDate}">
+            <label for="auction-start">Fin de l'enchère:</label>
+            <input type="datetime" id="auction-start" name="auction-start" readonly th:value="${article.auctionStartDate}">
         </div>
         <div class="form-group">
-            <label for="delivery-address">Retrait: </label>
-            <input type="text" id="delivery-address" name="delivery-address" readonly th:value="${article.withdrawalAddress}">
+            <label for="auction-end">Début de l'enchère de l'enchère:</label>
+            <input type="datetime" id="auction-end" name="auction-end" readonly th:value="${article.auctionEndDate}">
+        </div>
+        <label>Adresse de retrait : </label>
+        <div method="post" th:object="${article.withdrawalAddress}" th:fragment="adress-form-frag">
+            <div class="form-group">
+                <label for="street">Rue : </label>
+                <input readonly type="text" id="street" th:field="*{street}" required>
+            </div>
+            <div class="form-group">
+                <label for="postalCode">Code postal : </label>
+                <input readonly type="text" id="postalCode" th:field="*{postalCode}" required>
+            </div>
+            <div class="form-group">
+                <label for="city">Ville : </label>
+                <input readonly type="text" id="city" th:field="*{city}" required>
+            </div>
         </div>
         <div class="form-group">
             <label for="seller">Vendeur: </label>
-
             <input type="text" id="seller" name="seller" readonly th:value="${article.user.firstName+ ' ' +article.user.lastName}">
-
         </div>
         <div class="form-group">
             <label for="user-bid">Ma propositon </label>
