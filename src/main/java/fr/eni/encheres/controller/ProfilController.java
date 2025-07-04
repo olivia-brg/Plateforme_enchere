@@ -2,16 +2,20 @@ package fr.eni.encheres.controller;
 
 import fr.eni.encheres.bll.user.UserService;
 import fr.eni.encheres.bo.User;
+import fr.eni.encheres.exception.BusinessException;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
 @Controller
 @RequestMapping("/profile")
-@SessionAttributes({"connectedUser", "updateUserInfo"})
+@SessionAttributes({"connectedUser"})
 public class ProfilController {
 
     private static final Logger logger = LoggerFactory.getLogger(ProfilController.class);
@@ -21,18 +25,14 @@ public class ProfilController {
         this.userService = userService;
     }
 
-    @ModelAttribute("updateUserInfo")
-    public User AddUser() {
-        return new User();
-    }
-
 
     @GetMapping("")
-    public String showProfil(@RequestParam(name = "username", required = true) String username,
+    public String showProfil(@RequestParam(name = "id", required = true) int id,
                              Model model) {
-        User userFetched = this.userService.findByUsername(username);
+        User userFetched = this.userService.findById(id);
         if (userFetched != null) {
             model.addAttribute("userFetched", userFetched);
+            logger.info("USER FOUND : {}", userFetched);
             return "profile";
         } else logger.info("Unknown user");
 
@@ -40,21 +40,42 @@ public class ProfilController {
     }
 
     @GetMapping("/update")
-    public String updateProfil(@ModelAttribute("connectedUser") User connectedUser) {
-            return "edit-profile";
+    public String updateProfil(@ModelAttribute("connectedUser") User connectedUser, Model model) {
+        User user = userService.findById(connectedUser.getId());
+        model.addAttribute("user", user);
+        return "edit-profile";
     }
 
     @PostMapping("/update")
-    public String updateProfil(@ModelAttribute("updateUserInfo") User updateUserInfo,
+    public String updateProfil(@Valid @ModelAttribute("updatedUser") User updatedUser,
+                               BindingResult bindingResult,
                                @ModelAttribute("connectedUser") User connectedUser,
-                               @RequestParam(name = "oldPassword", required = false) String oldPassword,
-                               @RequestParam(name = "confirmPassword", required = false) String confirmPassword) {
-        logger.info("updateUserInfo : " + updateUserInfo.toString());
-        logger.info("connectedUser : " + connectedUser.toString());
-        this.userService.update(updateUserInfo);
-        // met à jour les données en session
-        connectedUser = updateUserInfo;
+                               Model model) throws BusinessException {
 
+        model.addAttribute("user", connectedUser);
+        if (bindingResult.hasErrors()) {
+            logger.error("updateProfil : {}", bindingResult.getAllErrors());
+            return "edit-profile";
+        } else {
+            try {
+                logger.info("updateProfil : {} updated", updatedUser.getUserName());
+                this.userService.update(updatedUser);
+                return "redirect:/profile?id=" + connectedUser.getId();
+
+            } catch (BusinessException e) {
+                e.getMessages().forEach(m -> {
+                    ObjectError error = new ObjectError("globalError", m);
+                    bindingResult.addError(error);
+                });
+                return "edit-profile";
+            }
+        }
+    }
+
+
+//        @RequestParam(name = "oldPassword", required = false) String oldPassword,
+//        @RequestParam(name = "confirmPassword", required = false) String confirmPassword
+//
 //        if (updateUserInfo.getPassword().equals(confirmPassword)) {
 //            if (this.userService.isPasswordCorrect(connectedUser.getUserName(), oldPassword)) {
 //            } else {
@@ -63,21 +84,19 @@ public class ProfilController {
 //        } else {
 //            logger.info("updateProfil : Veuillez saisir le même mot de passe");
 //        }
-        return "redirect:/profile?username=" + connectedUser.getUserName();
 
-    }
 
-    @GetMapping("/delete")
-    public String deleteUser( @ModelAttribute("connectedUser") User connectedUser,
-                              SessionStatus status){
-        if (this.userService.deleteUserById(connectedUser.getUserName())){
-            logger.info("deleteUser : {} deleted", connectedUser.getUserName());
-            status.setComplete();
-            return "redirect:/encheres";
+        @GetMapping("/delete")
+        public String deleteUser (@ModelAttribute("connectedUser") User connectedUser,
+                SessionStatus status){
+            if (this.userService.deleteUserById(connectedUser.getId())) {
+                logger.info("deleteUser : {} deleted", connectedUser.getUserName());
+                status.setComplete();
+                return "redirect:/encheres";
+            }
+            logger.info("deleteUser : {} not deleted", connectedUser.getUserName());
+            return "redirect:/profile?id=" + connectedUser.getId();
         }
-        logger.info("deleteUser : {} not deleted", connectedUser.getUserName());
-        return "redirect:/profile?username=" + connectedUser.getUserName();
+
+
     }
-
-
-}

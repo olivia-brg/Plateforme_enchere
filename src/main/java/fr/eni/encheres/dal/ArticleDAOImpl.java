@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import fr.eni.encheres.bo.Adress;
+import fr.eni.encheres.bo.Address;
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Category;
 import fr.eni.encheres.bo.User;
@@ -89,10 +89,10 @@ public class ArticleDAOImpl implements ArticleDAO{
 			category.setId(rs.getInt("CATEGORYID"));
 			a.setCategory(category);
 
-			// Adress's Association
-			Adress adress = new Adress();
-			adress.setDeliveryAdressId(rs.getInt("DELIVERYADDRESSID"));
-			a.setWithdrawalAdress(adress);
+			// Address's Association
+			Address address = new Address();
+			address.setDeliveryAddressId(rs.getInt("DELIVERYADDRESSID"));
+			a.setWithdrawalAddress(address);
 			
 			User user = new User();
 			user.setId(rs.getInt("USERID"));

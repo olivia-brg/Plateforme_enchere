@@ -4,7 +4,7 @@ package fr.eni.encheres.controller;
 import fr.eni.encheres.bll.article.ArticleService;
 
 import fr.eni.encheres.bll.user.UserService;
-import fr.eni.encheres.bo.Adress;
+import fr.eni.encheres.bo.Address;
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Category;
 import fr.eni.encheres.bo.User;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import fr.eni.encheres.dal.AdresseDAO;
+import fr.eni.encheres.dal.AddressDAO;
 import fr.eni.encheres.dal.ArticleDAO;
 
 import fr.eni.encheres.dal.CategoryDAO;
@@ -41,13 +41,13 @@ public class EnchereController {
     private final UserService userService;
     private ArticleDAO articleDAO;
     private ArticleService articleService;
-    private AdresseDAO adresseDAO;
+    private AddressDAO addressDAO;
     private CategoryDAO categoryDAO;
 
-    EnchereController(ArticleService articleService, ArticleDAO articleDAO, AdresseDAO adresseDAO, CategoryDAO categoryDAO, UserService userService) {
+    EnchereController(ArticleService articleService, ArticleDAO articleDAO, AddressDAO addressDAO, CategoryDAO categoryDAO, UserService userService) {
 		this.articleService = articleService ;
         this.articleDAO = articleDAO;
-        this.adresseDAO = adresseDAO;
+        this.addressDAO = addressDAO;
         this.categoryDAO = categoryDAO;
         this.userService = userService;
     }
@@ -66,7 +66,7 @@ public class EnchereController {
         }
 
         model.addAttribute("article", articles);
-        
+
         return "encheres";
     }
 
@@ -87,13 +87,13 @@ public class EnchereController {
     @PostMapping(path="/sell")
     String insererArticle(@ModelAttribute("article") Article article, @ModelAttribute("connectedUser") User connectedUser ){
         //On crée une adresse avec les attributs adresse de l'utilisateur
-        Adress adress = new Adress();
-        adress.setStreet(connectedUser.getStreet());
-        adress.setCity(connectedUser.getCity());
-        adress.setPostalCode(connectedUser.getPostalCode());
+        Address address = new Address();
+        address.setStreet(connectedUser.getStreet());
+        address.setCity(connectedUser.getCity());
+        address.setPostalCode(connectedUser.getPostalCode());
 
         //On implémente cette adresse à l'article.
-        article.setWithdrawalAdress(adress);
+        article.setWithdrawalAddress(address);
         article.setUser(connectedUser);
         article.setAuctionStartDate(LocalDateTime.now());
         //On appelle la méthode du service qui créera l'article
@@ -110,13 +110,12 @@ public class EnchereController {
     public String afficherUnArticle(@RequestParam(name = "id") int id, Model model) {
 
         Article current = articleService.consultArticleById(id);
-
         if (current != null) {
-            User vendeur = userService.readById(current.getUser().getId());
-            Adress adress = articleService.consultAdressById(current.getWithdrawalAdress().getDeliveryAdressId());
+            User vendeur = userService.findById(current.getUser().getId());
+            Address address = articleService.consultAddressById(current.getWithdrawalAddress().getDeliveryAddressId());
             Category category = articleService.consultCategoryById(current.getCategory().getId());
             current.setUser(vendeur);
-            current.setWithdrawalAdress(adress);
+            current.setWithdrawalAddress(address);
             current.setCategory(category);
             System.out.println(current);
             model.addAttribute("article", current);

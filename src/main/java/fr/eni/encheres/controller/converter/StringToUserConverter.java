@@ -1,6 +1,5 @@
 package fr.eni.encheres.controller.converter;
 
-import fr.eni.encheres.bll.article.ArticleService;
 import fr.eni.encheres.bll.user.UserService;
 import fr.eni.encheres.bo.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,6 @@ public class StringToUserConverter implements Converter<String, User> {
     @Override
     public User convert(String id) {
         Integer TheId = Integer.parseInt(id);
-        return userService.readById(TheId) ;
+        return userService.findById(TheId) ;
     }
 }

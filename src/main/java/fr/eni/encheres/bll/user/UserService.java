@@ -5,13 +5,13 @@ import fr.eni.encheres.exception.BusinessException;
 
 public interface UserService {
 
-    User readById(int id);
+    User findById(int id);
     User load(String username, String password)throws BusinessException;
-    void update(User user);
+    boolean update(User user) throws BusinessException;
     boolean isPasswordCorrect(String username, String password, BusinessException be);
     User findByUsername(String username);
     boolean isUserExisting(String userName, BusinessException be);
     void createNewUser (User user)throws BusinessException;
-    boolean deleteUserById(String username);
+    boolean deleteUserById(int id);
 
 }

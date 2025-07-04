@@ -25,12 +25,12 @@
 
     <div class="form-group">
         <label for="price">Prix initial:</label>
-        <input type="number" th:field="*{startingPrice}" id="price" value="0"></input>
+        <input type="number" th:field="*{startingPrice}" id="price"></input>
     </div>
-    <div class="form-group">
+    <!--<div class="form-group">
         <label for="bid-start">Début de l'enchère:</label>
-        <input type="datetime-local" th:field="*{auctionStartDate}" id="bid-start">
-    </div>
+        <input disabled hidden="hidden" type="datetime-local" th:field="*{auctionStartDate}" id="bid-start">
+    </div>-->
     <div class="form-group">
         <label for="bid-end">Fin de l'enchère:</label>
         <input type="datetime-local" th:field="*{auctionEndDate}" id="bid-end">
@@ -38,6 +38,7 @@
     <label> Adresse de retrait : </label>
     <div class="form-group" data-th-replace="~{/fragments/adress_form_fragment :: adress-form-frag}" >
     </div>
+    -->
     <div class="form-group">
         <button type="submit">Enregistrer</button>
         <button type="submit">Annuler</button>

@@ -2,14 +2,14 @@ package fr.eni.encheres.bll.article;
 
 import java.util.List;
 
-import fr.eni.encheres.bo.Adress;
+import fr.eni.encheres.bo.Address;
 import fr.eni.encheres.bo.Bid;
 import org.springframework.stereotype.Service;
 
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Category;
 import fr.eni.encheres.bo.User;
-import fr.eni.encheres.dal.AdresseDAO;
+import fr.eni.encheres.dal.AddressDAO;
 import fr.eni.encheres.dal.ArticleDAO;
 import fr.eni.encheres.dal.BidDAO;
 import fr.eni.encheres.dal.CategoryDAO;
@@ -20,17 +20,17 @@ import fr.eni.encheres.exception.BusinessException;
 public class ArticleServiceImpl implements ArticleService{
 
 	private ArticleDAO articleDAO;
-	private AdresseDAO adressDAO;
+	private AddressDAO addressDAO;
 	private BidDAO bidDAO;
 	private CategoryDAO categoryDAO;
 	private UserDAO userDAO;
 	
 	
-	public ArticleServiceImpl(ArticleDAO articleDAO, AdresseDAO adressDAO, BidDAO bidDAO, CategoryDAO categoryDAO,
-			UserDAO userDAO) {
+	public ArticleServiceImpl(ArticleDAO articleDAO, AddressDAO addressDAO, BidDAO bidDAO, CategoryDAO categoryDAO,
+							  UserDAO userDAO) {
 		
 		this.articleDAO = articleDAO;
-		this.adressDAO = adressDAO;
+		this.addressDAO = addressDAO;
 		this.bidDAO = bidDAO;
 		this.categoryDAO = categoryDAO;
 		this.userDAO = userDAO;
@@ -49,15 +49,14 @@ public class ArticleServiceImpl implements ArticleService{
 		
 		for (Article article : articles) {
 			User user = userDAO.findUserById(article.getUser().getId());
-//			Adress adress = adressDAO.findAddressById(article.getWithdrawalAdress().getDeliveryAdressId());
+//			Address address = addressDAO.findAddressById(article.getWithdrawalAddress().getDeliveryAddressId());
 			article.setUser(user);
-//			article.setWithdrawalAdress(adress);
+//			article.setWithdrawalAddress(address);
 		}
 		
 		
 		return articles;
 	}
-	
 
 	@Override
 	public List<Category> consultCategories() {
@@ -80,28 +79,28 @@ public class ArticleServiceImpl implements ArticleService{
 	}
 
 	@Override
-	public Adress consultAdressById(int id){
-		return adressDAO.findAddressById(id);
+	public Address consultAddressById(int id){
+		return addressDAO.findAddressById(id);
 	}
 
 	@Override
 	public void createArticle(Article article, int userId) {
 		//On extrait l'adresse pour la partie vérification
-		Adress adress = article.getWithdrawalAdress();
+		Address address = article.getWithdrawalAddress();
 		//Ola méthode suivante vérifie l'existence dans la BDD sur la base des trois attributs
-		Boolean adressExists=adressDAO.findIfExists(adress);
+		Boolean addressExists = addressDAO.findIfExists(address);
 		//Si l'adresse existe on lui attribue l'id existante
-		if(adressExists){
-			adress.setDeliveryAdressId(adressDAO.findIdByAdress(adress));
-			System.out.println("id de l\'adresse existante : "+adress.getDeliveryAdressId());
+		if(addressExists){
+			address.setDeliveryAddressId(addressDAO.findIdByAddress(address));
+			System.out.println("id de l\'adresse existante : "+address.getDeliveryAddressId());
 		}
 		//sinon on crée l'adresse (Fonctionne sur une première création d'article)
 		else{
-			adressDAO.create(adress);
-			adress.setDeliveryAdressId(adressDAO.findIdByAdress(adress));
-			System.out.println("id de l\'adresse : "+ adress.getDeliveryAdressId());
+			addressDAO.create(address);
+			address.setDeliveryAddressId(addressDAO.findIdByAddress(address));
+			System.out.println("id de l\'adresse : "+ address.getDeliveryAddressId());
 		}
 		//enfin on crée l'article
-		articleDAO.create(article, userId, adress.getDeliveryAdressId());
+		articleDAO.create(article, userId, address.getDeliveryAddressId());
 	}
 }

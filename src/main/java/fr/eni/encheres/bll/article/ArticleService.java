@@ -2,7 +2,7 @@ package fr.eni.encheres.bll.article;
 
 import java.util.List;
 
-import fr.eni.encheres.bo.Adress;
+import fr.eni.encheres.bo.Address;
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Bid;
 import fr.eni.encheres.bo.Category;
@@ -22,7 +22,7 @@ public interface ArticleService {
 
 	public List<Bid> consultBidsByArticleId(int id);
 
-	public Adress consultAdressById(int id);
+	public Address consultAddressById(int id);
 
 	public void createArticle(Article article,int userId);
 
