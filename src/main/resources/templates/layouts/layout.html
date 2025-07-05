@@ -9,18 +9,42 @@
     <title data-th-replace="${title}">ENI-Auction</title>
     <link rel="stylesheet" href="/css/style.css">
     <th:block data-th-replace="${ressourcesSupp} ?: ~{}"></th:block>
-        <link rel="icon" data-th-href="@{/img/icon.png}" sizes="32x32">
+    <link rel="icon" data-th-href="@{/img/icon.png}" sizes="32x32">
 </head>
 
 <body>
 <div data-th-replace="~{fragments/header-fragment :: header-frag}"></div>
 
 <main data-th-replace="${content} ?: ~{}">Page content</main>
+
+<!--<audio id="musicplayer" autoplay controls style="display: none">-->
+<!--    <source src="/flipflop.mp3" type="audio/mpeg" />-->
+<!--    Your browser does not support the audio element.-->
+<!--</audio>-->
 <script>
     function toggleMenu() {
         const navLinks = document.getElementById('nav-links');
         navLinks.classList.toggle('active');
     }
+</script>
+<script>
+    const player = document.getElementById("musicplayer");
+    let started = false;
+
+    function tryPlayAudio() {
+        if (!started) {
+            player.play().then(() => {
+                started = true;
+                console.log("Musique lancée !");
+            }).catch((e) => {
+                console.log("Lecture bloquée :", e);
+            });
+        }
+    }
+
+    window.addEventListener("mousemove", tryPlayAudio);
+    window.addEventListener("touchstart", tryPlayAudio);
+    window.addEventListener("click", tryPlayAudio);
 </script>
 </body>
 </html>
