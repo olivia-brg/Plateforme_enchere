@@ -16,6 +16,11 @@
 <div data-th-replace="~{fragments/header-fragment :: header-frag}"></div>
 
 <main data-th-replace="${content} ?: ~{}">Page content</main>
-
+<script>
+    function toggleMenu() {
+        const navLinks = document.getElementById('nav-links');
+        navLinks.classList.toggle('active');
+    }
+</script>
 </body>
 </html>

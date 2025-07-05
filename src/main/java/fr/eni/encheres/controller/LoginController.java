@@ -1,7 +1,6 @@
 package fr.eni.encheres.controller;
 
 import fr.eni.encheres.bll.user.UserService;
-import fr.eni.encheres.bll.user.UserServiceImpl;
 import fr.eni.encheres.bo.User;
 import fr.eni.encheres.exception.BusinessException;
 
@@ -41,7 +40,8 @@ public class LoginController {
     @PostMapping("/login")
     public String login(@RequestParam(name = "userName", required = true) String userName,
                         @RequestParam(name = "password", required = true) String password,
-                        @ModelAttribute("connectedUser") User connectedUser, RedirectAttributes redirectAttributes) {
+                        @ModelAttribute("connectedUser") User connectedUser,
+						RedirectAttributes redirectAttributes) {
         User user;
 		try {
 			user = this.userService.load(userName, password);
@@ -94,9 +94,9 @@ public class LoginController {
     @PostMapping("/register")
     public String registred(@Valid @ModelAttribute User user,
 							BindingResult bindingResult,
-							Model model,
-							RedirectAttributes redirectAttributes) throws BusinessException {
-    	System.out.println("méthode registred workin");
+							@RequestParam(name = "confirmPassword", required = true) String confirmPassword,
+							RedirectAttributes redirectAttributes,
+							Model model) {
 
 		if (bindingResult.hasErrors()) {
 			logger.error("bindingResult.hasErrors() {}", bindingResult.hasErrors());
@@ -104,13 +104,14 @@ public class LoginController {
 		}
 
     	try {
-			System.out.println(user.getEmail());
+			this.userService.checkPasswordConfirmation(user.getPassword(), confirmPassword);
 			this.userService.createNewUser(user);
 			logger.info("{} is registered", user.getUserName());
 			return "redirect:/";
+
 		} catch (BusinessException e) {
 
-			//redirectAttributes.addFlashAttribute("errorMessages", e.getMessages());
+			redirectAttributes.addFlashAttribute("errorMessages", e.getMessages());
 			model.addAttribute("errorMessages", e.getMessages());
 			logger.warn("exception username already used");
 			return "/signIn";

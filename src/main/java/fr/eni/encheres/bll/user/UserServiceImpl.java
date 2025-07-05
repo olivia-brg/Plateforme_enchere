@@ -117,5 +117,15 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    @Override
+    @Transactional(rollbackFor = BusinessException.class)
+    public boolean checkPasswordConfirmation(String firstPassword, String secondPassword) throws BusinessException {
+        BusinessException be = new BusinessException();
+        if (firstPassword.equals(secondPassword)) return true;
+
+        be.add("Les mots de passe ne correspondent pas.");
+        throw be;
+    }
+
 
 }

@@ -6,7 +6,7 @@ import fr.eni.encheres.exception.BusinessException;
 public interface UserService {
 
     User findById(int id);
-    User load(String username, String password)throws BusinessException;
+    User load(String username, String password) throws BusinessException;
     boolean update(User user, int id) throws BusinessException;
     boolean isPasswordCorrect(String username, String password, BusinessException be);
     User findByUsername(String username);
@@ -14,4 +14,6 @@ public interface UserService {
     void createNewUser (User user)throws BusinessException;
     boolean deleteUserById(int id);
     boolean isUsernameAvailable(String username, int id, BusinessException be);
+
+    boolean checkPasswordConfirmation(String firstPassword, String secondPassword) throws BusinessException;
 }
