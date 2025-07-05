@@ -5,7 +5,7 @@ import fr.eni.encheres.bo.User;
 public interface UserDAO {
 
     User login(String username, String password);
-    public boolean findId(String userName);
+    boolean findId(String userName);
     boolean update(User user, int id);
     boolean isPasswordCorrect(String username, String password);
     void insertNewUser(User user);

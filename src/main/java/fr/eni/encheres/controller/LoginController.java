@@ -5,10 +5,12 @@ import fr.eni.encheres.bll.user.UserServiceImpl;
 import fr.eni.encheres.bo.User;
 import fr.eni.encheres.exception.BusinessException;
 
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
@@ -40,7 +42,7 @@ public class LoginController {
     public String login(@RequestParam(name = "userName", required = true) String userName,
                         @RequestParam(name = "password", required = true) String password,
                         @ModelAttribute("connectedUser") User connectedUser, RedirectAttributes redirectAttributes) {
-        User user = new User();
+        User user;
 		try {
 			user = this.userService.load(userName, password);
 			if (user != null) {
@@ -52,12 +54,11 @@ public class LoginController {
 	            connectedUser.setUserName(null);
 	            connectedUser.setAdmin(false);
 	        }
-	        System.out.println(connectedUser);
+	        logger.info("{} is connected", connectedUser.getUserName());
 	        return "redirect:/";
 		} catch (BusinessException e) {
 			redirectAttributes.addFlashAttribute("errorMessages", e.getMessages());
 	        return "redirect:/login";
-
 		}
     }
 
@@ -72,16 +73,15 @@ public class LoginController {
 		model.addAttribute("user", new User());
 
 		return "redirect:/";
-
 	}
 
 
-    @PostMapping(path="/signIn")
-    public String addUser(Model model){
-        model.addAttribute("user", new User());
-        //ajouter articleService
-        return "redirect:/";
-    }
+	@PostMapping(path="/signIn")
+	public String addUser(Model model){
+		model.addAttribute("user", new User());
+		//ajouter articleService
+		return "redirect:/";
+	}
 
 
     @GetMapping("/logout")
@@ -92,21 +92,28 @@ public class LoginController {
     }
 
     @PostMapping("/register")
-    public String registred(@ModelAttribute User user, Model model, RedirectAttributes redirectAttributes) {
+    public String registred(@Valid @ModelAttribute User user,
+							BindingResult bindingResult,
+							Model model,
+							RedirectAttributes redirectAttributes) throws BusinessException {
     	System.out.println("méthode registred workin");
 
+		if (bindingResult.hasErrors()) {
+			logger.error("bindingResult.hasErrors() {}", bindingResult.hasErrors());
+			return "signIn";
+		}
 
     	try {
 			System.out.println(user.getEmail());
 			this.userService.createNewUser(user);
+			logger.info("{} is registered", user.getUserName());
 			return "redirect:/";
 		} catch (BusinessException e) {
 
-			redirectAttributes.addFlashAttribute("errorMessages", e.getMessages());
+			//redirectAttributes.addFlashAttribute("errorMessages", e.getMessages());
+			model.addAttribute("errorMessages", e.getMessages());
 			logger.warn("exception username already used");
-			return "redirect:/signIn";
+			return "/signIn";
 		}
-
-
     }
 }

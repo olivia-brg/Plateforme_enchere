@@ -190,7 +190,6 @@ public class UserDAOImpl implements UserDAO{
         return jdbcTemplate.getJdbcTemplate().queryForObject(FIND_USER_BY_ID,new BeanPropertyRowMapper<>(User.class), id);
     }
 
-    //si on change le username dans la page modifier profil cette méthode ne fonctionne plus. Remplacer par findByID?
     @Override
     public User findByUsername(String username) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
