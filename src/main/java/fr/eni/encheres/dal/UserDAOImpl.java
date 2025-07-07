@@ -307,7 +307,7 @@ public class UserDAOImpl implements UserDAO{
             user.setCity(rs.getString("city"));
             user.setPostalCode(rs.getString("postalCode"));
             user.setCredit(rs.getFloat("credit"));
-            user.setAdmin(rs.getBoolean("isAdmin"));
+            user.setAdmin(rs.getBoolean("role"));
             return user;
         }
 

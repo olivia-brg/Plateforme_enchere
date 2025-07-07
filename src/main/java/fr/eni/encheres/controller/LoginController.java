@@ -5,6 +5,8 @@ import fr.eni.encheres.bo.User;
 import fr.eni.encheres.exception.BusinessException;
 
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @SessionAttributes({"connectedUser"})
 public class LoginController {
-
+	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
     private final UserService userService;
 	private final StandardServletMultipartResolver standardServletMultipartResolver;
 	private final PasswordEncoder passwordEncoder;
@@ -97,12 +99,12 @@ public class LoginController {
 	}
 
 
-    @GetMapping("/logout")
-    public String finSession(SessionStatus status) {
-        // Suppression des attributs de @SessionAttributs
-        status.setComplete();
-        return "redirect:/";
-    }
+//    @GetMapping("/logout")
+//    public String finSession(SessionStatus status) {
+//        // Suppression des attributs de @SessionAttributs
+//        status.setComplete();
+//        return "redirect:/";
+//    }
 
 	@PostMapping("/register")
 	public String registred(@ModelAttribute User user,@ModelAttribute("connectedUser") User connectedUser, Model model, RedirectAttributes redirectAttributes) {

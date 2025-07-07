@@ -15,7 +15,7 @@ CREATE TABLE auctionUsers (
                               street VARCHAR(100),
                               city VARCHAR(50),
                               postalCode VARCHAR(6),
-                              password VARCHAR(20) NOT NULL,
+                              password VARCHAR(100) NOT NULL,
                               credit NUMERIC(15) NOT NULL,
                               Role VARCHAR(5) DEFAULT 'USER' NOT NULL,
                               CONSTRAINT pk_auctionUser PRIMARY KEY(id)
