@@ -85,7 +85,9 @@ public class ProfilController {
 
             // Mise à jour mot de passe si champs remplis
             PasswordDTO pwd = profileForm.getPasswordModification();
-            if (pwd.getNewPassword() != null && !pwd.getNewPassword().isBlank()) {
+            if ((pwd.getNewPassword() != null && !pwd.getNewPassword().isBlank()) ||
+                (pwd.getConfirmPassword() != null && !pwd.getConfirmPassword().isBlank())
+            ) {
                 logger.info("PASSWORD CHANGED : {}", pwd.getNewPassword());
                 userService.checkPasswordConfirmation(pwd.getNewPassword(), pwd.getConfirmPassword());
                 userService.updatePassword(pwd, connectedUser.getId());

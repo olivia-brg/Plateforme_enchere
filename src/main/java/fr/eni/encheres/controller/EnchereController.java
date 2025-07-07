@@ -10,6 +10,7 @@ import fr.eni.encheres.exception.BusinessException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,6 +18,8 @@ import fr.eni.encheres.dal.AddressDAO;
 import fr.eni.encheres.dal.ArticleDAO;
 
 import fr.eni.encheres.dal.CategoryDAO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
@@ -36,7 +39,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @SessionAttributes({"connectedUser"})
 public class EnchereController {
 
-
+    private static final Logger logger = LoggerFactory.getLogger(EnchereController.class);
     private final UserService userService;
     private ArticleDAO articleDAO;
     private ArticleService articleService;
@@ -55,22 +58,45 @@ public class EnchereController {
     }
 
     @RequestMapping(path = {"/", "/encheres"}, method = {RequestMethod.GET, RequestMethod.POST})
-    public String accueil(@ModelAttribute("connectedUser") User connectedUser,@RequestParam(required = false) Long category,@RequestParam(required = false) String search, Model model) throws BusinessException {
-    	List<Article> articles = articleService.consultArticles();
+    public String accueil(@ModelAttribute("connectedUser") User connectedUser,
+                          @RequestParam(required = false) Integer category,
+                          @RequestParam(required = false) String search,
+                          @RequestParam(required = false) String purchasesOptions,
+                          @RequestParam(required = false) String salesOptions,
+                          Model model) throws BusinessException {
+
+        if (category != null) logger.warn("category : {}", category.toString());
+        if (purchasesOptions != null) logger.warn("purchasesOptions : {}", purchasesOptions);
+        if (salesOptions != null) logger.warn("salesOptions : {}", salesOptions);
+        if (search != null) logger.warn("search : '{}'", search);
+
+
+
+        List<Article> articles = articleService.consultArticles();
         List<Category> listeCategories = articleService.consultCategories();
 
         model.addAttribute("listeCategories", listeCategories);
-        model.addAttribute("category", category);
-
-        if (search != null && !search.isBlank()) {
-            articles = articles.stream().filter( article ->article.getName().toLowerCase().contains(search.toLowerCase()))
-                    .collect(Collectors.toList());
-        }
-
         model.addAttribute("article", articles);
-
         return "encheres";
     }
+
+//    @PostMapping( "/encheres")
+//    public String accueil(@ModelAttribute("connectedUser") User connectedUser,
+//                          @RequestParam(required = false) int category,
+//                          @RequestParam(required = false) String search,
+//                          @RequestParam(required = false) String purchasesOptions,
+//                          @RequestParam(required = false) String salesOptions,
+//                          Model model) throws BusinessException {
+//        logger.warn("EnchereController.accueil");
+//
+//        if (salesOptions.equals("myCurrentSales")) {
+//            logger.warn(search);
+////            return articleService.;
+//        }
+//        return null;
+//
+//
+//    }
 
     @GetMapping("/sell")
     public String newArticle(@ModelAttribute("connectedUser") User connectedUser, Model model){

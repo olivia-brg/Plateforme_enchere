@@ -25,11 +25,25 @@ public class ArticleDAOImpl implements ArticleDAO{
 
 	private final String INSERT_NEW_ARTICLE = """
 				INSERT INTO articles(userID,categoryId,deliveryAddressId,name,description,auctionStartDate,auctionEndDate,startingPrice,isOnSale,IMAGEURL)
-			             VALUES(:userId,:categoryId,:deliveryAddressId,:name,:description,:auctionStartDate,:auctionEndDate,:startingPrice,1,:imageURL);			
+			             VALUES(:userId,:categoryId,:deliveryAddressId,:name,:description,:auctionStartDate,:auctionEndDate,:startingPrice,1,:imageURL);
 			""";
 
+	private final String FIND_BY_ID = """
+				SELECT ID,
+				       NAME,
+				       DESCRIPTION,
+				       AUCTIONSTARTDATE,
+				       AUCTIONENDDATE,
+				       STARTINGPRICE,
+				       SOLDPRICE,
+				       ISONSALE,
+				       CATEGORYID,
+				       DELIVERYADDRESSID,
+				       USERID,
+				       IMAGEURL 
+				FROM ARTICLES WHERE ID = :id""";
 
-	private final String FIND_BY_ID = "SELECT ID, NAME, DESCRIPTION, AUCTIONSTARTDATE, AUCTIONENDDATE, STARTINGPRICE, SOLDPRICE, ISONSALE, CATEGORYID, DELIVERYADDRESSID, USERID, IMAGEURL FROM ARTICLES WHERE ID = :id";
+	private final String FIND_WITH_OPTIONAL_FILTERS = "";
 
 	@Autowired
 	private NamedParameterJdbcTemplate jdbcTemplate;
@@ -65,7 +79,14 @@ public class ArticleDAOImpl implements ArticleDAO{
 		return jdbcTemplate.update(INSERT_NEW_ARTICLE, namedParameters);
 	}
 
-
+	@Override
+	public List<Article> searchByFilters(int categoryId, String search, String selectedOptions) {
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("categoryId", categoryId);
+		namedParameters.addValue("search", search);
+		namedParameters.addValue("selectedOptions", selectedOptions);
+		return jdbcTemplate.query(FIND_WITH_OPTIONAL_FILTERS, namedParameters, new ArticleRowMapper());
+	}
 
 
 	class ArticleRowMapper implements RowMapper<Article>{
