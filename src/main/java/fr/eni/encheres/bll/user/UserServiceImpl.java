@@ -109,5 +109,10 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    @Override
+    public int getUserCredit(int userId) {
+        return userDAO.findUserCreditByUserId(userId);
+    }
+
 
 }

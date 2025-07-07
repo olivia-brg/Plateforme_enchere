@@ -19,8 +19,7 @@ public class BidDAOImpl implements BidDAO{
 			             VALUES(:bidDate,:bidAmount,:userId,:articleId);
 			""";
 
-    NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     BidDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
@@ -33,7 +32,7 @@ public class BidDAOImpl implements BidDAO{
     namedParameters.addValue("bidAmount", bid.getAuctionAmount());
     namedParameters.addValue("userId", userId);
     namedParameters.addValue("articleId", articleId);
-        return jdbcTemplate.update(INSERT_NEW_BID, namedParameters);
+        return namedParameterJdbcTemplate.update(INSERT_NEW_BID, namedParameters);
     }
 
     @Override
