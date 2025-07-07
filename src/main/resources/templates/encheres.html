@@ -12,22 +12,26 @@
 <main>
     <h1>ENI-Auctions</h1>
 
-    <div class="filtres">
-        <h2>Filtres :</h2>
-        <label for="cat">Catégories</label>
-        <select name="cat" id="cat">
-            <option value="informatique">Informatique</option>
-            <option value="ameublement">Ameublement</option>
-            <option value="vetement">Vêtement</option>
-            <option value="s&l">Sports & loisirs</option>
+<div class="filtres">
+    <h2>Filtres :</h2>
+    <form method="get" th:action="@{/encheres}">
+        <label for="category">Catégories </label>
+        <select id="category" name="category">
+
+            <option value="" th:selected="${category == null}">Toutes</option>
+            <option th:each="categoryFromList : ${listeCategories}"
+                    th:value="${categoryFromList.id}"
+                    th:text="${categoryFromList.name}"
+                    th:selected="${categoryFromList.id == category}">
+            </option>
         </select>
-        <input type="text" placeholder="Search..">
+        <input type="text" placeholder="Search.." name = "search">
         <button type="submit">rechercher</button>
 
     </div>
     <div class="articles">
-        <div class="single-article" th:each="a : ${article}">
-            <img src="img/pic.jpg" alt="">
+        <div class="single-article" th:each="a : ${article}" th:if="${category == null or a.category.id == category}">
+            <img th:src="${a.getImageURL()}" th:alt="${a.getDescription()}" >
             <div class="article-infos">
                 <h5 th:text="${a.name}">Exemple</h5>
                 <p>Prix: </p>

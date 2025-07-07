@@ -20,13 +20,31 @@ public class UserDAOImpl implements UserDAO{
 
 	private static final Logger logger = LoggerFactory.getLogger(UserDAOImpl.class);
 
-	private final String INSERT_NEW_USER = "INSERT INTO auctionUsers(userName, firstName, LastName, email, phoneNumber, street, city, postalCode, password, credit) "
-	        + "VALUES (:userName, :firstName, :LastName, :email, :phoneNumber, :street, :city, :postalCode, :password, 100)";
-	private final String FIND_USER_NAME = "SELECT COUNT(*) FROM auctionUsers WHERE userName = :userName";
-    private final String DELETE_USER_BY_USERNAME = """
-                DELETE FROM auctionUsers
-                WHERE userName = :userName
-            """;
+    private final String DELETE_USER_BY_USERNAME = "DELETE FROM auctionUsers WHERE id = :id";
+    private final String FIND_USERNAME_BY_ID = "SELECT COUNT(*) FROM auctionUsers WHERE userName = :userName";
+    private final String FIND_IF_USERNAME_EXIST = "SELECT COUNT(*) FROM auctionUsers WHERE userName = :userName AND id != :id";
+
+    private final String INSERT_NEW_USER = """
+            INSERT INTO auctionUsers(userName,
+	                                    firstName,
+	                                    LastName,
+	                                    email,
+	                                    phoneNumber,
+	                                    street,
+	                                    city,
+	                                    postalCode,
+	                                    password,
+	                                    credit)
+	        VALUES (:userName,
+	                :firstName,
+	                :LastName,
+	                :email,
+	                :phoneNumber,
+	                :street,
+	                :city,
+	                :postalCode,
+	                :password,
+	                100)""";
 
     private final String FIND_USER = """
                 SELECT id,
@@ -61,14 +79,15 @@ public class UserDAOImpl implements UserDAO{
             """;
 
     private final String UPDATE_USER = """
-                UPDATE auctionUsers SET firstName = :firstName,
+                UPDATE auctionUsers SET userName = :userName,
+                                        firstName = :firstName,
                                         lastName = :lastName,
                                         email = :email,
                                         phoneNumber = :phoneNumber,
                                         street = :street,
                                         city = :city,
                                         postalCode = :postalCode
-                WHERE userName = :userName
+                WHERE id = :id
             """;
 
     private final String IS_PASSWORD_CORRECT = """
@@ -94,6 +113,10 @@ public class UserDAOImpl implements UserDAO{
             WHERE id = ?
             """;
 
+    private final String FIND_CREDIT_BY_USER_ID = """
+            SELECT credit FROM auctionUsers WHERE id = ?;
+            """;
+
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public UserDAOImpl(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -116,14 +139,17 @@ public class UserDAOImpl implements UserDAO{
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("userName", userName);
 
-        int count = jdbcTemplate.queryForObject(FIND_USER_NAME, mapSqlParameterSource, Integer.class);
+        logger.info("findId : " + userName);
+
+        int count = jdbcTemplate.queryForObject(FIND_USERNAME_BY_ID, mapSqlParameterSource, Integer.class);
         return count >= 1;
     }
 
     @Override
-    public void update(User user) {
+    public boolean update(User user, int id) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 
+        mapSqlParameterSource.addValue("id", id);
         mapSqlParameterSource.addValue("userName", user.getUserName());
         mapSqlParameterSource.addValue("firstName", user.getFirstName());
         mapSqlParameterSource.addValue("lastName", user.getLastName());
@@ -133,7 +159,8 @@ public class UserDAOImpl implements UserDAO{
         mapSqlParameterSource.addValue("city", user.getCity());
         mapSqlParameterSource.addValue("postalCode", user.getPostalCode());
         mapSqlParameterSource.addValue("password", user.getPassword());
-        jdbcTemplate.update(UPDATE_USER, mapSqlParameterSource);
+        logger.info("update {} (id : {}) : {}", user.getUserName(), id, String.valueOf(jdbcTemplate.update(UPDATE_USER, mapSqlParameterSource) == 1));
+        return jdbcTemplate.update(UPDATE_USER, mapSqlParameterSource) == 1;
 
     }
 
@@ -178,11 +205,27 @@ public class UserDAOImpl implements UserDAO{
     }
 
     @Override
-    public boolean deleteUserById(String username) {
+    public boolean isUsernameAvailable(String username, int id) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("userName", username);
+        params.addValue("id", id);
+        Integer count = jdbcTemplate.queryForObject(FIND_IF_USERNAME_EXIST, params, Integer.class);
+        return !(count != null && count > 0);
+    }
+
+    @Override
+    public boolean deleteUserById(int id) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("userName", username);
-        logger.info("Deleting {}", username);
+        mapSqlParameterSource.addValue("id", id);
+        logger.info("Deleting {}", id);
         return jdbcTemplate.update(DELETE_USER_BY_USERNAME, mapSqlParameterSource) == 1;
+    }
+
+
+    @Override
+    public int findUserCreditByUserId(int id) {
+        int result = jdbcTemplate.getJdbcTemplate().queryForObject(FIND_CREDIT_BY_USER_ID,Integer.class,id);
+        return result;
     }
 
     @Override

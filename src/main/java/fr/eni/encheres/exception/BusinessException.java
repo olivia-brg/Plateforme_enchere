@@ -15,8 +15,7 @@ public class BusinessException extends Exception {
 	public BusinessException() {
 		this.messages = new ArrayList<String>();
 	}
-	
-	
+
 	public void add(String message) {
 		this.messages.add(message);
 	}

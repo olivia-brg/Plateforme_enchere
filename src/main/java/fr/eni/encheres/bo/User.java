@@ -1,21 +1,49 @@
 package fr.eni.encheres.bo;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+
 import java.util.List;
 
 public class User {
 
 	private int id;
+
+	@Size(min = 3, max = 50, message = "Le nom d'utilisateur est obligatoire et doit contenir entre 2 et 50 caractères.")
 	private String userName;
+
+	@Size(min = 2, max = 100, message = "Le nom est obligatoire et doit contenir entre 2 et 100 caractères.")
 	private String lastName;
+
+	@Size(min = 2, max = 100, message = "Le prénom  est obligatoire et doit contenir entre 2 et 100 caractères.")
 	private String firstName;
+
+	@NotBlank(message = "Adresse email obligatoire.")
+	@Email(message = "Le format de l'email est invalide.")
 	private String email;
+
+	@Pattern(regexp = "^[0-9]{10}$", message = "Le numéro de téléphone doit contenir exactement 10 chiffres.")
 	private String phoneNumber;
+
+	@Size(min = 5, max = 100, message = "La rue est obligatoire et doit contenir entre 5 et 100 caractères.")
 	private String street;
+
+	@Pattern(regexp = "^[0-9]{4,5}$", message = "Le code postal est obligatoire et doit contenir 4 ou 5 chiffres.")
 	private String postalCode;
+
+	@Size(min = 2, max = 100, message = "La ville est obligatoire et doit contenir entre 2 et 100 caractères.")
 	private String city;
+
+//	@NotBlank(message = "Le mot de passe est obligatoire.")
+//	@Size(min = 8, max = 100, message = "Le mot de passe doit contenir entre 8 et 100 caractères.")
 	private String password;
+
+	@PositiveOrZero(message = "Le crédit ne peut pas être négatif.")
 	private float credit;
+
 	private boolean isAdmin;
+
+	@Valid
 	private List<Bid> bids;
 	private List<Article> articles;
 

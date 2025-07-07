@@ -12,38 +12,49 @@
 <main>
     <h2>Modifier mon profil</h2>
 
-    <form action="/profile/update" method="post" data-th-object="${connectedUser}">
+    <form action="/profile/update" method="post" data-th-object="${user}">
+        <div class="exception" th:if="${errorMessages}">
+            <span th:each="msg : ${errorMessages}" th:text="${msg}"></span>
+        </div>
         <div class="form-group">
+            <div class="text-danger exception" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></div>
             <label for="userName">Username:</label>
-            <input type="text" id="userName" name="userName" th:value="*{userName}">
+            <input type="text" th:field="*{userName}" />
         </div>
         <div class="form-group">
+            <div class="text-danger exception" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" ></div>
             <label for="lastName">Last Name:</label>
-            <input type="text" id="lastName" name="lastName" th:value="*{lastName}">
+            <input type="text" th:field="*{lastName}">
         </div>
         <div class="form-group">
+            <div class="text-danger exception" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" ></div>
             <label for="firstName">First Name:</label>
-            <input type="text" id="firstName" name="firstName" th:value="*{firstName}">
+            <input type="text" th:field="*{firstName}">
         </div>
         <div class="form-group">
+            <div class="text-danger exception" th:if="${#fields.hasErrors('email')}" th:errors="*{email}" ></div>
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" th:value="*{email}">
+            <input type="text" th:field="*{email}" class="form-control"/>
         </div>
         <div class="form-group">
-            <label for="phone">Phone:</label>
-            <input type="tel" id="phone" name="phone" th:value="*{phoneNumber}">
+            <div class="text-danger exception" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" ></div>
+            <label for="phoneNumber">Phone:</label>
+            <input type="tel" th:field="*{phoneNumber}">
         </div>
         <div class="form-group">
+            <div class="text-danger exception" th:if="${#fields.hasErrors('street')}" th:errors="*{street}" ></div>
             <label for="street">Street:</label>
-            <input type="text" id="street" name="street" th:value="*{street}">
+            <input type="text" th:field="*{street}">
         </div>
         <div class="form-group">
+            <div class="text-danger exception" th:if="${#fields.hasErrors('postalCode')}" th:errors="*{postalCode}" ></div>
             <label for="postalCode">Postal Code:</label>
-            <input type="text" id="postalCode" name="postalCode" th:value="*{postalCode}">
+            <input type="text" th:field="*{postalCode}">
         </div>
         <div class="form-group">
+            <div class="text-danger exception" th:if="${#fields.hasErrors('city')}" th:errors="*{city}" ></div>
             <label for="city">City:</label>
-            <input type="text" id="city" name="city" th:value="*{city}">
+            <input type="text" th:field="*{city}">
         </div>
 
         <!--        <div class="form-group">-->

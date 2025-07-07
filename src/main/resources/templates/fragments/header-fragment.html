@@ -1,40 +1,29 @@
 <header xmlns:th="http://www.thymeleaf.org"
         data-th-fragment="header-frag">
-    <section id="nav-title">
-        <h1>
-            <a href="/"><img data-th-src="@{/images/logo.png}">
-                <span>ENI auction</span>
-            </a>
-        </h1>
-    </section>
+    <nav class="navbar">
+        <div id="nav-title">
+            <a href="/home"><img data-th-src="@{/img/logo.png}"></a>
+        </div>
 
-    <nav>
-    <div class="sIsU">
-        <th:block data-th-if="${connectedUser != null && connectedUser.getId() > 0}">
-            <a href="/home">
-                <p>Enchères</p>
-            </a>
-            <p>-</p>
-            <a href="/sell">
-                <p>Vendre un article</p>
-            </a>
-            <p>-</p>
-            <a data-th-href="@{profile(username=${connectedUser.userName})}">
-                <p>Mon profil</p>
-            </a>
-            <p>-</p>
-            <a href="/logout">
-                <p>Déconnexion</p>
-            </a>
-        </th:block>
-        <th:block data-th-unless="${connectedUser != null && connectedUser.getId() > 0}">
-            <a href="/signIn">
-                <p>S'inscrire</p>
-            </a>
-            <p>-</p>
-            <a href="/login">
-                <p>Se connecter</p>
-            </a>
-        </th:block>
-    </div>
+        <!-- Burger icon (visible en mobile) -->
+        <div class="burger" onclick="toggleMenu()">☰</div>
+
+        <div class="sIsU">
+            <th:block data-th-if="${connectedUser != null && connectedUser.id > 0}">
+                <ul id="nav-links">
+                    <li><a href="/home"><p>Enchères</p></a></li>
+                    <li><a href="/sell"><p>Vendre un article</p></a></li>
+                    <li><a data-th-href="@{/profile(id=${connectedUser.id})}"><p>Mon profil</p></a></li>
+                    <li><a href="/logout"><p>Déconnexion</p></a></li>
+                </ul>
+            </th:block>
+            <th:block data-th-unless="${connectedUser != null && connectedUser.id > 0}">
+                <ul id="nav-links">
+                    <li><a href="/signIn"><p>S'inscrire</p></a></li>
+                    <li><a href="/login"><p>Se connecter</p></a></li>
+                </ul>
+            </th:block>
+        </div>
+    </nav>
 </header>
+
