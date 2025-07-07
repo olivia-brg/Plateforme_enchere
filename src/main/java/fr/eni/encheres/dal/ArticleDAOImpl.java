@@ -49,6 +49,7 @@ public class ArticleDAOImpl implements ArticleDAO{
 	@Override
 	public int create(Article article, int userId, int deliveryAddressId) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
+		//Pas d'utilisation du keyholder pour le moment a voir si on en a besoin. Faire un prepared statement comme pour l'adresse.
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
 		namedParameters.addValue("deliveryAddressId", deliveryAddressId);
 		namedParameters.addValue("userId", userId);

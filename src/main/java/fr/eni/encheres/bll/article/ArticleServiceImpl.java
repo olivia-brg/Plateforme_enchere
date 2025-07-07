@@ -96,8 +96,8 @@ public class ArticleServiceImpl implements ArticleService{
 		}
 		//sinon on crée l'adresse (Fonctionne sur une première création d'article)
 		else{
-			addressDAO.create(address);
-			address.setDeliveryAddressId(addressDAO.findIdByAddress(address));
+			int newAdressId=addressDAO.create(address);
+			address.setDeliveryAddressId(newAdressId);
 			System.out.println("id de l\'adresse : "+ address.getDeliveryAddressId());
 		}
 		//enfin on crée l'article
