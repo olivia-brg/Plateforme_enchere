@@ -58,7 +58,7 @@ public class UserDAOImpl implements UserDAO{
                        city,
                        postalCode,
                        credit,
-                       isAdmin
+                       role
                 from auctionUsers
                 WHERE userName = :userName AND
                       password = :password
@@ -121,7 +121,7 @@ public class UserDAOImpl implements UserDAO{
             city,
             postalCode,
             credit,
-            isAdmin
+            role
             from auctionUsers
             WHERE id = ?
             """;

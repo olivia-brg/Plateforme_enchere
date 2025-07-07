@@ -114,6 +114,9 @@ public class UserServiceImpl implements UserService {
 
         if (isValid) {
             logger.info("Creating : " + user.toString());
+
+            //Todo: insérer l'encodage su motDePasse
+
             userDAO.insertNewUser(user);
         } else {
             logger.error("Error creating : " + user.toString());

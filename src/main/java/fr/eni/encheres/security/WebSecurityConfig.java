@@ -1,0 +1,79 @@
+package fr.eni.encheres.security;
+import fr.eni.encheres.controller.LoginController;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
+import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.session.SessionManagementFilter;
+
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.Map;
+
+
+@Configuration
+@EnableWebSecurity
+public class WebSecurityConfig {
+
+    /**
+     * Récupération des utilisateurs de l'application via la base de données
+     */
+
+
+
+
+    protected final Log logger = LogFactory.getLog(getClass());
+
+    @Bean
+    UserDetailsManager userDetailsManager(DataSource datasource) {
+        JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(datasource);
+
+        jdbcUserDetailsManager.setUsersByUsernameQuery("select username, password, 1 from auctionUsers where username=?");
+        System.out.println("user database has been loaded");
+        jdbcUserDetailsManager.setAuthoritiesByUsernameQuery("select username, Role from auctionUsers where username =?");
+        return jdbcUserDetailsManager;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        http
+                .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/img/**", "/js/**","/flipflop.mp3").permitAll()
+                        .requestMatchers("/signIn").permitAll()
+                        .requestMatchers("/detailArticle").authenticated()
+                        .anyRequest().authenticated()
+                )
+                .formLogin((form) -> form
+                        .loginPage("/login").permitAll()
+                        .defaultSuccessUrl("/")
+                )
+                .logout((logout) -> logout.permitAll().logoutUrl("/logout").logoutSuccessUrl("/"));
+
+        return http.build();
+    }
+
+}

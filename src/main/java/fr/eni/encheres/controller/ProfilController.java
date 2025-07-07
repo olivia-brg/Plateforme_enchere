@@ -7,8 +7,6 @@ import fr.eni.encheres.dal.ProfileFormDTO;
 import fr.eni.encheres.dal.UserDTO;
 import fr.eni.encheres.exception.BusinessException;
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.support.SessionStatus;
 @SessionAttributes({"connectedUser"})
 public class ProfilController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ProfilController.class);
     private final UserService userService;
 
     public ProfilController(UserService userService) {
@@ -34,9 +31,9 @@ public class ProfilController {
         User userFetched = this.userService.findById(id);
         if (userFetched != null) {
             model.addAttribute("userFetched", userFetched);
-            logger.info("USER FOUND : {}", userFetched);
+
             return "profile";
-        } else logger.info("Unknown user");
+        }
 
         return "redirect:/encheres";
     }
@@ -86,7 +83,7 @@ public class ProfilController {
             // Mise à jour mot de passe si champs remplis
             PasswordDTO pwd = profileForm.getPasswordModification();
             if (pwd.getNewPassword() != null && !pwd.getNewPassword().isBlank()) {
-                logger.info("PASSWORD CHANGED : {}", pwd.getNewPassword());
+;
                 userService.checkPasswordConfirmation(pwd.getNewPassword(), pwd.getConfirmPassword());
                 userService.updatePassword(pwd, connectedUser.getId());
             }
@@ -104,11 +101,11 @@ public class ProfilController {
     public String deleteUser(@ModelAttribute("connectedUser") User connectedUser,
                              SessionStatus status) {
         if (this.userService.deleteUserById(connectedUser.getId())) {
-            logger.info("deleteUser : {} deleted", connectedUser.getUserName());
+
             status.setComplete();
             return "redirect:/encheres";
         }
-        logger.info("deleteUser : {} not deleted", connectedUser.getUserName());
+
         return "redirect:/profile?id=" + connectedUser.getId();
     }
 
