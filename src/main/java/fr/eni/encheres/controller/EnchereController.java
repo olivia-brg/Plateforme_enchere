@@ -4,15 +4,17 @@ package fr.eni.encheres.controller;
 import fr.eni.encheres.bll.article.ArticleService;
 
 import fr.eni.encheres.bll.user.UserService;
-import fr.eni.encheres.bo.Adress;
+import fr.eni.encheres.bo.Address;
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Category;
 import fr.eni.encheres.bo.User;
 import fr.eni.encheres.exception.BusinessException;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import fr.eni.encheres.dal.AdresseDAO;
+import fr.eni.encheres.dal.AddressDAO;
 import fr.eni.encheres.dal.ArticleDAO;
 
 import fr.eni.encheres.dal.CategoryDAO;
@@ -39,28 +41,44 @@ public class EnchereController {
     private final UserService userService;
     private ArticleDAO articleDAO;
     private ArticleService articleService;
-    private AdresseDAO adresseDAO;
+    private AddressDAO addressDAO;
     private CategoryDAO categoryDAO;
 
-    EnchereController(ArticleService articleService, ArticleDAO articleDAO, AdresseDAO adresseDAO, CategoryDAO categoryDAO, UserService userService) {
+    EnchereController(ArticleService articleService, ArticleDAO articleDAO, AddressDAO addressDAO, CategoryDAO categoryDAO, UserService userService) {
 		this.articleService = articleService ;
         this.articleDAO = articleDAO;
-        this.adresseDAO = adresseDAO;
+        this.addressDAO = addressDAO;
         this.categoryDAO = categoryDAO;
         this.userService = userService;
     }
 
     @RequestMapping(path = {"/", "/encheres"}, method = {RequestMethod.GET, RequestMethod.POST})
-    public String accueil(@ModelAttribute("connectedUser") User connectedUser, Model model) throws BusinessException {
+    public String accueil(@ModelAttribute("connectedUser") User connectedUser,@RequestParam(required = false) Long category,@RequestParam(required = false) String search, Model model) throws BusinessException {
     	List<Article> articles = articleService.consultArticles();
-		model.addAttribute("article", articles);
+        List<Category> listeCategories = articleService.consultCategories();
+
+        model.addAttribute("listeCategories", listeCategories);
+        model.addAttribute("category", category);
+
+        if (search != null && !search.isBlank()) {
+            articles = articles.stream().filter( article ->article.getName().toLowerCase().contains(search.toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+
+        model.addAttribute("article", articles);
+
         return "encheres";
     }
 
     @GetMapping("/sell")
-    public String newArticle(Model model){
+    public String newArticle(@ModelAttribute("connectedUser") User connectedUser, Model model){
         List<Category> listeCategories = articleService.consultCategories();
         Article article = new Article();
+        Address tempAdress = new Address();
+        tempAdress.setCity(userService.findById(connectedUser.getId()).getCity());
+        tempAdress.setStreet(userService.findById(connectedUser.getId()).getStreet());
+        tempAdress.setPostalCode(userService.findById(connectedUser.getId()).getPostalCode());
+        article.setWithdrawalAddress(tempAdress);
         model.addAttribute("article", article);
         model.addAttribute("listeCategories", listeCategories);
         return "new-product";
@@ -69,41 +87,42 @@ public class EnchereController {
     @PostMapping(path="/sell")
     String insererArticle(@ModelAttribute("article") Article article, @ModelAttribute("connectedUser") User connectedUser ){
         //On crée une adresse avec les attributs adresse de l'utilisateur
-        Adress adress = new Adress();
-        adress.setStreet(connectedUser.getStreet());
-        adress.setCity(connectedUser.getCity());
-        adress.setPostalCode(connectedUser.getPostalCode());
+        Address address = new Address();
+        address.setStreet(connectedUser.getStreet());
+        address.setCity(connectedUser.getCity());
+        address.setPostalCode(connectedUser.getPostalCode());
 
         //On implémente cette adresse à l'article.
-        article.setWithdrawalAdress(adress);
+        article.setWithdrawalAddress(address);
+        article.setUser(connectedUser);
+        article.setAuctionStartDate(LocalDateTime.now());
         //On appelle la méthode du service qui créera l'article
         articleService.createArticle(article, connectedUser.getId());
 
 
-        return "detail-vente";
+        //redirection vers l'accueil pour le moment je n'arrive pas a renvoyer sur la page article en conservant l'id.
+        return "redirect:/";
+        //return "redirect:/detailArticle(id=${article.id})";
+        //"@{/detailArticle(id=${a.id})}" a essayer d'ajouter
     }
-
-
 
     @GetMapping("/detailArticle")
     public String afficherUnArticle(@RequestParam(name = "id") int id, Model model) {
 
         Article current = articleService.consultArticleById(id);
-
         if (current != null) {
-            User vendeur = userService.readById(current.getUser().getId());
-            Adress adress = articleService.consultAdressById(current.getWithdrawalAdress().getDeliveryAdressId());
+            User vendeur = userService.findById(current.getUser().getId());
+            Address address = articleService.consultAddressById(current.getWithdrawalAddress().getDeliveryAddressId());
+            Category category = articleService.consultCategoryById(current.getCategory().getId());
             current.setUser(vendeur);
-            current.setWithdrawalAdress(adress);
+            current.setWithdrawalAddress(address);
+            current.setCategory(category);
             System.out.println(current);
             model.addAttribute("article", current);
         }else
         {System.out.println("Article inconnu!!");}
         return "detail-vente";
     }
-
-
-
 
     @ModelAttribute("connectedUser")
     public User AddUser() {

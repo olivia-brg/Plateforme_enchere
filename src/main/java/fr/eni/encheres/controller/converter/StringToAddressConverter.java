@@ -1,13 +1,14 @@
 package fr.eni.encheres.controller.converter;
 
 import fr.eni.encheres.bll.article.ArticleService;
-import fr.eni.encheres.bo.Adress;
+import fr.eni.encheres.bo.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StringToAdressConverter implements Converter<String, Adress> {
+public class StringToAddressConverter implements Converter<String, Address> {
 
 
     private ArticleService articleService;
@@ -18,8 +19,8 @@ public class StringToAdressConverter implements Converter<String, Adress> {
     }
 
     @Override
-    public Adress convert(String id) {
-        Integer TheId = Integer.parseInt(id);
-        return articleService.consultAdressById(TheId);
+    public Address convert(@NonNull String id) {
+        int TheId = Integer.parseInt(id);
+        return articleService.consultAddressById(TheId);
     }
 }

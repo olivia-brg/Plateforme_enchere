@@ -46,26 +46,10 @@ public class LoginController {
 			if (user != null) {
 	            connectedUser.setId(user.getId());
 	            connectedUser.setUserName(user.getUserName());
-	            connectedUser.setFirstName(user.getFirstName());
-	            connectedUser.setLastName(user.getLastName());
-	            connectedUser.setEmail(user.getEmail());
-	            connectedUser.setPhoneNumber(user.getPhoneNumber());
-	            connectedUser.setStreet(user.getStreet());
-	            connectedUser.setCity(user.getCity());
-	            connectedUser.setPostalCode(user.getPostalCode());
-	            connectedUser.setCredit(user.getCredit());
 	            connectedUser.setAdmin(user.isAdmin());
 	        } else {
 	            connectedUser.setId(0);
 	            connectedUser.setUserName(null);
-	            connectedUser.setFirstName(null);
-	            connectedUser.setLastName(null);
-	            connectedUser.setEmail(null);
-	            connectedUser.setPhoneNumber(null);
-	            connectedUser.setStreet(null);
-	            connectedUser.setCity(null);
-	            connectedUser.setPostalCode(null);
-	            connectedUser.setCredit(0);
 	            connectedUser.setAdmin(false);
 	        }
 	        System.out.println(connectedUser);

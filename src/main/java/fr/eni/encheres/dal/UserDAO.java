@@ -6,12 +6,13 @@ public interface UserDAO {
 
     User login(String username, String password);
     public boolean findId(String userName);
-    void update(User user);
+    boolean update(User user, int id);
     boolean isPasswordCorrect(String username, String password);
     void insertNewUser(User user);
     User findByUsername(String username);
+    boolean isUsernameAvailable(String username, int id);
     User findUserById(int id);
-    boolean deleteUserById(String username);
+    boolean deleteUserById(int id);
 
 
 }

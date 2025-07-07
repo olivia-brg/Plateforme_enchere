@@ -45,7 +45,7 @@
             <label for="city">City:</label>
             <input type="text" id="city" name="city" th:value="*{city}" readonly>
         </div>
-        <th:block th:if="${(userFetched.userName).equals(connectedUser.userName)}" readonly>
+        <th:block th:if="${userFetched.getId() == connectedUser.getId()}">
             <p>Credit: <span th:text="*{credit}"></span></p>
             <button type="button" onclick="window.location.href='/profile/update'">Update</button>
 
