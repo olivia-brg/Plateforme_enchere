@@ -124,9 +124,8 @@ public class EnchereController {
         return new User();
     }
 
-
     @PostMapping("/bid")
-    public String newBid(@ModelAttribute("connectedUser") User connectedUser,@RequestParam("user-bid") int bidAmount,@ModelAttribute("article")Article currentArticle, Model model) {
+    public String newBid(@ModelAttribute("connectedUser") User connectedUser,@RequestParam("user-bid") int bidAmount, @ModelAttribute("article") Article currentArticle, Model model) {
 
 
 

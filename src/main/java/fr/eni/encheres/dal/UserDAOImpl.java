@@ -114,7 +114,7 @@ public class UserDAOImpl implements UserDAO{
             """;
 
     private final String FIND_CREDIT_BY_USER_ID = """
-            SELECT credit FROM auctionUsers WHERE userId = ?;
+            SELECT credit FROM auctionUsers WHERE id = ?;
             """;
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -194,7 +194,6 @@ public class UserDAOImpl implements UserDAO{
         return jdbcTemplate.getJdbcTemplate().queryForObject(FIND_USER_BY_ID,new BeanPropertyRowMapper<>(User.class), id);
     }
 
-    //si on change le username dans la page modifier profil cette méthode ne fonctionne plus. Remplacer par findByID?
     @Override
     public User findByUsername(String username) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
@@ -222,8 +221,9 @@ public class UserDAOImpl implements UserDAO{
         return jdbcTemplate.update(DELETE_USER_BY_USERNAME, mapSqlParameterSource) == 1;
     }
 
+
     @Override
-    public int findCreditById(int id) {
+    public int findUserCreditByUserId(int id) {
         int result = jdbcTemplate.getJdbcTemplate().queryForObject(FIND_CREDIT_BY_USER_ID,Integer.class,id);
         return result;
     }
@@ -245,8 +245,6 @@ public class UserDAOImpl implements UserDAO{
 
         jdbcTemplate.update(INSERT_NEW_USER, params);
     }
-
-
 
 
     static class UserLoginRowMapper implements RowMapper<User> {

@@ -65,15 +65,15 @@ public class UserServiceImpl implements UserService {
     public boolean update(User user, int id) throws BusinessException {
         logger.info("update : " + user.toString());
         BusinessException be = new BusinessException();
+
         boolean isValid = isUsernameAvailable(user.getUserName(), id, be);
-//        isValid &= validerGenre(film.getGenre(), be);
-//        isValid &= validerActeurs(film.getActeurs(), be);
-//        isValid &= validerRealisateur(film.getRealisateur(), be);
+//      isValid &= -ajouter autant de parametres de validation que nécessaire-
+
         if (isValid) {
             logger.info("update : " + user.toString());
             return this.userDAO.update(user, id);
         } else  {
-            logger.error("update : " + user.toString());
+            logger.error("Error updating : " + user.toString());
             throw be;
         }
     }
@@ -87,10 +87,18 @@ public class UserServiceImpl implements UserService {
 	@Transactional(rollbackFor = BusinessException.class)
 	public void createNewUser(User user)throws BusinessException {
 		BusinessException be = new BusinessException();
-		boolean userExists = isUserExisting(user.getUserName(), be);
 
-		if (userExists) throw be;
-		else userDAO.insertNewUser(user);
+        // id car utilisateur pas en base de donnée
+        boolean isValid = isUsernameAvailable(user.getUserName(), 0, be);
+//      isValid &= -ajouter autant de paramètres de validation que nécessaire-
+
+        if (isValid) {
+            logger.info("Creating : " + user.toString());
+            userDAO.insertNewUser(user);
+        } else {
+            logger.error("Error creating : " + user.toString());
+            throw be;
+        }
 	}
 
     @Override
@@ -109,5 +117,20 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    @Override
+    @Transactional(rollbackFor = BusinessException.class)
+    public boolean checkPasswordConfirmation(String firstPassword, String secondPassword) throws BusinessException {
+        BusinessException be = new BusinessException();
+        if (firstPassword.equals(secondPassword)) return true;
 
+        be.add("Les mots de passe ne correspondent pas.");
+        throw be;
+    }
+  
+  @Override
+      public int getUserCredit(int userId) {
+        return userDAO.findUserCreditByUserId(userId);
+
+    }
 }
+

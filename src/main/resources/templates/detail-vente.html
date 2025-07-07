@@ -13,7 +13,7 @@
     <h1>ENI-Enchères</h1>
     <h2>Détail vente</h2>
     <div class="detail-objet" >
-        <h3>nom de l'objet</h3>
+        <h3 th:text="${article.name}"></h3>
         <img src="pic.jpg" alt="">
         <div class="form-group">
             <label for="description">Description:</label>
@@ -45,8 +45,8 @@
             <label for="auction-end">Début de l'enchère de l'enchère:</label>
             <input type="datetime" id="auction-end" name="auction-end" readonly th:value="${article.auctionEndDate}">
         </div>
-        <label>Adresse de retrait : </label>
-        <div method="post" th:object="${article.withdrawalAddress}" th:fragment="adress-form-frag">
+        <h4><label for="withdraw_Address">Adresse de retrait :</label></h4>
+        <div id="withdraw_Address" th:object="${article.withdrawalAddress}" th:fragment="adress-form-frag">
             <div class="form-group">
                 <label for="street">Rue : </label>
                 <input readonly type="text" id="street" th:field="*{street}" required>
