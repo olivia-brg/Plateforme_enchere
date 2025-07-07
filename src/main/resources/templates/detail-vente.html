@@ -25,8 +25,14 @@
         </div>
         <div class="form-group">
             <label for="best-bid">Meilleur offre:</label>
-            <input type="text" id="best-bid" name="best-bid" readonly th:value="${article.soldPrice}">
+            <input type="text" id="best-bid" name="best-bid" readonly th:if="${maxBid != null}" th:value="${maxBid.getAuctionAmount()}">
+            <span type="text" id="no-bid" name="best-bid" readonly th:if="${maxBid == null}">Aucune enchere</span>
         </div>
+            <label for="best-user">Meilleur encherisseur:</label>
+            <input type="text" id="best-user" name="best-user" readonly th:if="${maxBid != null}" th:value="${maxBid.getArticle().getUser().getLastName()}">
+            <span id="no-user-bid"  th:if="${maxBid == null}">Aucune enchere</span>
+
+        <div
         <div class="form-group">
             <label for="intial-price">Mise à prix:</label>
             <input type="number" id="intial-price" name="intial-price" readonly th:value="${article.startingPrice}">

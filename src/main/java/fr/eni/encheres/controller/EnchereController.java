@@ -137,9 +137,10 @@ public class EnchereController {
         bid.setAuctionDate(LocalDate.now());
 
         bidService.createBid(bid, connectedUser.getId(),currentArticle.getId());
+        Bid maxBid = bidService.getHighestBid(currentArticle.getId());
 
         model.addAttribute("bid", bid);
-
+        model.addAttribute("maxBid", maxBid);
 
         return "detail-vente";
     }
