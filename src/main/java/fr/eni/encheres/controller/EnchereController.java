@@ -3,13 +3,12 @@ package fr.eni.encheres.controller;
 
 import fr.eni.encheres.bll.article.ArticleService;
 
+import fr.eni.encheres.bll.bid.BidService;
 import fr.eni.encheres.bll.user.UserService;
-import fr.eni.encheres.bo.Address;
-import fr.eni.encheres.bo.Article;
-import fr.eni.encheres.bo.Category;
-import fr.eni.encheres.bo.User;
+import fr.eni.encheres.bo.*;
 import fr.eni.encheres.exception.BusinessException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,13 +42,16 @@ public class EnchereController {
     private ArticleService articleService;
     private AddressDAO addressDAO;
     private CategoryDAO categoryDAO;
+    private BidService bidService;
 
-    EnchereController(ArticleService articleService, ArticleDAO articleDAO, AddressDAO addressDAO, CategoryDAO categoryDAO, UserService userService) {
+
+    EnchereController(ArticleService articleService, ArticleDAO articleDAO, AddressDAO addressDAO, CategoryDAO categoryDAO, UserService userService, BidService bidService) {
 		this.articleService = articleService ;
         this.articleDAO = articleDAO;
         this.addressDAO = addressDAO;
         this.categoryDAO = categoryDAO;
         this.userService = userService;
+        this.bidService = bidService;
     }
 
     @RequestMapping(path = {"/", "/encheres"}, method = {RequestMethod.GET, RequestMethod.POST})
@@ -128,6 +130,26 @@ public class EnchereController {
     public User AddUser() {
         System.out.println("Add Attribut User to Session");
         return new User();
+    }
+
+
+    @PostMapping("/bid")
+    public String newBid(@ModelAttribute("connectedUser") User connectedUser,@RequestParam("user-bid") int bidAmount,@ModelAttribute("article")Article currentArticle, Model model) {
+
+
+
+        Bid bid = new Bid();
+
+        bid.setArticle(currentArticle);
+        bid.setAuctionAmount(bidAmount);
+        bid.setAuctionDate(LocalDate.now());
+
+        bidService.createBid(bid, connectedUser.getId(),currentArticle.getId());
+
+        model.addAttribute("bid", bid);
+
+
+        return "detail-vente";
     }
 
 
