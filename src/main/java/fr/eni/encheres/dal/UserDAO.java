@@ -13,6 +13,7 @@ public interface UserDAO {
     boolean doesUsernameExist(String username);
     User findUserById(int id);
     boolean deleteUserById(int id);
+    int findCreditById(int id);
 
 
 }

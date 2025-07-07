@@ -9,13 +9,16 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+
 @Repository
 public class AddressDAOImpl implements AddressDAO {
 
 	private final String FIND_BY_ID = "SELECT ID, STREET, POSTALCODE, CITY FROM DELIVERYADDRESS WHERE ID = :id";
 	private final String CREATE_ADDRESS = """
 			INSERT INTO DELIVERYADDRESS(street, postalCode, city)
-			VALUES(:street, :postalCode, :city)
+			VALUES(? , ?, ?)
 	""";
 	private final String FIND_IF_EXISTS = """
 			SELECT COUNT(*) FROM DELIVERYADDRESS WHERE STREET = :street AND  POSTALCODE = :postalCode
@@ -56,22 +59,29 @@ public class AddressDAOImpl implements AddressDAO {
 		namedParameters.addValue("postalCode", address.getPostalCode());
 		namedParameters.addValue("city", address.getCity());
 		int count=jdbcTemplate.queryForObject(FIND_IF_EXISTS, namedParameters, Integer.class);
+
+
 		return count > 0;
 	}
 
 
 	@Override
 	public int create(Address address) {
+
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-		namedParameters.addValue("street", address.getStreet());
-		namedParameters.addValue("postalCode", address.getPostalCode());
-		namedParameters.addValue("city", address.getCity());
-		int result = jdbcTemplate.update(CREATE_ADDRESS,namedParameters);
-		if (keyHolder!=null && keyHolder.getKey() != null){
-			address.setDeliveryAddressId(keyHolder.getKey().intValue());
-		}
-		return result;
+
+		//int result = jdbcTemplate.update(CREATE_ADDRESS,namedParameters);
+		jdbcTemplate.getJdbcTemplate().update(connection -> {
+			PreparedStatement ps = connection.prepareStatement(CREATE_ADDRESS, Statement.RETURN_GENERATED_KEYS);
+			ps.setString(1, address.getStreet());
+			ps.setString(2, address.getCity());
+			ps.setString(3, address.getPostalCode());
+			return ps;
+		}, keyHolder);
+		address.setDeliveryAddressId(keyHolder.getKey().intValue());
+		System.out.println("L'adresse ajoutée : " + address.toString());
+
+		return keyHolder.getKey().intValue();
 	}
 }
 

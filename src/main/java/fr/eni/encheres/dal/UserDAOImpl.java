@@ -112,6 +112,10 @@ public class UserDAOImpl implements UserDAO{
             WHERE id = ?
             """;
 
+    private final String FIND_CREDIT_BY_USER_ID = """
+            SELECT credit FROM auctionUsers WHERE userId = ?;
+            """;
+
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public UserDAOImpl(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -217,6 +221,12 @@ public class UserDAOImpl implements UserDAO{
     }
 
     @Override
+    public int findCreditById(int id) {
+        int result = jdbcTemplate.getJdbcTemplate().queryForObject(FIND_CREDIT_BY_USER_ID,Integer.class,id);
+        return result;
+    }
+
+    @Override
     public void insertNewUser(User user) {
         logger.warn("call to insert methode");
 
@@ -233,6 +243,8 @@ public class UserDAOImpl implements UserDAO{
 
         jdbcTemplate.update(INSERT_NEW_USER, params);
     }
+
+
 
 
     static class UserLoginRowMapper implements RowMapper<User> {

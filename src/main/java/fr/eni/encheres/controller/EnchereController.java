@@ -86,14 +86,6 @@ public class EnchereController {
 
     @PostMapping(path="/sell")
     String insererArticle(@ModelAttribute("article") Article article, @ModelAttribute("connectedUser") User connectedUser ){
-        //On crée une adresse avec les attributs adresse de l'utilisateur
-        Address address = new Address();
-        address.setStreet(connectedUser.getStreet());
-        address.setCity(connectedUser.getCity());
-        address.setPostalCode(connectedUser.getPostalCode());
-
-        //On implémente cette adresse à l'article.
-        article.setWithdrawalAddress(address);
         article.setUser(connectedUser);
         article.setAuctionStartDate(LocalDateTime.now());
         //On appelle la méthode du service qui créera l'article
