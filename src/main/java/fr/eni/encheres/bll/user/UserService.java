@@ -14,6 +14,7 @@ public interface UserService {
     void createNewUser (User user)throws BusinessException;
     boolean deleteUserById(int id);
     boolean isUsernameAvailable(String username, int id, BusinessException be);
-
     boolean checkPasswordConfirmation(String firstPassword, String secondPassword) throws BusinessException;
+    int getUserCredit(int userId);
+
 }
