@@ -94,7 +94,7 @@ public class LoginController {
 	@PostMapping("/register")
 	public String registred(@ModelAttribute User user,@ModelAttribute("connectedUser") User connectedUser, Model model, RedirectAttributes redirectAttributes) {
 		System.out.println("méthode registred workin");
-
+		logger.info("méthode registred workin");
 
 		try {
 			System.out.println(user.getEmail());

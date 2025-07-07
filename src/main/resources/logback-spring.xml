@@ -54,8 +54,12 @@
         </encoder>
     </appender>
 
+
     <springProfile name="debug">
         <root level="DEBUG">
+            <logger name="org.hibernate.SQL" level="DEBUG"/>
+            <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE"/>
+            <logger name="org.springframework.security" level="DEBUG"/>
             <appender-ref ref="DEBUG_APPENDER"/>
             <appender-ref ref="INFO_APPENDER"/>
             <appender-ref ref="WARN_APPENDER"/>
@@ -64,6 +68,7 @@
     </springProfile>
 
     <springProfile name="dev">
+
         <root level="DEBUG">
             <appender-ref ref="INFO_APPENDER"/>
             <appender-ref ref="WARN_APPENDER"/>

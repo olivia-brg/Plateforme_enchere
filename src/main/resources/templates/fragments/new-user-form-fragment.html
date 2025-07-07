@@ -1,38 +1,38 @@
 <form th:action="@{/register}" method="post" th:object="${user}" th:fragment="new-user-form-frag">
     <div class="text-danger exception" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></div>
     <label for="userName">Username:</label>
-    <input type="text" th:field="*{userName}" required>
+    <input id="username" type="text" th:field="*{userName}" required>
 
     <div class="text-danger exception" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" ></div>
     <label for="lastName">Last Name:</label>
-    <input type="text" th:field="*{lastName}" required>
+    <input id="lastName" type="text" th:field="*{lastName}" required>
 
     <div class="text-danger exception" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" ></div>
     <label for="firstName">First Name:</label>
-    <input type="text" th:field="*{firstName}" required>
+    <input id="firstName" type="text" th:field="*{firstName}" required>
 
     <div class="text-danger exception" th:if="${#fields.hasErrors('email')}" th:errors="*{email}" ></div>
     <label for="email">Email:</label>
-    <input type="email" th:field="*{email}" required>
+    <input id="email" type="email" th:field="*{email}" required>
 
     <div class="text-danger exception" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" ></div>
     <label for="phone">Phone:</label>
-    <input type="tel" th:field="*{phoneNumber}">
+    <input id ="phone" type="tel" th:field="*{phoneNumber}">
 
     <div class="text-danger exception" th:if="${#fields.hasErrors('street')}" th:errors="*{street}" ></div>
     <label for="street">Street:</label>
-    <input type="text"  th:field="*{street}">
+    <input id="street" type="text"  th:field="*{street}">
 
     <div class="text-danger exception" th:if="${#fields.hasErrors('postalCode')}" th:errors="*{postalCode}" ></div>
     <label for="postalCode">Postal Code:</label>
-    <input type="text" th:field="*{postalCode}">
+    <input id="postalCode" type="text" th:field="*{postalCode}">
 
     <div class="text-danger exception" th:if="${#fields.hasErrors('city')}" th:errors="*{city}" ></div>
     <label for="city">City:</label>
-    <input type="text" th:field="*{city}">
+    <input id="city" type="text" th:field="*{city}">
 
     <label for="password">Password:</label>
-    <input type="password" th:field="*{password}" required>
+    <input id="password" type="password" th:field="*{password}" required>
 
     <label for="confirmPassword">Confirm Password:</label>
     <input type="password" id="confirmPassword" name="confirmPassword" required>
