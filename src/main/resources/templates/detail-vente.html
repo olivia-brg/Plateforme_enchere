@@ -59,12 +59,12 @@
 
             <input type="text" id="seller" name="seller" readonly th:value="${article.user.firstName}+ ' ' +${article.user.lastName}">
         </div>
-        <div class="form-group">
+        <form method= "POST" action="/bid" class="form-group">
             <label for="user-bid">Ma propositon </label>
             <input type="number" name="user-bid" id="user-bid"  th:value="${article.soldPrice}" th:min="${article.soldPrice > article.startingPrice} ? article.soldPrice : article.startingPrice">
 
             <button type="submit">Enchérir</button>
-        </div>
+        </form>
         <div class="form-group">
            <button type="submit"><a href="/">Back</a></button>
         </div>

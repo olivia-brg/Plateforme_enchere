@@ -1,6 +1,9 @@
 package fr.eni.encheres.dal;
 
+import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Bid;
+import fr.eni.encheres.bo.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -11,15 +14,26 @@ import java.util.List;
 @Repository
 public class BidDAOImpl implements BidDAO{
 
+    private final String INSERT_NEW_BID = """
+				INSERT INTO bids(bidDate, bidAmount, userId, articleId)
+			             VALUES(:bidDate,:bidAmount,:userId,:articleId);
+			""";
+
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private NamedParameterJdbcTemplate jdbcTemplate;
 
     BidDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     @Override
-    public int createBid() {
-        return 0;
+    public int create(Bid bid, int userId, int  articleId) {
+    MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+    namedParameters.addValue("bidDate", bid.getAuctionDate());
+    namedParameters.addValue("bidAmount", bid.getAuctionAmount());
+    namedParameters.addValue("userId", userId);
+    namedParameters.addValue("articleId", articleId);
+        return jdbcTemplate.update(INSERT_NEW_BID, namedParameters);
     }
 
     @Override
