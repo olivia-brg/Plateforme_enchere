@@ -33,17 +33,17 @@ public class Bid {
 
 
 //	List setter and getter
-	public LocalDate getAuctionDate() {
+	public LocalDate getBidDate() {
 		return bidDate;
 	}
-	public void setAuctionDate(LocalDate auctionDate) {
+	public void setBidDate(LocalDate auctionDate) {
 		this.bidDate = auctionDate;
 	}
 
-	public float getAuctionAmount() {
+	public float getBidAmount() {
 		return bidAmount;
 	}
-	public void setAuctionAmount(float auctionAmount) {
+	public void setBidAmount(float auctionAmount) {
 		this.bidAmount = auctionAmount;
 	}
 
@@ -53,7 +53,7 @@ public class Bid {
 	public void setArticle(Article article) {
 		this.article = article;
 	}
-		
+
 
 	
 }
