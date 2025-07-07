@@ -12,55 +12,74 @@
 <main>
     <h2>Modifier mon profil</h2>
 
-    <form action="/profile/update" method="post" data-th-object="${user}">
+    <form action="/profile/update" method="post" data-th-object="${profileForm}">
+        <h3>Modifier mes informations</h3>
+        <div class="exception" th:if="${errorMessages}">
+            <span th:each="msg : ${errorMessages}" th:text="${msg}"></span>
+        </div>
         <div class="form-group">
+            <div class="text-danger exception" th:if="${#fields.hasErrors('user.userName')}" th:errors="*{user.userName}"></div>
             <label for="userName">Username:</label>
-            <input type="text" id="userName" name="userName" th:value="*{userName}">
+            <input type="text" th:field="*{user.userName}"/>
         </div>
         <div class="form-group">
+            <div class="text-danger exception" th:if="${#fields.hasErrors('user.lastName')}" th:errors="*{user.lastName}"></div>
             <label for="lastName">Last Name:</label>
-            <input type="text" id="lastName" name="lastName" th:value="*{lastName}">
+            <input type="text" th:field="*{user.lastName}">
         </div>
         <div class="form-group">
+            <div class="text-danger exception" th:if="${#fields.hasErrors('user.firstName')}" th:errors="*{user.firstName}"></div>
             <label for="firstName">First Name:</label>
-            <input type="text" id="firstName" name="firstName" th:value="*{firstName}">
+            <input type="text" th:field="*{user.firstName}">
         </div>
         <div class="form-group">
+            <div class="text-danger exception" th:if="${#fields.hasErrors('user.email')}" th:errors="*{user.email}"></div>
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" th:value="*{email}">
+            <input type="text" th:field="*{user.email}" class="form-control"/>
         </div>
         <div class="form-group">
+            <div class="text-danger exception" th:if="${#fields.hasErrors('user.phoneNumber')}"
+                 th:errors="*{user.phoneNumber}"></div>
             <label for="phoneNumber">Phone:</label>
-            <input type="tel" id="phoneNumber" name="phoneNumber" th:value="*{phoneNumber}">
+            <input type="tel" th:field="*{user.phoneNumber}">
         </div>
         <div class="form-group">
+            <div class="text-danger exception" th:if="${#fields.hasErrors('user.street')}" th:errors="*{user.street}"></div>
             <label for="street">Street:</label>
-            <input type="text" id="street" name="street" th:value="*{street}">
+            <input type="text" th:field="*{user.street}">
         </div>
         <div class="form-group">
+            <div class="text-danger exception" th:if="${#fields.hasErrors('user.postalCode')}"
+                 th:errors="*{user.postalCode}"></div>
             <label for="postalCode">Postal Code:</label>
-            <input type="text" id="postalCode" name="postalCode" th:value="*{postalCode}">
+            <input type="text" th:field="*{user.postalCode}">
         </div>
         <div class="form-group">
+            <div class="text-danger exception" th:if="${#fields.hasErrors('user.city')}" th:errors="*{user.city}"></div>
             <label for="city">City:</label>
-            <input type="text" id="city" name="city" th:value="*{city}">
+            <input type="text" th:field="*{user.city}">
         </div>
 
-        <!--        <div class="form-group">-->
-        <!--            <label for="oldPassword">Previous password:</label>-->
-        <!--            <input type="password" id="oldPassword" name="oldPassword">-->
-        <!--        </div>-->
+        <h3>Changer de mot de passe</h3>
 
-        <!--        <div class="form-group">-->
-        <!--            <label for="newPassword">New password:</label>-->
-        <!--            <input type="password" id="newPassword" name="password">-->
-        <!--        </div>-->
+        <div class="form-group">
+            <div class="text-danger exception" th:errors="*{passwordModification.oldPassword}"></div>
+            <label for="oldPassword">Previous password:</label>
+            <input type="password" th:field="*{passwordModification.oldPassword}">
+        </div>
 
-        <!--        <div class="form-group">-->
-        <!--            <label for="confirmPassword">Confirm Password:</label>-->
-        <!--            <input type="password" id="confirmPassword" name="confirmPassword">-->
-        <!--        </div>-->
-        <p>Credit: <span th:text="*{credit}"></span></p>
+        <div class="form-group">
+            <div class="text-danger exception" th:if="${#fields.hasErrors('passwordModification.newPassword')}"
+                 th:errors="*{passwordModification.newPassword}"></div>
+            <label for="newPassword">New password:</label>
+            <input type="password" th:field="*{passwordModification.newPassword}">
+        </div>
+
+        <div class="form-group">
+            <div class="text-danger exception" th:errors="*{passwordModification.confirmPassword}"></div>
+            <label for="confirmPassword">Confirm Password:</label>
+            <input type="password" th:field="*{passwordModification.confirmPassword}">
+        </div>
         <button type="submit">Save</button>
         <button type="button" onclick="window.location.href='/profile/delete'">Delete my account</button>
         <button type="button" onclick="window.location.href='/'">Back</button>

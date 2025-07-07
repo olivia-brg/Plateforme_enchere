@@ -18,9 +18,7 @@ public interface ArticleService {
 
 	public Category consultCategoryById(int id);
 
-	public Bid consultBidById(int id);
 
-	public List<Bid> consultBidsByArticleId(int id);
 
 	public Address consultAddressById(int id);
 

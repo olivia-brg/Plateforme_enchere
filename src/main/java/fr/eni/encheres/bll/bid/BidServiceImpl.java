@@ -17,7 +17,8 @@ public class BidServiceImpl implements BidService {
 
     private BidDAO bidDAO;
 
-    public BidServiceImpl(ArticleService articleService,  BidDAO bidDAO) {
+
+    public BidServiceImpl(ArticleService articleService, BidDAO bidDAO) {
         this.articleService = articleService;
         this.bidDAO = bidDAO;
     }
@@ -30,9 +31,12 @@ public class BidServiceImpl implements BidService {
 //    we are looking for the highest bid for an article
     public Bid getHighestBid(int articleId){
        List<Bid> listBid = bidDAO.readAllFromArticleId(articleId);
-
        return Collections.max(listBid, Comparator.comparing(Bid::getBidAmount));
 
+
+    @Override
+    public List<Bid> consultBidsByArticleId(int id) {
+        return bidDAO.readAllFromArticleId(id);
     }
 
 

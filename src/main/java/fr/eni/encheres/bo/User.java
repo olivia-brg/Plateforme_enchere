@@ -9,35 +9,29 @@ public class User {
 
 	private int id;
 
-	@NotBlank(message = "Le nom d'utilisateur est obligatoire.")
-	@Size(min = 3, max = 50, message = "Le nom d'utilisateur doit contenir entre 3 et 50 caractères.")
+	@Size(min = 3, max = 50, message = "Le nom d'utilisateur est obligatoire et doit contenir entre 2 et 50 caractères.")
 	private String userName;
 
-	@NotBlank(message = "Le nom est obligatoire.")
-	@Size(max = 100, message = "Le nom ne peut pas dépasser 100 caractères.")
+	@Size(min = 2, max = 100, message = "Le nom est obligatoire et doit contenir entre 2 et 100 caractères.")
 	private String lastName;
 
-	@NotBlank(message = "Le prénom est obligatoire.")
-	@Size(max = 100, message = "Le prénom ne peut pas dépasser 100 caractères.")
+	@Size(min = 2, max = 100, message = "Le prénom  est obligatoire et doit contenir entre 2 et 100 caractères.")
 	private String firstName;
 
-	@NotBlank(message = "L'adresse email est obligatoire.")
+	@NotBlank(message = "Adresse email obligatoire.")
 	@Email(message = "Le format de l'email est invalide.")
 	private String email;
 
 	@Pattern(regexp = "^[0-9]{10}$", message = "Le numéro de téléphone doit contenir exactement 10 chiffres.")
 	private String phoneNumber;
 
-	@NotBlank(message = "La rue est obligatoire.")
-	@Size(min = 5, max = 100, message = "La rue doit contenir entre 5 et 100 caractères.")
+	@Size(min = 5, max = 100, message = "La rue est obligatoire et doit contenir entre 5 et 100 caractères.")
 	private String street;
 
-	@NotBlank(message = "Le code postal est obligatoire.")
-	@Pattern(regexp = "^[0-9]{4,5}$", message = "Le code postal doit contenir 4 ou 5 chiffres.")
+	@Pattern(regexp = "^[0-9]{4,5}$", message = "Le code postal est obligatoire et doit contenir 4 ou 5 chiffres.")
 	private String postalCode;
 
-	@NotBlank(message = "La ville est obligatoire.")
-	@Size(min = 2, max = 100, message = "La ville doit contenir entre 2 et 100 caractères.")
+	@Size(min = 2, max = 100, message = "La ville est obligatoire et doit contenir entre 2 et 100 caractères.")
 	private String city;
 
 //	@NotBlank(message = "Le mot de passe est obligatoire.")

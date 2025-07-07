@@ -88,14 +88,6 @@ public class EnchereController {
 
     @PostMapping(path="/sell")
     String insererArticle(@ModelAttribute("article") Article article, @ModelAttribute("connectedUser") User connectedUser ){
-        //On crée une adresse avec les attributs adresse de l'utilisateur
-        Address address = new Address();
-        address.setStreet(connectedUser.getStreet());
-        address.setCity(connectedUser.getCity());
-        address.setPostalCode(connectedUser.getPostalCode());
-
-        //On implémente cette adresse à l'article.
-        article.setWithdrawalAddress(address);
         article.setUser(connectedUser);
         article.setAuctionStartDate(LocalDateTime.now());
         //On appelle la méthode du service qui créera l'article
@@ -132,10 +124,8 @@ public class EnchereController {
         return new User();
     }
 
-
     @PostMapping("/bid")
     public String newBid(@ModelAttribute("connectedUser") User connectedUser,@RequestParam("user-bid") int bidAmount,@RequestParam("articleId") int articleId, Model model) {
-
 
         Article currentArticle = articleService.consultArticleById(articleId);
         Bid bid = new Bid();

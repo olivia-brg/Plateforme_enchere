@@ -2,6 +2,9 @@ package fr.eni.encheres.controller;
 
 import fr.eni.encheres.bll.user.UserService;
 import fr.eni.encheres.bo.User;
+import fr.eni.encheres.dal.PasswordDTO;
+import fr.eni.encheres.dal.ProfileFormDTO;
+import fr.eni.encheres.dal.UserDTO;
 import fr.eni.encheres.exception.BusinessException;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -9,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
@@ -41,62 +43,74 @@ public class ProfilController {
 
     @GetMapping("/update")
     public String updateProfil(@ModelAttribute("connectedUser") User connectedUser, Model model) {
+
         User user = userService.findById(connectedUser.getId());
-        model.addAttribute("user", user);
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setUserName(user.getUserName());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setPhoneNumber(user.getPhoneNumber());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setStreet(user.getStreet());
+        userDTO.setPostalCode(user.getPostalCode());
+        userDTO.setCity(user.getCity());
+        PasswordDTO passwordDTO = new PasswordDTO();
+
+        // Créer l'objet englobant
+        ProfileFormDTO profileForm = new ProfileFormDTO();
+        profileForm.setUser(userDTO);
+        profileForm.setPasswordModification(passwordDTO);
+
+        // Ajouter dans le modèle
+        model.addAttribute("profileForm", profileForm);
         return "edit-profile";
     }
 
     @PostMapping("/update")
-    public String updateProfil(@Valid @ModelAttribute("updatedUser") User updatedUser,
-                               BindingResult bindingResult,
-                               @ModelAttribute("connectedUser") User connectedUser,
-                               Model model) throws BusinessException {
+    public String updateProfile(@Valid @ModelAttribute("profileForm") ProfileFormDTO profileForm,
+                                BindingResult bindingResult,
+                                @ModelAttribute("connectedUser") User connectedUser,
+                                Model model) throws BusinessException {
 
-        model.addAttribute("user", connectedUser);
+        // Gestion des erreurs de validation
         if (bindingResult.hasErrors()) {
-            logger.error("updateProfil : {}", bindingResult.getAllErrors());
             return "edit-profile";
-        } else {
-            try {
-                logger.info("updateProfil : {} updated", updatedUser.getUserName());
-                this.userService.update(updatedUser);
-                return "redirect:/profile?id=" + connectedUser.getId();
-
-            } catch (BusinessException e) {
-                e.getMessages().forEach(m -> {
-                    ObjectError error = new ObjectError("globalError", m);
-                    bindingResult.addError(error);
-                });
-                return "edit-profile";
-            }
         }
-    }
 
+        try {
+            // Mise à jour des infos utilisateur
+            userService.updateProfile(profileForm.getUser(), connectedUser.getId());
 
-//        @RequestParam(name = "oldPassword", required = false) String oldPassword,
-//        @RequestParam(name = "confirmPassword", required = false) String confirmPassword
-//
-//        if (updateUserInfo.getPassword().equals(confirmPassword)) {
-//            if (this.userService.isPasswordCorrect(connectedUser.getUserName(), oldPassword)) {
-//            } else {
-//                logger.info("updateProfil : Mot de passe erroné");
-//            }
-//        } else {
-//            logger.info("updateProfil : Veuillez saisir le même mot de passe");
-//        }
-
-
-        @GetMapping("/delete")
-        public String deleteUser (@ModelAttribute("connectedUser") User connectedUser,
-                SessionStatus status){
-            if (this.userService.deleteUserById(connectedUser.getId())) {
-                logger.info("deleteUser : {} deleted", connectedUser.getUserName());
-                status.setComplete();
-                return "redirect:/encheres";
+            // Mise à jour mot de passe si champs remplis
+            PasswordDTO pwd = profileForm.getPasswordModification();
+            if (pwd.getNewPassword() != null && !pwd.getNewPassword().isBlank()) {
+                logger.info("PASSWORD CHANGED : {}", pwd.getNewPassword());
+                userService.checkPasswordConfirmation(pwd.getNewPassword(), pwd.getConfirmPassword());
+                userService.updatePassword(pwd, connectedUser.getId());
             }
-            logger.info("deleteUser : {} not deleted", connectedUser.getUserName());
+
             return "redirect:/profile?id=" + connectedUser.getId();
+
+        } catch (BusinessException e) {
+            model.addAttribute("errorMessages", e.getMessages());
+            return "edit-profile";
         }
-
-
     }
+
+
+    @GetMapping("/delete")
+    public String deleteUser(@ModelAttribute("connectedUser") User connectedUser,
+                             SessionStatus status) {
+        if (this.userService.deleteUserById(connectedUser.getId())) {
+            logger.info("deleteUser : {} deleted", connectedUser.getUserName());
+            status.setComplete();
+            return "redirect:/encheres";
+        }
+        logger.info("deleteUser : {} not deleted", connectedUser.getUserName());
+        return "redirect:/profile?id=" + connectedUser.getId();
+    }
+
+
+}

@@ -1,6 +1,7 @@
 package fr.eni.encheres.dal;
 
 import fr.eni.encheres.bo.User;
+import fr.eni.encheres.exception.BusinessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,7 @@ public class UserDAOImpl implements UserDAO{
 	        VALUES (:userName,
 	                :firstName,
 	                :LastName,
-	                :email, 
+	                :email,
 	                :phoneNumber,
 	                :street,
 	                :city,
@@ -79,20 +80,33 @@ public class UserDAOImpl implements UserDAO{
             """;
 
     private final String UPDATE_USER = """
-                UPDATE auctionUsers SET firstName = :firstName,
+                UPDATE auctionUsers SET userName = :userName,
+                                        firstName = :firstName,
                                         lastName = :lastName,
                                         email = :email,
                                         phoneNumber = :phoneNumber,
                                         street = :street,
                                         city = :city,
                                         postalCode = :postalCode
-                WHERE userName = :userName
+                WHERE id = :id
             """;
 
-    private final String IS_PASSWORD_CORRECT = """
+    private final String UPDATE_PASSWORD = """
+                UPDATE auctionUsers SET password = :password
+                WHERE id = :id
+            """;
+
+    private final String IS_PASSWORD_CORRECT_BY_USERNAME = """
                 SELECT COUNT(*)
                 FROM auctionUsers
                 WHERE username = :userName AND
+                      password = :password
+            """;
+
+    private final String IS_PASSWORD_CORRECT_BY_ID = """
+                SELECT COUNT(*)
+                FROM auctionUsers
+                WHERE id = :id AND
                       password = :password
             """;
 
@@ -110,6 +124,10 @@ public class UserDAOImpl implements UserDAO{
             isAdmin
             from auctionUsers
             WHERE id = ?
+            """;
+
+    private final String FIND_CREDIT_BY_USER_ID = """
+            SELECT credit FROM auctionUsers WHERE id = ?;
             """;
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -141,9 +159,10 @@ public class UserDAOImpl implements UserDAO{
     }
 
     @Override
-    public boolean update(User user) {
+    public boolean updateProfile(UserDTO user, int id) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 
+        mapSqlParameterSource.addValue("id", id);
         mapSqlParameterSource.addValue("userName", user.getUserName());
         mapSqlParameterSource.addValue("firstName", user.getFirstName());
         mapSqlParameterSource.addValue("lastName", user.getLastName());
@@ -152,7 +171,7 @@ public class UserDAOImpl implements UserDAO{
         mapSqlParameterSource.addValue("street", user.getStreet());
         mapSqlParameterSource.addValue("city", user.getCity());
         mapSqlParameterSource.addValue("postalCode", user.getPostalCode());
-        mapSqlParameterSource.addValue("password", user.getPassword());
+        logger.info("update {} (id : {}) : {}", user.getUserName(), id, String.valueOf(jdbcTemplate.update(UPDATE_USER, mapSqlParameterSource) == 1));
         return jdbcTemplate.update(UPDATE_USER, mapSqlParameterSource) == 1;
 
     }
@@ -169,7 +188,32 @@ public class UserDAOImpl implements UserDAO{
             params.addValue("password", password);
 
             Integer count = jdbcTemplate.queryForObject(
-                    IS_PASSWORD_CORRECT,
+                    IS_PASSWORD_CORRECT_BY_USERNAME,
+                    params,
+                    Integer.class
+            );
+            logger.info("isPasswordCorrect : " + (count != null && count > 0));
+            return count != null && count > 0;
+
+        } catch (Exception e) {
+            logger.error("Erreur lors de la vérification du mot de passe", e);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isPasswordCorrect(int id, String password) {
+        try {
+            if (id < 1 || password == null) {
+                return false;
+            }
+
+            MapSqlParameterSource params = new MapSqlParameterSource();
+            params.addValue("userName", id);
+            params.addValue("password", password);
+
+            Integer count = jdbcTemplate.queryForObject(
+                    IS_PASSWORD_CORRECT_BY_ID,
                     params,
                     Integer.class
             );
@@ -187,7 +231,6 @@ public class UserDAOImpl implements UserDAO{
         return jdbcTemplate.getJdbcTemplate().queryForObject(FIND_USER_BY_ID,new BeanPropertyRowMapper<>(User.class), id);
     }
 
-    //si on change le username dans la page modifier profil cette méthode ne fonctionne plus. Remplacer par findByID?
     @Override
     public User findByUsername(String username) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
@@ -199,13 +242,12 @@ public class UserDAOImpl implements UserDAO{
     }
 
     @Override
-    public boolean doesUsernameExist(String username) {
-        //TODO: finir d'implémenter la méthode (la requete fonctionne bien, changer le 1 par un id dynamique)
+    public boolean isUsernameAvailable(String username, int id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userName", username);
-        params.addValue("id", 1);
+        params.addValue("id", id);
         Integer count = jdbcTemplate.queryForObject(FIND_IF_USERNAME_EXIST, params, Integer.class);
-        return count != null && count > 0;
+        return !(count != null && count > 0);
     }
 
     @Override
@@ -214,6 +256,21 @@ public class UserDAOImpl implements UserDAO{
         mapSqlParameterSource.addValue("id", id);
         logger.info("Deleting {}", id);
         return jdbcTemplate.update(DELETE_USER_BY_USERNAME, mapSqlParameterSource) == 1;
+    }
+
+
+    @Override
+    public int findUserCreditByUserId(int id) {
+        int result = jdbcTemplate.getJdbcTemplate().queryForObject(FIND_CREDIT_BY_USER_ID,Integer.class,id);
+        return result;
+    }
+
+    @Override
+    public boolean updatePassword(String newPassword, int id) throws BusinessException {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("password", newPassword);
+        mapSqlParameterSource.addValue("id", id);
+        return jdbcTemplate.update(UPDATE_PASSWORD, mapSqlParameterSource) == 1;
     }
 
     @Override

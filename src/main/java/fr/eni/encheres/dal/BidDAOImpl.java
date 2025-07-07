@@ -16,8 +16,8 @@ public class BidDAOImpl implements BidDAO{
 			             VALUES(:bidDate,:bidAmount,:userId,:articleId);
 			""";
 
-    NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 
     BidDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {

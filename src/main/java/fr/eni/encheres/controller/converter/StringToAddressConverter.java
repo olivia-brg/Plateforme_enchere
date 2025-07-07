@@ -4,6 +4,7 @@ import fr.eni.encheres.bll.article.ArticleService;
 import fr.eni.encheres.bo.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,8 +19,8 @@ public class StringToAddressConverter implements Converter<String, Address> {
     }
 
     @Override
-    public Address convert(String id) {
-        Integer TheId = Integer.parseInt(id);
+    public Address convert(@NonNull String id) {
+        int TheId = Integer.parseInt(id);
         return articleService.consultAddressById(TheId);
     }
 }
