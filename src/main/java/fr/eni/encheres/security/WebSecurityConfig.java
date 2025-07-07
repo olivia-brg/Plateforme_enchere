@@ -34,11 +34,12 @@ public class WebSecurityConfig {
      * Récupération des utilisateurs de l'application via la base de données
      */
 
-    protected final Log logger = LogFactory.getLog(getClass());
+    //protected final Log logger = LogFactory.getLog(getClass());
 
     @Bean
     UserDetailsManager userDetailsManager(DataSource datasource) {
         JdbcUserDetailsManager users = new JdbcUserDetailsManager(datasource);
+
 
         users.setUsersByUsernameQuery("select username, password, 1 from auctionUsers where username=?");
         System.out.println("user database has been loaded");

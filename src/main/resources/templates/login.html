@@ -17,9 +17,9 @@
     
 	</div>
     
-    <form action="/login" method="post">
+    <form data-th-action="@{/login}" method="post">
         <label for="userName">Identifiant :</label>
-        <input type="text" id="userName" name="userName" required>
+        <input type="text" id="username" name="username" required>
 
         <label for="password">Mot de passe :</label>
         <input type="password" id="password" name="password" required>
