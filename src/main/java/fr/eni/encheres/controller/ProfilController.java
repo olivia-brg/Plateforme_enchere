@@ -14,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/profile")
@@ -69,24 +68,6 @@ public class ProfilController {
         return "edit-profile";
     }
 
-//    @PostMapping("/update")
-//    public String updateProfil(@Valid @ModelAttribute("user") UserDTO updatedUser,
-//                               BindingResult bindingResult,
-//                               @ModelAttribute("connectedUser") User connectedUser,
-//                               Model model) throws BusinessException {
-//        if (bindingResult.hasErrors()) {
-//            return "edit-profile";
-//        }
-//
-//        try {
-//            this.userService.updateProfile(updatedUser, connectedUser.getId());
-//            return "redirect:/profile?id=" + connectedUser.getId();
-//        } catch (BusinessException e) {
-//            model.addAttribute("errorMessages", e.getMessages());
-//            return "edit-profile";
-//        }
-//    }
-
     @PostMapping("/update")
     public String updateProfile(@Valid @ModelAttribute("profileForm") ProfileFormDTO profileForm,
                                 BindingResult bindingResult,
@@ -119,28 +100,17 @@ public class ProfilController {
     }
 
 
-//
-//        if (updateUserInfo.getPassword().equals(confirmPassword)) {
-//            if (this.userService.isPasswordCorrect(connectedUser.getUserName(), oldPassword)) {
-//            } else {
-//                logger.info("updateProfil : Mot de passe erroné");
-//            }
-//        } else {
-//            logger.info("updateProfil : Veuillez saisir le même mot de passe");
-//        }
-
-
-        @GetMapping("/delete")
-        public String deleteUser (@ModelAttribute("connectedUser") User connectedUser,
-                SessionStatus status){
-            if (this.userService.deleteUserById(connectedUser.getId())) {
-                logger.info("deleteUser : {} deleted", connectedUser.getUserName());
-                status.setComplete();
-                return "redirect:/encheres";
-            }
-            logger.info("deleteUser : {} not deleted", connectedUser.getUserName());
-            return "redirect:/profile?id=" + connectedUser.getId();
+    @GetMapping("/delete")
+    public String deleteUser(@ModelAttribute("connectedUser") User connectedUser,
+                             SessionStatus status) {
+        if (this.userService.deleteUserById(connectedUser.getId())) {
+            logger.info("deleteUser : {} deleted", connectedUser.getUserName());
+            status.setComplete();
+            return "redirect:/encheres";
         }
-
-
+        logger.info("deleteUser : {} not deleted", connectedUser.getUserName());
+        return "redirect:/profile?id=" + connectedUser.getId();
     }
+
+
+}
