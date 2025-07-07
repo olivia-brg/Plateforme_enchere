@@ -1,8 +1,8 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      data-th-replace="~{layouts/layout :: layout-eni-auction(title=~{:: title},
-                                                              content=~{:: main},
-                                                              ressourcesSupp=~{})}">
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--      data-th-replace="~{layouts/layout :: layout-eni-auction(title=~{:: title},-->
+<!--                                                              content=~{:: main},-->
+<!--                                                              ressourcesSupp=~{})}">-->
 
 <head>
     <title th:text="'Détail de ' + ${article.getName()}"></title>
@@ -56,11 +56,13 @@
         </div>
         <div class="form-group">
             <label for="seller">Vendeur: </label>
-            <input type="text" id="seller" name="seller" readonly th:value="${article.user.firstName+ ' ' +article.user.lastName}">
+
+            <input type="text" id="seller" name="seller" readonly th:value="${article.user.firstName}+ ' ' +${article.user.lastName}">
         </div>
         <div class="form-group">
             <label for="user-bid">Ma propositon </label>
-            <input type="number" name="user-bid" id="user-bid"  th:value="${article.soldPrice > article.startingPrice} ? ${article.soldPrice} : ${article.startingPrice}">
+            <input type="number" name="user-bid" id="user-bid"  th:value="${article.soldPrice}" th:min="${article.soldPrice > article.startingPrice} ? article.soldPrice : article.startingPrice">
+
             <button type="submit">Enchérir</button>
         </div>
         <div class="form-group">
