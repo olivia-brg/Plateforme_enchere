@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       data-th-replace="~{layouts/layout :: layout-eni-auction(title=~{:: title},
                                                               content=~{:: main},
-                                                              ressourcesSupp=~{::script})}">
+                                                              ressourcesSupp=~{})}">
 
 <head>
     <title>Auctions List</title>
@@ -39,7 +39,6 @@
     <button class="create-account" type="submit"  onclick="window.location.href='/signIn'">Créer un compte</button>
 </main>
 
-<script type="text/javascript" th:src="@{/js/sIScript.js}" ></script>
-</body>
+
 
 </html>
