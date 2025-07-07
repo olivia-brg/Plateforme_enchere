@@ -108,14 +108,44 @@ public class LoginController {
     }
 
     @PostMapping("/register")
-    public String registred(@ModelAttribute User user, Model model, RedirectAttributes redirectAttributes) {
+    public String registred(@ModelAttribute User user,@ModelAttribute("connectedUser") User connectedUser, Model model, RedirectAttributes redirectAttributes) {
     	System.out.println("méthode registred workin");
 
 
     	try {
 			System.out.println(user.getEmail());
 			this.userService.createNewUser(user);
-			return "redirect:/";
+
+
+				user = this.userService.load(user.getUserName(), user.getPassword());
+				if (user != null) {
+					connectedUser.setId(user.getId());
+					connectedUser.setUserName(user.getUserName());
+					connectedUser.setFirstName(user.getFirstName());
+					connectedUser.setLastName(user.getLastName());
+					connectedUser.setEmail(user.getEmail());
+					connectedUser.setPhoneNumber(user.getPhoneNumber());
+					connectedUser.setStreet(user.getStreet());
+					connectedUser.setCity(user.getCity());
+					connectedUser.setPostalCode(user.getPostalCode());
+					connectedUser.setCredit(user.getCredit());
+					connectedUser.setAdmin(user.isAdmin());
+				} else {
+					connectedUser.setId(0);
+					connectedUser.setUserName(null);
+					connectedUser.setFirstName(null);
+					connectedUser.setLastName(null);
+					connectedUser.setEmail(null);
+					connectedUser.setPhoneNumber(null);
+					connectedUser.setStreet(null);
+					connectedUser.setCity(null);
+					connectedUser.setPostalCode(null);
+					connectedUser.setCredit(0);
+					connectedUser.setAdmin(false);
+				}
+				System.out.println(connectedUser);
+				return "redirect:/";
+
 		} catch (BusinessException e) {
 
 			redirectAttributes.addFlashAttribute("errorMessages", e.getMessages());
