@@ -14,4 +14,5 @@ public interface UserService {
     void createNewUser (User user)throws BusinessException;
     boolean deleteUserById(int id);
     boolean isUsernameAvailable(String username, int id, BusinessException be);
+    int getUserCredit(int userId);
 }
