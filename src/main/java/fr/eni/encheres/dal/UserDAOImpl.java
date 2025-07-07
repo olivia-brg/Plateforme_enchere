@@ -1,6 +1,7 @@
 package fr.eni.encheres.dal;
 
 import fr.eni.encheres.bo.User;
+import fr.eni.encheres.exception.BusinessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,10 +91,22 @@ public class UserDAOImpl implements UserDAO{
                 WHERE id = :id
             """;
 
-    private final String IS_PASSWORD_CORRECT = """
+    private final String UPDATE_PASSWORD = """
+                UPDATE auctionUsers SET password = :password
+                WHERE id = :id
+            """;
+
+    private final String IS_PASSWORD_CORRECT_BY_USERNAME = """
                 SELECT COUNT(*)
                 FROM auctionUsers
                 WHERE username = :userName AND
+                      password = :password
+            """;
+
+    private final String IS_PASSWORD_CORRECT_BY_ID = """
+                SELECT COUNT(*)
+                FROM auctionUsers
+                WHERE id = :id AND
                       password = :password
             """;
 
@@ -142,7 +155,7 @@ public class UserDAOImpl implements UserDAO{
     }
 
     @Override
-    public boolean update(User user, int id) {
+    public boolean updateProfile(UserDTO user, int id) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 
         mapSqlParameterSource.addValue("id", id);
@@ -154,7 +167,6 @@ public class UserDAOImpl implements UserDAO{
         mapSqlParameterSource.addValue("street", user.getStreet());
         mapSqlParameterSource.addValue("city", user.getCity());
         mapSqlParameterSource.addValue("postalCode", user.getPostalCode());
-        mapSqlParameterSource.addValue("password", user.getPassword());
         logger.info("update {} (id : {}) : {}", user.getUserName(), id, String.valueOf(jdbcTemplate.update(UPDATE_USER, mapSqlParameterSource) == 1));
         return jdbcTemplate.update(UPDATE_USER, mapSqlParameterSource) == 1;
 
@@ -172,7 +184,32 @@ public class UserDAOImpl implements UserDAO{
             params.addValue("password", password);
 
             Integer count = jdbcTemplate.queryForObject(
-                    IS_PASSWORD_CORRECT,
+                    IS_PASSWORD_CORRECT_BY_USERNAME,
+                    params,
+                    Integer.class
+            );
+            logger.info("isPasswordCorrect : " + (count != null && count > 0));
+            return count != null && count > 0;
+
+        } catch (Exception e) {
+            logger.error("Erreur lors de la vérification du mot de passe", e);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isPasswordCorrect(int id, String password) {
+        try {
+            if (id < 1 || password == null) {
+                return false;
+            }
+
+            MapSqlParameterSource params = new MapSqlParameterSource();
+            params.addValue("userName", id);
+            params.addValue("password", password);
+
+            Integer count = jdbcTemplate.queryForObject(
+                    IS_PASSWORD_CORRECT_BY_ID,
                     params,
                     Integer.class
             );
@@ -215,6 +252,14 @@ public class UserDAOImpl implements UserDAO{
         mapSqlParameterSource.addValue("id", id);
         logger.info("Deleting {}", id);
         return jdbcTemplate.update(DELETE_USER_BY_USERNAME, mapSqlParameterSource) == 1;
+    }
+
+    @Override
+    public boolean updatePassword(String newPassword, int id) throws BusinessException {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("password", newPassword);
+        mapSqlParameterSource.addValue("id", id);
+        return jdbcTemplate.update(UPDATE_PASSWORD, mapSqlParameterSource) == 1;
     }
 
     @Override
