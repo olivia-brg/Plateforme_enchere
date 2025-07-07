@@ -125,21 +125,24 @@ public class EnchereController {
     }
 
     @PostMapping("/bid")
-    public String newBid(@ModelAttribute("connectedUser") User connectedUser,@RequestParam("user-bid") int bidAmount, @ModelAttribute("article") Article currentArticle, Model model) {
+    public String newBid(@ModelAttribute("connectedUser") User connectedUser,@RequestParam("user-bid") int bidAmount,@RequestParam("articleId") int articleId, Model model) {
 
-
-
+        Article currentArticle = articleService.consultArticleById(articleId);
         Bid bid = new Bid();
 
         bid.setArticle(currentArticle);
-        bid.setAuctionAmount(bidAmount);
-        bid.setAuctionDate(LocalDate.now());
+        bid.setBidAmount(bidAmount);
+        bid.setBidDate(LocalDate.now());
+
+        System.out.println("l'utilisateur est " + connectedUser.toString());
+        System.out.println("le current article est" + currentArticle.toString());
 
         bidService.createBid(bid, connectedUser.getId(),currentArticle.getId());
         Bid maxBid = bidService.getHighestBid(currentArticle.getId());
 
         model.addAttribute("bid", bid);
         model.addAttribute("maxBid", maxBid);
+        model.addAttribute("article", currentArticle);
 
         return "detail-vente";
     }
