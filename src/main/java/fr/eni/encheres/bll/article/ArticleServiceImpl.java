@@ -19,6 +19,7 @@ import fr.eni.encheres.exception.BusinessException;
 @Service
 public class ArticleServiceImpl implements ArticleService{
 
+
 	private ArticleDAO articleDAO;
 	private AddressDAO addressDAO;
 	private BidDAO bidDAO;
@@ -34,12 +35,14 @@ public class ArticleServiceImpl implements ArticleService{
 		this.bidDAO = bidDAO;
 		this.categoryDAO = categoryDAO;
 		this.userDAO = userDAO;
+
 	}
 	
 	public Article consultArticleById(int id) {
 		Article article = this.articleDAO.findArticleById(id);
 		User user = userDAO.findUserById(article.getUser().getId());
 		article.setUser(user);
+
 		return article;
 	}
 
