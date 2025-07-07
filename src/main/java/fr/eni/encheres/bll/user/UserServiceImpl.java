@@ -146,6 +146,11 @@ public class UserServiceImpl implements UserService {
         be.add("Les mots de passe ne correspondent pas.");
         throw be;
     }
+  
+  @Override
+      public int getUserCredit(int userId) {
+        return userDAO.findUserCreditByUserId(userId);
 
-
+    }
 }
+
