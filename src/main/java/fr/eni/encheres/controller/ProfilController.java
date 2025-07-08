@@ -83,17 +83,6 @@ public class ProfilController {
         }
 
         try {
-//            logger.info("USER UPDATE : {}", profileForm);
-//            logger.info("OLD PASSWORD : {}", profileForm.getPasswordModification().getOldPassword());
-//            logger.info("NEW PASSWORD : {}", profileForm.getPasswordModification().getNewPassword());
-//            logger.info("CONFIRM PASSWORD : {}", profileForm.getPasswordModification().getConfirmPassword());
-//
-//            PasswordDTO passwordDTO = new PasswordDTO();
-//            passwordDTO.setNewPassword(passwordEncoder.encode(profileForm.getPasswordModification().getNewPassword()));
-//            passwordDTO.setOldPassword(passwordEncoder.encode(profileForm.getPasswordModification().getOldPassword()));
-//            passwordDTO.setConfirmPassword(passwordEncoder.encode(profileForm.getPasswordModification().getConfirmPassword()));
-//            profileForm.setPasswordModification(passwordDTO);
-
             // Mise à jour des infos utilisateur
             userService.updateProfile(profileForm.getUser(), connectedUser.getId());
 

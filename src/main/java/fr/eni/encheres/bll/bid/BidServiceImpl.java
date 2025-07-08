@@ -1,6 +1,7 @@
 package fr.eni.encheres.bll.bid;
 
 import fr.eni.encheres.bll.article.ArticleService;
+import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Bid;
 import fr.eni.encheres.dal.BidDAO;
 import fr.eni.encheres.exception.BusinessException;
@@ -28,7 +29,7 @@ public class BidServiceImpl implements BidService {
     }
 
     @Transactional(rollbackFor = BusinessException.class)
-    public boolean isBidValid(int bidAmount, int articleId) throws BusinessException {
+    public boolean isBidValid(float bidAmount, int articleId) throws BusinessException {
         BusinessException be = new BusinessException();
         Bid maxBid = getHighestBid(articleId);
         if (maxBid != null && bidAmount < maxBid.getBidAmount()) {
@@ -36,7 +37,6 @@ public class BidServiceImpl implements BidService {
             throw be;
         }
         return true;
-
     }
 
     // we are looking for the highest bid for an article
@@ -46,7 +46,11 @@ public class BidServiceImpl implements BidService {
         if (listBid.isEmpty() || listBid == null) {
             return null;
         }
-        return Collections.max(listBid, Comparator.comparing(Bid::getBidAmount));
+
+        Bid maxBid = Collections.max(listBid, Comparator.comparing(Bid::getBidAmount));
+        Article article = articleService.consultArticleById(articleId);
+        maxBid.setArticle(article);
+        return maxBid;
     }
 
     @Override

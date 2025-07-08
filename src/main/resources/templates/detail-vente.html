@@ -61,27 +61,42 @@
                 <input readonly type="text" id="city" th:field="*{city}" required>
             </div>
         </div>
+        <div hidden="hidden" class="form-group">
+            <input name="userId" readonly th:value="${article.user.id}">
+        </div>
         <div class="form-group">
             <label for="seller">Vendeur: </label>
-
             <input type="text" id="seller" name="seller" readonly th:value="${article.user.firstName}+ ' ' +${article.user.lastName}">
         </div>
-        <form method= "POST" action="/bid" class="form-group">
+        <form data-th-object="${connectedUser}" method="POST" action="/bid" class="form-group">
+            <div th:if="${!connectedUser.isActive}" class="alert alert-warning">
+                Votre compte est désactivé. Vous ne pouvez pas participer aux enchères.
+            </div>
+
             <label for="user-bid">Ma propositon </label>
+
+            <input type="number" name="user-bid" id="user-bid" th:value="${article.soldPrice}"
+                   th:min="${article.soldPrice > article.startingPrice} ? article.soldPrice : article.startingPrice"
+                   th:disabled="${!connectedUser.isActive}">
+
+            <button type="submit" th:disabled="${!connectedUser.isActive}">Enchérir</button>
+
             <span th:each="msg : ${errorMessages}" th:text="${msg}"></span>
 
-            <input type="number" name="user-bid" id="user-bid"  th:value="${article.soldPrice}" th:min="${article.soldPrice > article.startingPrice} ? article.soldPrice : article.startingPrice">
-            <button type="submit">Enchérir</button>
+            
 
             <input type="hidden" name="articleId" th:value="${article.id}">
 
         </form>
+
         <div class="form-group">
            <button type="submit"><a href="/">Back</a></button>
         </div>
+        <div th:if="${connectedUser.id==article.user.id}">
         <div th:with="currentDateTime=${#temporals.format(#temporals.createNow(), 'yyyyMMddHHmm')},
              auctionDateTime=${#temporals.format(article.auctionStartDate, 'yyyyMMddHHmm')}">
-            <button type="submit" th:if="${auctionDateTime > currentDateTime}"><a href="/changeArticle">Modifier</a></button>
+            <button type="submit" th:if="${auctionDateTime > currentDateTime}"><a th:href="@{/changeArticle(id=${article.id})}">Modifier</a></button>
+        </div>
         </div>
     </div>
 </main>

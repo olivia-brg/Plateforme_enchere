@@ -12,7 +12,9 @@
 <main>
     <h2 th:text="'Profil de ' + ${userFetched.userName}"></h2>
 
-    <form data-th-object="${userFetched}">
+    <form data-th-object="${userFetched}" action="deactivateUser" method="post">
+        <input type="text" id="userId" name="userId" th:value="*{id}" readonly>
+        <input type="text" id="userSts" name="userSts" th:value="*{isActive}" readonly>
         <div class="form-group">
             <label for="userName">Username:</label>
             <input type="text" id="userName" name="userName" th:value="*{userName}" readonly>
@@ -49,11 +51,10 @@
             <p>Credit: <span th:text="*{credit}"></span></p>
             <button type="button" onclick="window.location.href='/profile/update'">Update</button>
         </th:block>
-
         <th:block th:if="${connectedUser.getRole()=='ADMIN'}">
-            <button type="button" style="background-color: #ff1827; color: white; border-radius: 5px"
-                    onclick="window.location.href=''">
-                <strong>Désactiver le compte</strong>
+
+            <button type="submit" style="background-color: #ff1827; color: white; border-radius: 5px">
+                <strong th:text="*{isActive} ? 'Désactiver le compte' : 'Activer le compte'"></strong>
             </button>
             <button type="button" style="background-color: #ff1827; color: white; border-radius: 5px"
                     onclick="window.location.href=''">
@@ -76,5 +77,4 @@
     </form>
 </main>
 </body>
-
 </html>

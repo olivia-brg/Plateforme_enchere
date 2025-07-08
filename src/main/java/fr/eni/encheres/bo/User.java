@@ -42,14 +42,14 @@ public class User {
 	private float credit;
 
 	private String role;
-
+	private boolean isActive;
 	@Valid
 	private List<Bid> bids;
 	private List<Article> articles;
 
 	//	Constructor without articles and bids
 	public User(int id, String pseudo, String name, String prenom, String email, String phoneNumber, String street,
-			String postalCode, String city, String password, float credit, String role) {
+			String postalCode, String city, String password, float credit, boolean admin, boolean isActive) {
 
 		this.id = id;
 		this.userName = pseudo;
@@ -63,6 +63,7 @@ public class User {
 		this.password = password;
 		this.credit = credit;
 		this.role = role;
+		this.isActive = isActive;
 	}
 
 	public User() {
@@ -151,6 +152,8 @@ public class User {
 	public void setRole(String role) {
 		 this.role = role;
 	}
+	public boolean getIsActive() {return isActive;}
+	public void setIsActive(boolean isActive) {this.isActive = isActive;}
 
 	public List<Bid> getBids() {
 		return bids;
@@ -183,6 +186,7 @@ public class User {
 		sb.append(", Role=").append(role);
 		sb.append(", bids=").append(bids);
 		sb.append(", articles=").append(articles);
+		sb.append(", sts=").append(isActive);
 		sb.append('}');
 		return sb.toString();
 	}

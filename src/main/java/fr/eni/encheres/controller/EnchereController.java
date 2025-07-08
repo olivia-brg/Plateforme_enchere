@@ -93,7 +93,9 @@ public class EnchereController {
     }
 
     @PostMapping(path = "/sell")
-    String insererArticle(@ModelAttribute("article") Article article, @ModelAttribute("connectedUser") User connectedUser, Model model) {
+    String insererArticle(@ModelAttribute("article") Article article,
+                          @ModelAttribute("connectedUser") User connectedUser,
+                          Model model) {
         article.setUser(connectedUser);
         article.setAuctionStartDate(LocalDateTime.now());
         //On appelle la méthode du service qui créera l'article
@@ -105,10 +107,13 @@ public class EnchereController {
     }
 
     @GetMapping("/detailArticle")
-    public String afficherUnArticle(@RequestParam(name = "id") int id, Model model) {
-
+    public String afficherUnArticle(@RequestParam(name = "id") int id,
+                                    @ModelAttribute("connectedUser") User connectedUser,
+                                    Model model) {
+        User user = connectedUser;
         Article current = articleService.consultArticleById(id);
         if (current != null) {
+
             User vendeur = userService.findById(current.getUser().getId());
             Address address = articleService.consultAddressById(current.getWithdrawalAddress().getDeliveryAddressId());
             Category category = articleService.consultCategoryById(current.getCategory().getId());
@@ -117,10 +122,12 @@ public class EnchereController {
             current.setCategory(category);
 
             model.addAttribute("article", current);
+            model.addAttribute("connectedUser", user);
+
             Bid maxBid = bidService.getHighestBid(current.getId());
             model.addAttribute("maxBid", maxBid);
         } else {
-            System.out.println("Article inconnu!!");
+            System.out.println("Article inconnu!");
         }
         return "detail-vente";
     }
@@ -133,7 +140,7 @@ public class EnchereController {
 
     @PostMapping("/bid")
     public String newBid(@ModelAttribute("connectedUser") User connectedUser,
-                         @RequestParam("user-bid") int bidAmount,
+                         @RequestParam("user-bid") float bidAmount,
                          @RequestParam("articleId") int articleId,
                          Model model) throws BusinessException {
 
@@ -151,18 +158,23 @@ public class EnchereController {
             userService.isCreditValid(bidAmount, connectedUser.getId());
             bidService.isBidValid(bidAmount, currentArticle.getId());
 
+            userService.substractCredit(bidAmount, connectedUser.getId());
+            Bid maxBid = bidService.getHighestBid(currentArticle.getId());
+
+            if (maxBid != null) {
+                userService.addCredit(maxBid.getBidAmount(), maxBid.getArticle().getUser().getId());
+            }
 
             bid.setArticle(currentArticle);
             bid.setBidAmount(bidAmount);
             bid.setBidDate(LocalDate.now());
 
             bidService.createBid(bid, connectedUser.getId(), currentArticle.getId());
-            Bid maxBid = bidService.getHighestBid(currentArticle.getId());
+            maxBid = bidService.getHighestBid(currentArticle.getId());
 
             model.addAttribute("bid", bid);
             model.addAttribute("maxBid", maxBid);
             model.addAttribute("article", currentArticle);
-
 
             return "detail-vente";
 
@@ -179,6 +191,8 @@ public class EnchereController {
     @GetMapping("/changeArticle")
     public String changeArticle(@RequestParam(name = "id") int id, Model model) {
         Article current = articleService.consultArticleById(id);
+        Address address = articleService.consultAddressById(current.getWithdrawalAddress().getDeliveryAddressId());
+        current.setWithdrawalAddress(address);
         model.addAttribute("article", current);
         return "change-product";
     }

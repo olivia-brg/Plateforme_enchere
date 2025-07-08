@@ -19,7 +19,8 @@ CREATE TABLE auctionUsers
     postalCode  VARCHAR(6),
     password    VARCHAR(100)              NOT NULL,
     credit      NUMERIC(15)               NOT NULL,
-    Role        VARCHAR(5) DEFAULT 'USER' NOT NULL
+    Role        VARCHAR(5) DEFAULT 'USER' NOT NULL,
+    isActive    BIT        DEFAULT 1      NOT NULL
 );
 
 -- 🏠 ADRESSES DE LIVRAISON

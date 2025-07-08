@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html data-th-replace="~{layouts/layout :: layout-eni-auction(title=~{:: title},
+<html xmlns:th="http://www.thymeleaf.org"
+      data-th-replace="~{layouts/layout :: layout-eni-auction(title=~{:: title},
                                                               content=~{:: main},
-                                                              ressourcesSupp=~{})}"
-      xmlns:th="http://www.thymeleaf.org">
+                                                              ressourcesSupp=~{})}">
 
 <head>
     <title>Auctions List</title>
@@ -20,12 +20,12 @@
             <label for="category">Catégories </label>
             <select id="category" name="categoryId">
 
-                <option th:selected="${category == null}" value="">Toutes</option>
-                <option th:each="categoryFromList : ${listeCategories}"
-                        th:selected="${categoryFromList.id == category}"
-                        th:text="${categoryFromList.name}"
-                        th:value="${categoryFromList.id}">
-                </option>
+            <option value="" th:selected="${category == null}">Toutes</option>
+            <option th:each="categoryFromList : ${listeCategories}"
+                    th:value="${categoryFromList.id}"
+                    th:text="${categoryFromList.name}"
+                    th:selected="${categoryFromList.id == category}">
+            </option>
 
             </select>
 
@@ -65,7 +65,8 @@
                 </fieldset>
             </th:block>
 
-            <button type="submit">rechercher</button>
+        <input type="text" placeholder="Search.." name = "search">
+        <button type="submit">rechercher</button>
         </form>
     </div>
     <div class="articles">
@@ -78,7 +79,8 @@
                 <p th:text="${'Fin de l''enchère : ' + a.auctionEndDate}">Fin de l'enchère: </p>
                 <!--<p th:text="'Retrait : ' + ${a.withdrawalAddress.street} + ' ' + ${a.withdrawalAddress.city} + ' ' + ${a.withdrawalAddress.postalCode}">Retrait: </p>-->
                 <p th:text="'Vendeur : ' + ${a.user.firstName} + ' ' + ${a.user.lastName}">Vendeur: </p>
-                <a th:href="@{/detailArticle(id=${a.id})}">Détail de la vente</a>
+                <a th:if="${connectedUser.getId() > 0}"
+                        th:href="@{/detailArticle(id=${a.id})}">Détail de la vente</a>
             </div>
         </div>
 

@@ -41,11 +41,11 @@
     </div>
     <div class="form-group">
       <label for="auction-start">Fin de l'enchère:</label>
-      <input type="datetime" id="auction-start" name="auction-start" th:value="${article.auctionStartDate}">
+      <input type="datetime-local" id="auction-start" name="auction-start" th:value="${article.auctionStartDate}">
     </div>
     <div class="form-group">
       <label for="auction-end">Début de l'enchère :</label>
-      <input type="datetime" id="auction-end" name="auction-end" th:value="${article.auctionEndDate}">
+      <input type="datetime-local" id="auction-end" name="auction-end" th:value="${article.auctionEndDate}">
     </div>
     <h4><label for="withdraw_Address">Adresse de retrait :</label></h4>
     <div id="withdraw_Address" th:object="${article.withdrawalAddress}">
