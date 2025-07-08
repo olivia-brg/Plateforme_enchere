@@ -50,7 +50,7 @@
             <button type="button" onclick="window.location.href='/profile/update'">Update</button>
         </th:block>
 
-        <th:block th:if="${connectedUser.isAdmin()}">
+        <th:block th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
             <button type="button" style="background-color: #ff1827; color: white; border-radius: 5px"
                     onclick="window.location.href=''">
                 <strong>Désactiver le compte</strong>
@@ -60,6 +60,17 @@
                 <strong>Supprimer l'utilisateur</strong>
             </button>
         </th:block>
+
+        <!--<th:block th:if="${connectedUser.isAdmin()}">
+            <button type="button" style="background-color: #ff1827; color: white; border-radius: 5px"
+                    onclick="window.location.href=''">
+                <strong>Désactiver le compte</strong>
+            </button>
+            <button type="button" style="background-color: #ff1827; color: white; border-radius: 5px"
+                    onclick="window.location.href=''">
+                <strong>Supprimer l'utilisateur</strong>
+            </button>
+        </th:block>-->
 
     </form>
 </main>

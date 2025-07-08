@@ -69,10 +69,10 @@ public class WebSecurityConfig {
                 )
                 .formLogin((form) -> form
                         .loginPage("/login").permitAll()
-                        .defaultSuccessUrl("/")
+                        .defaultSuccessUrl("/loginSucess")
                 )
                 //todo: réparer le logout
-                .logout((logout) -> logout.permitAll().logoutSuccessUrl("/"));
+                .logout((logout) -> logout.permitAll().logoutUrl("/logout").logoutSuccessUrl("/"));
 
         return http.build();
     }
