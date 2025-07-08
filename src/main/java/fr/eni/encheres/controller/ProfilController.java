@@ -34,6 +34,7 @@ public class ProfilController {
         User userFetched = this.userService.findById(id);
         if (userFetched != null) {
             model.addAttribute("userFetched", userFetched);
+
             logger.info("USER FOUND : {}", userFetched);
             System.out.println(userService.findById(id));
             return "profile";
@@ -85,12 +86,12 @@ public class ProfilController {
             userService.updateProfile(profileForm.getUser(), connectedUser.getId());
 
             // Mise à jour mot de passe si champs remplis
-            PasswordDTO pwd = profileForm.getPasswordModification();
-            if (pwd.getNewPassword() != null && !pwd.getNewPassword().isBlank()) {
-                logger.info("PASSWORD CHANGED : {}", pwd.getNewPassword());
-                userService.checkPasswordConfirmation(pwd.getNewPassword(), pwd.getConfirmPassword());
-                userService.updatePassword(pwd, connectedUser.getId());
-            }
+//            PasswordDTO pwd = profileForm.getPasswordModification();
+//            if (pwd.getNewPassword() != null && !pwd.getNewPassword().isBlank()) {
+//;
+//                userService.checkPasswordConfirmation(pwd.getNewPassword(), pwd.getConfirmPassword());
+//                userService.updatePassword(pwd, connectedUser.getId());
+//            }
 
             return "redirect:/profile?id=" + connectedUser.getId();
 

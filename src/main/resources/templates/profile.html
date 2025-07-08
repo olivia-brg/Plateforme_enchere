@@ -51,8 +51,19 @@
             <p>Credit: <span th:text="*{credit}"></span></p>
             <button type="button" onclick="window.location.href='/profile/update'">Update</button>
         </th:block>
+        <th:block th:if="${connectedUser.getRole()=='ADMIN'}">
 
-        <th:block th:if="${connectedUser.isAdmin()}">
+            <button type="submit" style="background-color: #ff1827; color: white; border-radius: 5px">
+                <strong th:text="*{isActive} ? 'Désactiver le compte' : 'Activer le compte'"></strong>
+            </button>
+            <button type="button" style="background-color: #ff1827; color: white; border-radius: 5px"
+                    onclick="window.location.href=''">
+                <strong>Supprimer l'utilisateur</strong>
+            </button>
+        </th:block>
+
+        <!--
+            <th:block th:if="${connectedUser.isAdmin()}">
             <button type="button" style="background-color: #ff1827; color: white; border-radius: 5px"
                     onclick="window.location.href=''">
                 <strong>Désactiver le compte</strong>
@@ -61,23 +72,9 @@
                     onclick="window.location.href=''">
                 <strong>Supprimer l'utilisateur</strong>
             </button>
-        </th:block>
-        <th:block th:if="${connectedUser.isAdmin()}">
-
-            <button type="submit" style="background-color: #ff1827; color: white; border-radius: 5px">
-                <strong th:text="*{isActive} ? 'Désactiver le compte' : 'Activer le compte'"></strong>
-
-            </button>
-            <button type="button" style="background-color: #ff1827; color: white; border-radius: 5px"
-                    onclick="window.location.href=''">
-                <strong>Supprimer l'utilisateur</strong>
-            </button>
-        </th:block>
+        </th:block>-->
 
     </form>
 </main>
-
-
 </body>
-
 </html>

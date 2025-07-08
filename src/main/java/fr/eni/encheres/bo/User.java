@@ -41,7 +41,7 @@ public class User {
 	@PositiveOrZero(message = "Le crédit ne peut pas être négatif.")
 	private float credit;
 
-	private boolean isAdmin;
+	private String role;
 	private boolean isActive;
 	@Valid
 	private List<Bid> bids;
@@ -62,7 +62,7 @@ public class User {
 		this.city = city;
 		this.password = password;
 		this.credit = credit;
-		this.isAdmin = admin;
+		this.role = role;
 		this.isActive = isActive;
 	}
 
@@ -146,14 +146,15 @@ public class User {
 		this.credit = credit;
 	}
 
-	public boolean isAdmin() {
-		return isAdmin;
+	public String getRole() {
+		return role;
 	}
-	public void setAdmin(boolean isAdmin) {
-		this.isAdmin = isAdmin;
+	public void setRole(String role) {
+		 this.role = role;
 	}
 	public boolean getIsActive() {return isActive;}
 	public void setIsActive(boolean isActive) {this.isActive = isActive;}
+
 	public List<Bid> getBids() {
 		return bids;
 	}
@@ -182,7 +183,7 @@ public class User {
 		sb.append(", city='").append(city).append('\'');
 		sb.append(", password='").append(password).append('\'');
 		sb.append(", credit=").append(credit);
-		sb.append(", isAdmin=").append(isAdmin);
+		sb.append(", Role=").append(role);
 		sb.append(", bids=").append(bids);
 		sb.append(", articles=").append(articles);
 		sb.append(", sts=").append(isActive);

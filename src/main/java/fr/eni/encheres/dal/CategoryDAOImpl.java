@@ -34,5 +34,4 @@ public class CategoryDAOImpl implements CategoryDAO{
 		return jdbcTemplate.getJdbcOperations().query(FIND_ALL, new BeanPropertyRowMapper<>(Category.class));
 	}
 
-
 }

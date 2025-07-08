@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      data-th-replace="~{layouts/layout :: layout-eni-auction(title=~{:: title},
+                                                              content=~{:: main},
+                                                              ressourcesSupp=~{})}">
+
+<head>
+  <title th:text="'Détail de ' + ${article.getName()}"></title>
+</head>
+
+<body>
+<main>
+  <h1>ENI-Enchères</h1>
+  <h2>Détail vente</h2>
+  <div class="detail-objet" >
+    <label for="name"></label>
+    <input type="text" id="name" name="name" th:value="${article.name}">
+    <img src="pic.jpg" alt="">
+    <div class="form-group">
+      <label for="description">Description:</label>
+      <input type="text" id="description" name="description"  th:value="${article.description}">
+    </div>
+    <select id="category" th:field="${article.category}">Toutes
+      <option th:each="categoryFromList : ${listeCategories}" data-th-value="${categoryFromList.getId()}"
+              data-th-text="${categoryFromList.getName()}"></option>
+    </select>
+    <div class="form-group">
+      <label for="best-bid">Meilleur offre:</label>
+      <input type="text" id="best-bid" name="best-bid" readonly th:if="${maxBid != null}" th:value="${maxBid.getBidAmount()}">
+      <span type="text" id="no-bid" name="best-bid" readonly th:if="${maxBid == null}">Aucune enchere</span>
+    </div>
+    <!--        <div class="form-group">-->
+    <!--            <label for="best-user">Meilleur encherisseur:</label>-->
+    <!--            <input type="text" id="best-user" name="best-user" readonly th:if="${maxBid != null}" th:value="${maxBid.getArticle().getUser().getLastName()}">-->
+    <!--            <span id="no-user-bid"  th:if="${maxBid == null}">Aucune enchere</span>-->
+    <!--        </div>-->
+
+    <div class="form-group">
+      <label for="intial-price">Mise à prix:</label>
+      <input type="number" id="intial-price" name="intial-price" th:value="${article.startingPrice}">
+    </div>
+    <div class="form-group">
+      <label for="auction-start">Fin de l'enchère:</label>
+      <input type="datetime-local" id="auction-start" name="auction-start" th:value="${article.auctionStartDate}">
+    </div>
+    <div class="form-group">
+      <label for="auction-end">Début de l'enchère :</label>
+      <input type="datetime-local" id="auction-end" name="auction-end" th:value="${article.auctionEndDate}">
+    </div>
+    <h4><label for="withdraw_Address">Adresse de retrait :</label></h4>
+    <div id="withdraw_Address" th:object="${article.withdrawalAddress}">
+      <div class="form-group">
+        <label for="street">Rue : </label>
+        <input type="text" id="street" th:field="*{street}" required>
+      </div>
+      <div class="form-group">
+        <label for="postalCode">Code postal : </label>
+        <input type="text" id="postalCode" th:field="*{postalCode}" required>
+      </div>
+      <div class="form-group">
+        <label for="city">Ville : </label>
+        <input type="text" id="city" th:field="*{city}" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="seller">Vendeur: </label>
+
+      <input type="text" id="seller" name="seller" readonly th:value="${article.user.firstName}+ ' ' +${article.user.lastName}">
+    </div>
+    <form method= "POST" action="/bid" class="form-group">
+      <label for="user-bid">Ma propositon </label>
+      <input type="number" name="user-bid" id="user-bid"  th:value="${article.soldPrice}" th:min="${article.soldPrice > article.startingPrice} ? article.soldPrice : article.startingPrice">
+
+      <button type="submit">Enchérir</button>
+
+      <input type="hidden" name="articleId" th:value="${article.id}">
+
+    </form>
+    <div class="form-group">
+      <button type="submit"><a href="/">Back</a></button>
+    </div>
+  </div>
+</main>
+</body>
+</html>

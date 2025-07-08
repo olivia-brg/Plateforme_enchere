@@ -9,7 +9,7 @@
         <div class="burger" onclick="toggleMenu()">☰</div>
 
         <div class="sIsU">
-            <th:block data-th-if="${connectedUser != null && connectedUser.id > 0}">
+            <th:block data-th-if="${#authorization.expression('isAuthenticated()')}">
                 <ul id="nav-links">
                     <li><a href="/home"><p>Enchères</p></a></li>
                     <li><a href="/sell"><p>Vendre un article</p></a></li>
@@ -17,7 +17,7 @@
                     <li><a href="/logout"><p>Déconnexion</p></a></li>
                 </ul>
             </th:block>
-            <th:block data-th-unless="${connectedUser != null && connectedUser.id > 0}">
+            <th:block data-th-if="${!#authorization.expression('isAuthenticated()')}">
                 <ul id="nav-links">
                     <li><a href="/signIn"><p>S'inscrire</p></a></li>
                     <li><a href="/login"><p>Se connecter</p></a></li>

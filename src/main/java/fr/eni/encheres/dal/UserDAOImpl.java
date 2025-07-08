@@ -58,7 +58,7 @@ public class UserDAOImpl implements UserDAO{
                        city,
                        postalCode,
                        credit,
-                       isAdmin,
+                       role,
                        isActive
                 from auctionUsers
                 WHERE userName = :userName AND
@@ -75,9 +75,8 @@ public class UserDAOImpl implements UserDAO{
                        street,
                        city,
                        postalCode,
-                       credit,
-                       
-                from auctionUsers
+                       credit
+                       from auctionUsers
                 WHERE userName = :userName
             """;
 
@@ -123,7 +122,7 @@ public class UserDAOImpl implements UserDAO{
             city,
             postalCode,
             credit,
-            isAdmin,
+            role,
             isActive
             from auctionUsers
             WHERE id = ?
@@ -221,8 +220,6 @@ public class UserDAOImpl implements UserDAO{
         mapSqlParameterSource.addValue("street", user.getStreet());
         mapSqlParameterSource.addValue("city", user.getCity());
         mapSqlParameterSource.addValue("postalCode", user.getPostalCode());
-
-        mapSqlParameterSource.addValue("password", user.getPassword());
         logger.info("update {} (id : {}) : {}", user.getUserName(), id, String.valueOf(namedParameterJdbcTemplate.update(UPDATE_USER, mapSqlParameterSource) == 1));
         return namedParameterJdbcTemplate.update(UPDATE_USER, mapSqlParameterSource) == 1;
 
@@ -241,7 +238,7 @@ public class UserDAOImpl implements UserDAO{
             params.addValue("password", password);
 
 
-            Integer count = jdbcTemplate.queryForObject(
+            Integer count = namedParameterJdbcTemplate.queryForObject(
                     IS_PASSWORD_CORRECT_BY_USERNAME,
                     params,
                     Integer.class
@@ -266,9 +263,8 @@ public class UserDAOImpl implements UserDAO{
             params.addValue("userName", id);
             params.addValue("password", password);
 
-            Integer count = jdbcTemplate.queryForObject(
+            Integer count = namedParameterJdbcTemplate.queryForObject(
                     IS_PASSWORD_CORRECT_BY_ID,
-
                     params,
                     Integer.class
             );
@@ -331,7 +327,7 @@ public class UserDAOImpl implements UserDAO{
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("password", newPassword);
         mapSqlParameterSource.addValue("id", id);
-        return jdbcTemplate.update(UPDATE_PASSWORD, mapSqlParameterSource) == 1;
+        return namedParameterJdbcTemplate.update(UPDATE_PASSWORD, mapSqlParameterSource) == 1;
     }
 
     @Override
@@ -374,7 +370,7 @@ public class UserDAOImpl implements UserDAO{
             user.setCity(rs.getString("city"));
             user.setPostalCode(rs.getString("postalCode"));
             user.setCredit(rs.getFloat("credit"));
-            user.setAdmin(rs.getBoolean("isAdmin"));
+            user.setRole(rs.getString("role"));
             user.setIsActive(rs.getBoolean("isActive"));
             return user;
         }

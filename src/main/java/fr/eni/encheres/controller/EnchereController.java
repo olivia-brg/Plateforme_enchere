@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
@@ -88,17 +88,17 @@ public class EnchereController {
     }
 
     @PostMapping(path="/sell")
-    String insererArticle(@ModelAttribute("article") Article article, @ModelAttribute("connectedUser") User connectedUser ){
+    String insererArticle(@ModelAttribute("article") Article article, @ModelAttribute("connectedUser") User connectedUser, Model model ){
         article.setUser(connectedUser);
         article.setAuctionStartDate(LocalDateTime.now());
         //On appelle la méthode du service qui créera l'article
         articleService.createArticle(article, connectedUser.getId());
 
+        model.addAttribute("article", article);
 
-        //redirection vers l'accueil pour le moment je n'arrive pas a renvoyer sur la page article en conservant l'id.
-        return "redirect:/";
-        //return "redirect:/detailArticle(id=${article.id})";
-        //"@{/detailArticle(id=${a.id})}" a essayer d'ajouter
+
+       
+        return "/detail-vente";
     }
 
     @GetMapping("/detailArticle")
@@ -183,6 +183,15 @@ public class EnchereController {
             model.addAttribute("errorMessages", be.getMessages());
             return "detail-vente";
         }
+    }
+
+    @GetMapping("/changeArticle")
+    public String changeArticle(@RequestParam(name = "id") int id, Model model) {
+        Article current = articleService.consultArticleById(id);
+        Address address = articleService.consultAddressById(current.getWithdrawalAddress().getDeliveryAddressId());
+        current.setWithdrawalAddress(address);
+        model.addAttribute("article", current);
+        return "change-product";
     }
 
 

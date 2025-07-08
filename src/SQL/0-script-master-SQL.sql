@@ -15,9 +15,9 @@ CREATE TABLE auctionUsers (
                               street VARCHAR(100),
                               city VARCHAR(50),
                               postalCode VARCHAR(6),
-                              password VARCHAR(20) NOT NULL,
+                              password VARCHAR(100) NOT NULL,
                               credit NUMERIC(15) NOT NULL,
-                              isAdmin BIT DEFAULT 0 NOT NULL,
+                              Role VARCHAR(5) DEFAULT 'USER' NOT NULL,
 							  isActive BIT DEFAULT 1 NOT NULL,
                               CONSTRAINT pk_auctionUser PRIMARY KEY(id)
 
@@ -76,11 +76,11 @@ CREATE TABLE bids (
 
 DELETE FROM auctionUsers WHERE id > 0;
 
-INSERT INTO auctionUsers(userName,firstName,LastName,email,phoneNumber,street,city,postalCode,password,credit,isAdmin)
-VALUES('makusu','maxime','jeannin','max.jeannin@hotmail.com','0245856335','boulevard du massacre','Nantes','44100','maxime',100,1);
+INSERT INTO auctionUsers(userName,firstName,LastName,email,phoneNumber,street,city,postalCode,password,credit,Role)
+VALUES('makusu','maxime','jeannin','max.jeannin@hotmail.com','0245856335','boulevard du massacre','Nantes','44100','$2a$10$dm804LiUruKfdoS5BXFZLeIzIPnCTDWgXBwQb2Z4RM9t6cFsMNjbS',100,'ADMIN');
 
-INSERT INTO auctionUsers(userName,firstName,LastName,email,phoneNumber,street,city,postalCode,password,credit,isAdmin)
-VALUES('HappyBeer','pierrick','rouxel','pierrick.rouxel@hotmail.com','0245858435','rue du houblon','Nantes','44100','pierrick',100,0);
+INSERT INTO auctionUsers(userName,firstName,LastName,email,phoneNumber,street,city,postalCode,password,credit)
+VALUES('HappyBeer','pierrick','rouxel','pierrick.rouxel@hotmail.com','0245858435','rue du houblon','Nantes','44100','$2a$10$fsvFQmKlShqro1GXRh9/9eeG/9EMjo/xc1NfYMlginstKJ93Zpc3O',100);
 
 
 INSERT INTO categories(name) VALUES('bière')
