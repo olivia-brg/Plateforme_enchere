@@ -58,9 +58,9 @@ public class LoginController {
     public String login(@AuthenticationPrincipal UserDetails userDetails,
                         @ModelAttribute("connectedUser") User connectedUser,
 						RedirectAttributes redirectAttributes) {
-
 		connectedUser.setUserName(userDetails.getUsername());
 		connectedUser.setRole(userDetails.getAuthorities().iterator().next().getAuthority());
+		connectedUser.setIsActive(userDetails.isEnabled());
 		connectedUser.setId(userService.findByUsername(connectedUser.getUserName()).getId());
 
 		logger.info("{} is connected", connectedUser.getUserName());
@@ -70,6 +70,24 @@ public class LoginController {
 
 		return "redirect:/";
 
+//        User user;
+//		try {
+//			user = this.userService.load(userName, password);
+//			if (user != null) {
+//	            connectedUser.setId(user.getId());
+//	            connectedUser.setUserName(user.getUserName());
+//	            connectedUser.setAdmin(user.isAdmin());
+//	        } else {
+//	            connectedUser.setId(0);
+//	            connectedUser.setUserName(null);
+//	            connectedUser.setAdmin(false);
+//	        }
+//	        logger.info("{} is connected", connectedUser.getUserName());
+//	        return "redirect:/";
+//		} catch (BusinessException e) {
+//			redirectAttributes.addFlashAttribute("errorMessages", e.getMessages());
+//	        return "redirect:/login";
+//		}
     }
 
     @GetMapping(path="/signIn")
@@ -145,7 +163,7 @@ public class LoginController {
 		} catch (BusinessException e) {
 
 			redirectAttributes.addFlashAttribute("errorMessages", e.getMessages());
-
+			logger.warn("exception username already used");
 			return "redirect:/signIn";
 		}
 

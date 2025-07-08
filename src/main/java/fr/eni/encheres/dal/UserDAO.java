@@ -16,7 +16,13 @@ public interface UserDAO {
     User findUserById(int id);
     boolean deleteUserById(int id);
     int findUserCreditByUserId(int id);
+
+    int findIdByUsername(String username);
+    void deactivateUser(int id);
+    void activateUser(int id);
+
     boolean updatePassword(String newPassword, int id) throws BusinessException;
+
 
 
 }

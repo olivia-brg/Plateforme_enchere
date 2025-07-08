@@ -7,6 +7,8 @@ import fr.eni.encheres.dal.ProfileFormDTO;
 import fr.eni.encheres.dal.UserDTO;
 import fr.eni.encheres.exception.BusinessException;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.support.SessionStatus;
 @SessionAttributes({"connectedUser"})
 public class ProfilController {
 
+    private static final Logger logger = LoggerFactory.getLogger(ProfilController.class);
     private final UserService userService;
 
     public ProfilController(UserService userService) {
@@ -32,8 +35,10 @@ public class ProfilController {
         if (userFetched != null) {
             model.addAttribute("userFetched", userFetched);
 
+            logger.info("USER FOUND : {}", userFetched);
+            System.out.println(userService.findById(id));
             return "profile";
-        }
+        } else logger.info("Unknown user");
 
         return "redirect:/encheres";
     }
@@ -101,11 +106,11 @@ public class ProfilController {
     public String deleteUser(@ModelAttribute("connectedUser") User connectedUser,
                              SessionStatus status) {
         if (this.userService.deleteUserById(connectedUser.getId())) {
-
+            logger.info("deleteUser : {} deleted", connectedUser.getUserName());
             status.setComplete();
             return "redirect:/encheres";
         }
-
+        logger.info("deleteUser : {} not deleted", connectedUser.getUserName());
         return "redirect:/profile?id=" + connectedUser.getId();
     }
 
