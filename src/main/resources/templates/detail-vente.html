@@ -68,8 +68,9 @@
         </div>
         <form method= "POST" action="/bid" class="form-group">
             <label for="user-bid">Ma propositon </label>
-            <input type="number" name="user-bid" id="user-bid"  th:value="${article.soldPrice}" th:min="${article.soldPrice > article.startingPrice} ? article.soldPrice : article.startingPrice">
+            <span th:each="msg : ${errorMessages}" th:text="${msg}"></span>
 
+            <input type="number" name="user-bid" id="user-bid"  th:value="${article.soldPrice}" th:min="${article.soldPrice > article.startingPrice} ? article.soldPrice : article.startingPrice">
             <button type="submit">Enchérir</button>
 
             <input type="hidden" name="articleId" th:value="${article.id}">

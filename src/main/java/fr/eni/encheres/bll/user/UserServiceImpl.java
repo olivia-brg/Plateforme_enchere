@@ -1,5 +1,6 @@
 package fr.eni.encheres.bll.user;
 
+import fr.eni.encheres.bo.Bid;
 import fr.eni.encheres.bo.User;
 import fr.eni.encheres.dal.PasswordDTO;
 import fr.eni.encheres.dal.UserDAO;
@@ -150,6 +151,21 @@ public class UserServiceImpl implements UserService {
   @Override
       public int getUserCredit(int userId) {
         return userDAO.findUserCreditByUserId(userId);
+
+    }
+
+    @Transactional(rollbackFor = BusinessException.class)
+    public boolean isCreditValid(int bidAmount,int userId) throws BusinessException{
+        BusinessException be = new BusinessException();
+        User currentUser = userDAO.findUserById(userId);
+
+        if (bidAmount > currentUser.getCredit()) {
+
+            be.add("Crédit insuffisant");
+
+            throw be;
+        }
+        return true;
 
     }
 }
