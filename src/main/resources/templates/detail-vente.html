@@ -25,13 +25,14 @@
         </div>
         <div class="form-group">
             <label for="best-bid">Meilleur offre:</label>
-            <input type="text" id="best-bid" name="best-bid" readonly th:if="${maxBid != null}" th:value="${maxBid.getAuctionAmount()}">
+            <input type="text" id="best-bid" name="best-bid" readonly th:if="${maxBid != null}" th:value="${maxBid.getBidAmount()}">
             <span type="text" id="no-bid" name="best-bid" readonly th:if="${maxBid == null}">Aucune enchere</span>
         </div>
-            <label for="best-user">Meilleur encherisseur:</label>
-            <input type="text" id="best-user" name="best-user" readonly th:if="${maxBid != null}" th:value="${maxBid.getArticle().getUser().getLastName()}">
-            <span id="no-user-bid"  th:if="${maxBid == null}">Aucune enchere</span>
-
+<!--        <div class="form-group">-->
+<!--            <label for="best-user">Meilleur encherisseur:</label>-->
+<!--            <input type="text" id="best-user" name="best-user" readonly th:if="${maxBid != null}" th:value="${maxBid.getArticle().getUser().getLastName()}">-->
+<!--            <span id="no-user-bid"  th:if="${maxBid == null}">Aucune enchere</span>-->
+<!--        </div>-->
 
         <div class="form-group">
             <label for="intial-price">Mise à prix:</label>
@@ -71,11 +72,19 @@
             </div>
 
             <label for="user-bid">Ma propositon </label>
+
             <input type="number" name="user-bid" id="user-bid" th:value="${article.soldPrice}"
                    th:min="${article.soldPrice > article.startingPrice} ? article.soldPrice : article.startingPrice"
                    th:disabled="${!connectedUser.isActive}">
 
             <button type="submit" th:disabled="${!connectedUser.isActive}">Enchérir</button>
+
+            <span th:each="msg : ${errorMessages}" th:text="${msg}"></span>
+
+            
+
+            <input type="hidden" name="articleId" th:value="${article.id}">
+
         </form>
 
         <div class="form-group">

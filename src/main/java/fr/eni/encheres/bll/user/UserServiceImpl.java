@@ -1,8 +1,11 @@
 package fr.eni.encheres.bll.user;
 
+import fr.eni.encheres.bo.Bid;
 import fr.eni.encheres.bo.User;
+import fr.eni.encheres.dal.PasswordDTO;
 import fr.eni.encheres.dal.UserDAO;
 
+import fr.eni.encheres.dal.UserDTO;
 import fr.eni.encheres.exception.BusinessException;
 
 
@@ -70,7 +73,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = BusinessException.class)
-    public boolean update(User user, int id) throws BusinessException {
+    public boolean updateProfile(UserDTO user, int id) throws BusinessException {
         logger.info("update : " + user.toString());
         BusinessException be = new BusinessException();
 
@@ -79,7 +82,7 @@ public class UserServiceImpl implements UserService {
 
         if (isValid) {
             logger.info("update : " + user.toString());
-            return this.userDAO.update(user, id);
+            return this.userDAO.updateProfile(user, id);
         } else  {
             logger.error("Error updating : " + user.toString());
             throw be;
@@ -87,8 +90,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(rollbackFor = BusinessException.class)
+    public boolean updatePassword(PasswordDTO passwordModif, int id) throws BusinessException {
+        BusinessException be = new BusinessException();
+        boolean isValid = isPasswordCorrect(id, passwordModif.getOldPassword(), be);
+
+        if (isValid) {
+            userDAO.updatePassword(passwordModif.getNewPassword(), id);
+        } else {
+            throw be;
+        }
+        return false;
+    }
+
+    @Override
     public boolean isPasswordCorrect(String username, String password, BusinessException be) {
         return this.userDAO.isPasswordCorrect(username, password);
+    }
+
+    public boolean isPasswordCorrect(int id, String password, BusinessException be) {
+        return this.userDAO.isPasswordCorrect(id, password);
     }
 
 	@Override
@@ -144,6 +165,21 @@ public class UserServiceImpl implements UserService {
   @Override
       public int getUserCredit(int userId) {
         return userDAO.findUserCreditByUserId(userId);
+
+    }
+
+    @Transactional(rollbackFor = BusinessException.class)
+    public boolean isCreditValid(int bidAmount,int userId) throws BusinessException{
+        BusinessException be = new BusinessException();
+        User currentUser = userDAO.findUserById(userId);
+
+        if (bidAmount > currentUser.getCredit()) {
+
+            be.add("Crédit insuffisant");
+
+            throw be;
+        }
+        return true;
 
     }
 }

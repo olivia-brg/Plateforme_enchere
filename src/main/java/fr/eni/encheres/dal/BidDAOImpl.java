@@ -1,9 +1,6 @@
 package fr.eni.encheres.dal;
 
-import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Bid;
-import fr.eni.encheres.bo.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -19,7 +16,9 @@ public class BidDAOImpl implements BidDAO{
 			             VALUES(:bidDate,:bidAmount,:userId,:articleId);
 			""";
 
+
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
 
     BidDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
@@ -28,8 +27,8 @@ public class BidDAOImpl implements BidDAO{
     @Override
     public int create(Bid bid, int userId, int  articleId) {
     MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-    namedParameters.addValue("bidDate", bid.getAuctionDate());
-    namedParameters.addValue("bidAmount", bid.getAuctionAmount());
+    namedParameters.addValue("bidDate", bid.getBidDate());
+    namedParameters.addValue("bidAmount", bid.getBidAmount());
     namedParameters.addValue("userId", userId);
     namedParameters.addValue("articleId", articleId);
         return namedParameterJdbcTemplate.update(INSERT_NEW_BID, namedParameters);
@@ -37,7 +36,7 @@ public class BidDAOImpl implements BidDAO{
 
     @Override
     public Bid read(long id) {
-        String sql = "SELECT (bidDate, bidAmount, userId, articleId) FROM bids WHERE bidId = :id";
+        String sql = "SELECT bidDate, bidAmount, userId, articleId FROM bids WHERE bidId = :id";
         MapSqlParameterSource namedParameters = new MapSqlParameterSource();
         namedParameters.addValue("id", id);
         return namedParameterJdbcTemplate.queryForObject(sql, namedParameters ,new BeanPropertyRowMapper<>(Bid.class));
@@ -46,18 +45,13 @@ public class BidDAOImpl implements BidDAO{
 
     @Override
     public List<Bid> readAllFromArticleId(long artId) {
-        String SQL = "SELECT (bidDate, bidAmount, userId, articleId) FROM bids WHERE articleId = :artId";
-        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-        namedParameters.addValue("artId", artId);
-        return namedParameterJdbcTemplate.queryForList(SQL, namedParameters, Bid.class);
+        String SQL = "SELECT bidDate, bidAmount, userId, articleId FROM bids WHERE articleId = ?";
+        return namedParameterJdbcTemplate.getJdbcOperations().query(SQL, new BeanPropertyRowMapper<>(Bid.class), artId);
     }
 
     @Override
     public List<Bid> readAllFromArticleIdByUserId(long articleId, long userId) {
-        String SQL = "SELECT (bidDate, bidAmount, userId, articleId) FROM bids WHERE (articleId = :artId AND userId = :userId)"   ;
-        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-        namedParameters.addValue("artId", articleId);
-        namedParameters.addValue("userId", userId);
-        return namedParameterJdbcTemplate.queryForList(SQL, namedParameters, Bid.class);
+        String SQL = "SELECT bidDate, bidAmount, userId, articleId FROM bids WHERE (articleId = ? AND userId = ?)"   ;
+        return namedParameterJdbcTemplate.getJdbcOperations().query(SQL, new BeanPropertyRowMapper<>(Bid.class), articleId, userId);
     }
 }

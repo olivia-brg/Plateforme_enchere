@@ -19,6 +19,7 @@ import fr.eni.encheres.exception.BusinessException;
 @Service
 public class ArticleServiceImpl implements ArticleService{
 
+
 	private ArticleDAO articleDAO;
 	private AddressDAO addressDAO;
 	private BidDAO bidDAO;
@@ -34,12 +35,14 @@ public class ArticleServiceImpl implements ArticleService{
 		this.bidDAO = bidDAO;
 		this.categoryDAO = categoryDAO;
 		this.userDAO = userDAO;
+
 	}
 	
 	public Article consultArticleById(int id) {
 		Article article = this.articleDAO.findArticleById(id);
 		User user = userDAO.findUserById(article.getUser().getId());
 		article.setUser(user);
+
 		return article;
 	}
 
@@ -79,7 +82,7 @@ public class ArticleServiceImpl implements ArticleService{
 	public void createArticle(Article article, int userId) {
 		//On extrait l'adresse pour la partie vérification
 		Address address = article.getWithdrawalAddress();
-		//Ola méthode suivante vérifie l'existence dans la BDD sur la base des trois attributs
+		//la méthode suivante vérifie l'existence dans la BDD sur la base des trois attributs
 		Boolean addressExists = addressDAO.findIfExists(address);
 		//Si l'adresse existe on lui attribue l'id existante
 		if(addressExists){
