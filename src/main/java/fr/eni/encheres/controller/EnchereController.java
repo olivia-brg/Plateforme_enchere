@@ -150,6 +150,8 @@ public class EnchereController {
     @GetMapping("/changeArticle")
     public String changeArticle(@RequestParam(name = "id") int id, Model model) {
         Article current = articleService.consultArticleById(id);
+        Address address = articleService.consultAddressById(current.getWithdrawalAddress().getDeliveryAddressId());
+        current.setWithdrawalAddress(address);
         model.addAttribute("article", current);
         return "change-product";
     }
