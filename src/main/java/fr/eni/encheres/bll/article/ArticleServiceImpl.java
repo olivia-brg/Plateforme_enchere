@@ -61,8 +61,6 @@ public class ArticleServiceImpl implements ArticleService {
             article.setUser(user);
 //			article.setWithdrawalAddress(address);
         }
-
-
         return articles;
     }
 
@@ -158,7 +156,7 @@ public class ArticleServiceImpl implements ArticleService {
     public void createArticle(Article article, int userId) {
         //On extrait l'adresse pour la partie vérification
         Address address = article.getWithdrawalAddress();
-        //Ola méthode suivante vérifie l'existence dans la BDD sur la base des trois attributs
+        //la méthode suivante vérifie l'existence dans la BDD sur la base des trois attributs
         Boolean addressExists = addressDAO.findIfExists(address);
         //Si l'adresse existe on lui attribue l'id existante
         if (addressExists) {
