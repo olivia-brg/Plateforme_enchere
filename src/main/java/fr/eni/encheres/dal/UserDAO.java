@@ -1,6 +1,7 @@
 package fr.eni.encheres.dal;
 
 import fr.eni.encheres.bo.User;
+import fr.eni.encheres.dto.UserDTO;
 import fr.eni.encheres.exception.BusinessException;
 
 public interface UserDAO {

@@ -15,10 +15,10 @@
     <div class="filtres">
         <h2>Filtres :</h2>
         <form method="get" th:action="@{/encheres}">
-            <input name="search" placeholder="Search.." type="text">
+            <input name="searchText" placeholder="Search.." type="text">
 
             <label for="category">Catégories </label>
-            <select id="category" name="category">
+            <select id="category" name="categoryId">
 
                 <option th:selected="${category == null}" value="">Toutes</option>
                 <option th:each="categoryFromList : ${listeCategories}"
@@ -34,16 +34,16 @@
                 <fieldset id="purchasesOptions">
                     <legend>
                         <label for="auctionFilter">Achats</label>
-                        <input checked id="auctionFilter" name="filterType" type="radio" value="purchases">
+                        <input id="auctionFilter" name="filterType" type="radio" value="purchases">
                     </legend>
                     <label>
-                        <input class="defaultCheckbox" name="purchasesOptions" type="checkbox" value="openAuctions">Enchères ouvertes
+                        <input name="searchFilter" type="checkbox" value="openAuctions">Enchères ouvertes
                     </label><br>
                     <label>
-                        <input name="purchasesOptions" type="checkbox" value="ongoingAuctions">Mes enchères
+                        <input name="searchFilter" type="checkbox" value="ongoingAuctions">Mes enchères
                     </label><br>
                     <label>
-                        <input name="purchasesOptions" type="checkbox" value="wonAuctions">Enchères remportées
+                        <input name="searchFilter" type="checkbox" value="wonAuctions">Enchères remportées
                     </label><br>
                 </fieldset>
 
@@ -54,13 +54,13 @@
                         <input id="salesFilter" name="filterType" type="radio" value="sales">
                     </legend>
                     <label>
-                        <input class="defaultCheckbox" name="salesOptions" type="checkbox" value="myCurrentSales">Mes ventes en cours
+                        <input name="searchFilter" type="checkbox" value="CurrentSales">Mes ventes en cours
                     </label><br>
                     <label>
-                        <input name="salesOptions" type="checkbox" value="notStarted">Ventes non débutées
+                        <input name="searchFilter" type="checkbox" value="notStartedSales">Ventes non débutées
                     </label><br>
                     <label>
-                        <input name="salesOptions" type="checkbox" value="finished">Vente terminées
+                        <input name="searchFilter" type="checkbox" value="finishedSales">Vente terminées
                     </label><br>
                 </fieldset>
             </th:block>

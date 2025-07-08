@@ -1,10 +1,10 @@
 package fr.eni.encheres.bll.user;
 
 import fr.eni.encheres.bo.User;
-import fr.eni.encheres.dal.PasswordDTO;
+import fr.eni.encheres.dto.PasswordDTO;
 import fr.eni.encheres.dal.UserDAO;
 
-import fr.eni.encheres.dal.UserDTO;
+import fr.eni.encheres.dto.UserDTO;
 import fr.eni.encheres.exception.BusinessException;
 
 

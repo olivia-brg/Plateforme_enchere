@@ -1,6 +1,7 @@
 package fr.eni.encheres.dal;
 
 import fr.eni.encheres.bo.User;
+import fr.eni.encheres.dto.UserDTO;
 import fr.eni.encheres.exception.BusinessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.slf4j.Logger;

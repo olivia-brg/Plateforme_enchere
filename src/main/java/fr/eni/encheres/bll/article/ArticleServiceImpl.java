@@ -4,11 +4,21 @@ import fr.eni.encheres.bo.Address;
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Category;
 import fr.eni.encheres.bo.User;
+import fr.eni.encheres.controller.EnchereController;
 import fr.eni.encheres.dal.*;
+import fr.eni.encheres.dto.ArticleSearchCriteria;
+import fr.eni.encheres.dto.FilterType;
 import fr.eni.encheres.exception.BusinessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
@@ -18,16 +28,20 @@ public class ArticleServiceImpl implements ArticleService {
     private final BidDAO bidDAO;
     private final CategoryDAO categoryDAO;
     private final UserDAO userDAO;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(EnchereController.class);
+
 
 
     public ArticleServiceImpl(ArticleDAO articleDAO, AddressDAO addressDAO, BidDAO bidDAO, CategoryDAO categoryDAO,
-                              UserDAO userDAO) {
+                              UserDAO userDAO, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
 
         this.articleDAO = articleDAO;
         this.addressDAO = addressDAO;
         this.bidDAO = bidDAO;
         this.categoryDAO = categoryDAO;
         this.userDAO = userDAO;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     public Article consultArticleById(int id) {
@@ -63,36 +77,77 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> getFilteredArticles(int categoryId, String search, String selectedOptions) throws BusinessException {
-        List<Article> articles = this.articleDAO.searchByFilters(categoryId, search, selectedOptions);
+    public List<Article> getFilteredArticles(ArticleSearchCriteria criteria, int currentUserId, int page, int size) {
+        LocalDateTime now = LocalDateTime.now();
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
 
-        //TODO : selectedOptions renvoie différents paramètres de recherche (id utilisateur, date etc...).
-        // Penser à bien tout lister, séparer les méthode.
-        // Voir comment je gère avec les paramètres de requête optionnel et la hashset pour supprimer les doublons
+        // Base requête SQL
+        StringBuilder sql = new StringBuilder("SELECT DISTINCT a.* FROM articles a ");
 
-        for (Article article : articles) {
-            User user = userDAO.findUserById(article.getUser().getId());
-            article.setUser(user);
+        // jointure pour récupérer les enchères de l'utilisateur actif
+        if (criteria.getSearchFilter() != null && criteria.getSearchFilter().contains(FilterType.ongoingAuctions)) {
+            sql.append("JOIN bids b ON b.articleId = a.id ");
         }
 
-        return articles;
-    }
+        sql.append("WHERE 1=1 ");
 
-    @Override
-    public List<Article> getCurrentSale(int categoryId, String search) throws BusinessException {
-        return List.of();
-    }
 
-    @Override
-    public List<Article> getFutureSale(int categoryId, String search) throws BusinessException {
-        return List.of();
-    }
+        if (criteria.getSearchText() != null && !criteria.getSearchText().isBlank()) {
+            sql.append("AND LOWER(a.name) LIKE LOWER(:searchText) ");
+            namedParameters.addValue("searchText", "%" + criteria.getSearchText() + "%");
+        }
 
-    @Override
-    public List<Article> getPastSale(int categoryId, String search) throws BusinessException {
-        return List.of();
-    }
+        if (criteria.getCategoryId() != null) {
+            sql.append("AND a.categoryId = :categoryId ");
+            namedParameters.addValue("categoryId", criteria.getCategoryId());
+        }
 
+        if (criteria.getSearchFilter() != null) {
+            for (FilterType filter : criteria.getSearchFilter()) {
+                switch (filter) {
+                    case openAuctions:
+                        logger.warn("Filter openAuctions");
+                        sql.append("AND a.auctionStartDate < :now AND a.auctionEndDate > :now ");
+                        namedParameters.addValue("now", now);
+                        break;
+                    case ongoingAuctions:
+                        logger.warn("Filter ongoingAuctions");
+                        sql.append("AND b.userId = :currentUserId ");
+                        namedParameters.addValue("currentUserId", currentUserId);
+                        break;
+                    case CurrentSales:
+                        logger.warn("Filter CurrentSales");
+                        sql.append("AND a.userId = :currentUserId ");
+                        sql.append("AND a.auctionStartDate < :now AND a.auctionEndDate > :now ");
+                        namedParameters.addValue("currentUserId", currentUserId);
+                        namedParameters.addValue("now", now);
+                        break;
+                    case notStartedSales:
+                        logger.warn("Filter notStartedSales");
+                        sql.append("AND a.userId = :currentUserId ");
+                        sql.append("AND a.auctionStartDate > :now ");
+                        namedParameters.addValue("currentUserId", currentUserId);
+                        namedParameters.addValue("now", now);
+                        break;
+                    case finishedSales:
+                        logger.warn("Filter finishedSales");
+                        sql.append("AND a.userId = :currentUserId ");
+                        sql.append("AND a.auctionEndDate < :now ");
+                        namedParameters.addValue("currentUserId", currentUserId);
+                        namedParameters.addValue("now", now);
+                        break;
+                }
+            }
+        }
+
+//        namedParameters.addValue("limit", size);
+        namedParameters.addValue("offset", page * size);
+        sql.append("ORDER BY a.auctionEndDate ASC ");
+//        sql.append("LIMIT :limit OFFSET :offset");
+        logger.warn(sql.toString());
+
+        return namedParameterJdbcTemplate.query(sql.toString(), namedParameters, new ArticleDAOImpl.ArticleRowMapper());
+    }
 
     @Override
     public Address consultAddressById(int id) {

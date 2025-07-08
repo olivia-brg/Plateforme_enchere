@@ -12,5 +12,5 @@ public interface ArticleDAO {
 
 	int create(Article article, int userId, int deliveryAddressId);
 
-	List<Article> searchByFilters(int categoryId, String search, String purchasesOptions);
+//	List<Article> searchByFilters(int categoryId, String search, String purchasesOptions);
 }

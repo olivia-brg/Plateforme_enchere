@@ -2,9 +2,9 @@ package fr.eni.encheres.controller;
 
 import fr.eni.encheres.bll.user.UserService;
 import fr.eni.encheres.bo.User;
-import fr.eni.encheres.dal.PasswordDTO;
-import fr.eni.encheres.dal.ProfileFormDTO;
-import fr.eni.encheres.dal.UserDTO;
+import fr.eni.encheres.dto.PasswordDTO;
+import fr.eni.encheres.dto.ProfileFormDTO;
+import fr.eni.encheres.dto.UserDTO;
 import fr.eni.encheres.exception.BusinessException;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
