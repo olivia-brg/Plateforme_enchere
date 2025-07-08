@@ -18,6 +18,7 @@ CREATE TABLE auctionUsers (
                               password VARCHAR(20) NOT NULL,
                               credit NUMERIC(15) NOT NULL,
                               isAdmin BIT DEFAULT 0 NOT NULL,
+							  isActive BIT DEFAULT 1 NOT NULL,
                               CONSTRAINT pk_auctionUser PRIMARY KEY(id)
 
 );

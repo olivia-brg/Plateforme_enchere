@@ -20,6 +20,12 @@ public interface UserService {
     boolean isUsernameAvailable(String username, int id, BusinessException be);
     boolean checkPasswordConfirmation(String firstPassword, String secondPassword) throws BusinessException;
     int getUserCredit(int userId);
+
+    int findIdByUsername(String username);
+    void deactivateUser(int userId);
+    void activateUser(int userId);
+
     public boolean isCreditValid(int bidAmount,int userId) throws BusinessException;
+
 
 }
