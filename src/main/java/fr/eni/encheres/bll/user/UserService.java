@@ -21,11 +21,14 @@ public interface UserService {
     boolean checkPasswordConfirmation(String firstPassword, String secondPassword) throws BusinessException;
     int getUserCredit(int userId);
 
+    public boolean isCreditValid(float bidAmount,int userId) throws BusinessException;
+    public void substractCredit(float bidAmount,int userId) throws BusinessException;
+    public void addCredit(float bidAmount,int userId) throws BusinessException;
+
+
     int findIdByUsername(String username);
     void deactivateUser(int userId);
     void activateUser(int userId);
-
-    public boolean isCreditValid(int bidAmount,int userId) throws BusinessException;
 
 
 }

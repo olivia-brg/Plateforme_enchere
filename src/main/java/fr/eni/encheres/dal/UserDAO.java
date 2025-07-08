@@ -22,6 +22,7 @@ public interface UserDAO {
     void activateUser(int id);
 
     boolean updatePassword(String newPassword, int id) throws BusinessException;
+    public void updateCredit(int id, float credit);
 
 
 

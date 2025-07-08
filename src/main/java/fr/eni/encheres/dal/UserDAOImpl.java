@@ -132,6 +132,15 @@ public class UserDAOImpl implements UserDAO{
     private final String FIND_CREDIT_BY_USER_ID = """
             SELECT credit FROM auctionUsers WHERE id = ?;
             """;
+
+
+    private final String UPDATE_CREDIT = """
+            UPDATE auctionUsers SET credit = :credit
+            WHERE id = :id
+            
+            """;
+
+
     private final String FIND_ID_BY_USERNAME = """
             SELECT id FROM auctionUsers WHERE userName = :userName
         """;
@@ -154,6 +163,7 @@ public class UserDAOImpl implements UserDAO{
             WHERE userId = :id;
             """;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
 
     public UserDAOImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.namedParameterJdbcTemplate = jdbcTemplate;
@@ -342,6 +352,12 @@ public class UserDAOImpl implements UserDAO{
         namedParameterJdbcTemplate.update(INSERT_NEW_USER, params);
     }
 
+    public void updateCredit(int id, float credit) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("credit", credit);
+        mapSqlParameterSource.addValue("id", id);
+        jdbcTemplate.update(UPDATE_CREDIT, mapSqlParameterSource);
+    }
 
     static class UserLoginRowMapper implements RowMapper<User> {
 

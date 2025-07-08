@@ -19,7 +19,8 @@ public class Bid {
 	@Valid
 	@NotNull(message = "L'article est obligatoire.")
 	private Article article;
-	
+
+
 //	Full constructor
 	public Bid(LocalDate auctionDate, float auctionAmount, Article article) {
 	
@@ -47,9 +48,7 @@ public class Bid {
 		this.bidAmount = auctionAmount;
 	}
 
-	public Article getArticle() {
-		return article;
-	}
+	public Article getArticle() {return article;}
 	public void setArticle(Article article) {
 		this.article = article;
 	}
