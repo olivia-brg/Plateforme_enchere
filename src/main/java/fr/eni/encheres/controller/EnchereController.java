@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
@@ -145,6 +145,13 @@ public class EnchereController {
         model.addAttribute("article", currentArticle);
 
         return "detail-vente";
+    }
+
+    @GetMapping("/changeArticle")
+    public String changeArticle(@RequestParam(name = "id") int id, Model model) {
+        Article current = articleService.consultArticleById(id);
+        model.addAttribute("article", current);
+        return "change-product";
     }
 
 
