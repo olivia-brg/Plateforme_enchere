@@ -16,21 +16,18 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
 
+    private static final Logger logger = LoggerFactory.getLogger(EnchereController.class);
     private final ArticleDAO articleDAO;
     private final AddressDAO addressDAO;
     private final BidDAO bidDAO;
     private final CategoryDAO categoryDAO;
     private final UserDAO userDAO;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private static final Logger logger = LoggerFactory.getLogger(EnchereController.class);
-
 
 
     public ArticleServiceImpl(ArticleDAO articleDAO, AddressDAO addressDAO, BidDAO bidDAO, CategoryDAO categoryDAO,

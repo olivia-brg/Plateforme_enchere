@@ -4,8 +4,6 @@ import fr.eni.encheres.bo.Address;
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Category;
 import fr.eni.encheres.bo.User;
-import fr.eni.encheres.dto.ArticleSearchCriteria;
-import fr.eni.encheres.dto.FilterType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -16,10 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @Repository

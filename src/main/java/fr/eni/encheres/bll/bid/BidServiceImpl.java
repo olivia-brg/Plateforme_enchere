@@ -1,12 +1,9 @@
 package fr.eni.encheres.bll.bid;
 
 import fr.eni.encheres.bll.article.ArticleService;
-import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Bid;
-import fr.eni.encheres.bo.User;
 import fr.eni.encheres.dal.BidDAO;
 import fr.eni.encheres.exception.BusinessException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,9 +15,7 @@ import java.util.List;
 public class BidServiceImpl implements BidService {
 
     private final ArticleService articleService;
-
-    private BidDAO bidDAO;
-
+    private final BidDAO bidDAO;
 
     public BidServiceImpl(ArticleService articleService, BidDAO bidDAO) {
         this.articleService = articleService;
@@ -32,9 +27,8 @@ public class BidServiceImpl implements BidService {
 
     }
 
-
     @Transactional(rollbackFor = BusinessException.class)
-    public boolean isBidValid(int bidAmount, int articleId ) throws BusinessException{
+    public boolean isBidValid(int bidAmount, int articleId) throws BusinessException {
         BusinessException be = new BusinessException();
         Bid maxBid = getHighestBid(articleId);
         if (maxBid != null && bidAmount < maxBid.getBidAmount()) {
@@ -45,9 +39,7 @@ public class BidServiceImpl implements BidService {
 
     }
 
-
-
-//    we are looking for the highest bid for an article
+    // we are looking for the highest bid for an article
     public Bid getHighestBid(int articleId) {
         List<Bid> listBid = bidDAO.readAllFromArticleId(articleId);
 
@@ -59,14 +51,11 @@ public class BidServiceImpl implements BidService {
 
     @Override
     public Bid consultBidById(int id) {
-        return null;
+        return bidDAO.read(id);
     }
 
     @Override
     public List<Bid> consultBidsByArticleId(int id) {
         return bidDAO.readAllFromArticleId(id);
     }
-
-
-
 }

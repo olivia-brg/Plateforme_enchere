@@ -9,6 +9,7 @@ import fr.eni.encheres.exception.BusinessException;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,9 +23,11 @@ public class ProfilController {
 
     private static final Logger logger = LoggerFactory.getLogger(ProfilController.class);
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
-    public ProfilController(UserService userService) {
+    public ProfilController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -80,13 +83,24 @@ public class ProfilController {
         }
 
         try {
+//            logger.info("USER UPDATE : {}", profileForm);
+//            logger.info("OLD PASSWORD : {}", profileForm.getPasswordModification().getOldPassword());
+//            logger.info("NEW PASSWORD : {}", profileForm.getPasswordModification().getNewPassword());
+//            logger.info("CONFIRM PASSWORD : {}", profileForm.getPasswordModification().getConfirmPassword());
+//
+//            PasswordDTO passwordDTO = new PasswordDTO();
+//            passwordDTO.setNewPassword(passwordEncoder.encode(profileForm.getPasswordModification().getNewPassword()));
+//            passwordDTO.setOldPassword(passwordEncoder.encode(profileForm.getPasswordModification().getOldPassword()));
+//            passwordDTO.setConfirmPassword(passwordEncoder.encode(profileForm.getPasswordModification().getConfirmPassword()));
+//            profileForm.setPasswordModification(passwordDTO);
+
             // Mise à jour des infos utilisateur
             userService.updateProfile(profileForm.getUser(), connectedUser.getId());
 
             // Mise à jour mot de passe si champs remplis
             PasswordDTO pwd = profileForm.getPasswordModification();
             if ((pwd.getNewPassword() != null && !pwd.getNewPassword().isBlank()) ||
-                (pwd.getConfirmPassword() != null && !pwd.getConfirmPassword().isBlank())
+                    (pwd.getConfirmPassword() != null && !pwd.getConfirmPassword().isBlank())
             ) {
                 logger.info("PASSWORD CHANGED : {}", pwd.getNewPassword());
                 userService.checkPasswordConfirmation(pwd.getNewPassword(), pwd.getConfirmPassword());

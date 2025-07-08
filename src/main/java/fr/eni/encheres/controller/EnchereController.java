@@ -20,7 +20,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 
 @Controller
@@ -36,7 +35,12 @@ public class EnchereController {
     private final BidService bidService;
 
 
-    EnchereController(ArticleService articleService, ArticleDAO articleDAO, AddressDAO addressDAO, CategoryDAO categoryDAO, UserService userService, BidService bidService) {
+    EnchereController(ArticleService articleService,
+                      ArticleDAO articleDAO,
+                      AddressDAO addressDAO,
+                      CategoryDAO categoryDAO,
+                      UserService userService,
+                      BidService bidService) {
         this.articleService = articleService;
         this.articleDAO = articleDAO;
         this.addressDAO = addressDAO;
@@ -64,8 +68,7 @@ public class EnchereController {
         if (criteria == null) {
             logger.warn("critères null");
             articles = articleService.consultArticles();
-        }
-        else {
+        } else {
             logger.warn(criteria.toString());
             int userId = connectedUser.getId();
             articles = articleService.getFilteredArticles(criteria, userId, page, size);
@@ -90,17 +93,15 @@ public class EnchereController {
     }
 
     @PostMapping(path = "/sell")
-    String insererArticle(@ModelAttribute("article") Article article, @ModelAttribute("connectedUser") User connectedUser) {
+    String insererArticle(@ModelAttribute("article") Article article, @ModelAttribute("connectedUser") User connectedUser, Model model) {
         article.setUser(connectedUser);
         article.setAuctionStartDate(LocalDateTime.now());
         //On appelle la méthode du service qui créera l'article
         articleService.createArticle(article, connectedUser.getId());
 
+        model.addAttribute("article", article);
 
-        //redirection vers l'accueil pour le moment je n'arrive pas a renvoyer sur la page article en conservant l'id.
-        return "redirect:/";
-        //return "redirect:/detailArticle(id=${article.id})";
-        //"@{/detailArticle(id=${a.id})}" a essayer d'ajouter
+        return "/detail-vente";
     }
 
     @GetMapping("/detailArticle")
@@ -118,8 +119,9 @@ public class EnchereController {
             model.addAttribute("article", current);
             Bid maxBid = bidService.getHighestBid(current.getId());
             model.addAttribute("maxBid", maxBid);
-        }else
-        {System.out.println("Article inconnu!!");}
+        } else {
+            System.out.println("Article inconnu!!");
+        }
         return "detail-vente";
     }
 
@@ -162,10 +164,9 @@ public class EnchereController {
             model.addAttribute("article", currentArticle);
 
 
-
             return "detail-vente";
 
-        }catch (BusinessException be){
+        } catch (BusinessException be) {
             Bid maxBid = bidService.getHighestBid(currentArticle.getId());
             model.addAttribute("maxBid", maxBid);
             model.addAttribute("bid", bid);
@@ -174,4 +175,13 @@ public class EnchereController {
             return "detail-vente";
         }
     }
+
+    @GetMapping("/changeArticle")
+    public String changeArticle(@RequestParam(name = "id") int id, Model model) {
+        Article current = articleService.consultArticleById(id);
+        model.addAttribute("article", current);
+        return "change-product";
+    }
+
+
 }

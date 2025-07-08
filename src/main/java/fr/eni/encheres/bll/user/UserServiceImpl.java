@@ -11,27 +11,30 @@ import fr.eni.encheres.exception.BusinessException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
 
+    private final PasswordEncoder passwordEncoder;
     private UserDAO userDAO;
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
 
-    public UserServiceImpl(UserDAO userDAO) {
+    public UserServiceImpl(UserDAO userDAO, PasswordEncoder passwordEncoder) {
         this.userDAO = userDAO;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     @Transactional(rollbackFor = BusinessException.class)
-    public User load(String username, String password) throws BusinessException{
+    public User load(String username, int id, String password) throws BusinessException{
     	BusinessException be = new BusinessException();
     	boolean userExists = isUserExisting(username, be);
-        boolean isPasscorrect = isPasswordCorrect(username, password, be);
-    	if(userExists && isPasscorrect) {
+        boolean isPasswordCorrect = isPasswordCorrect(id, password, be);
+    	if(userExists && isPasswordCorrect) {
 
     		return this.userDAO.login(username, password);}
 
@@ -85,23 +88,17 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = BusinessException.class)
     public boolean updatePassword(PasswordDTO passwordModif, int id) throws BusinessException {
         BusinessException be = new BusinessException();
-        boolean isValid = isPasswordCorrect(id, passwordModif.getOldPassword(), be);
 
-        if (isValid) {
-            userDAO.updatePassword(passwordModif.getNewPassword(), id);
-        } else {
-            throw be;
-        }
+        boolean isValid = passwordEncoder.matches(passwordModif.getOldPassword(), userDAO.findPasswordById(id));
+
+        if (isValid) userDAO.updatePassword(passwordEncoder.encode(passwordModif.getNewPassword()), id);
+        else throw be;
+
         return false;
     }
 
-    @Override
-    public boolean isPasswordCorrect(String username, String password, BusinessException be) {
-        return this.userDAO.isPasswordCorrect(username, password);
-    }
-
     public boolean isPasswordCorrect(int id, String password, BusinessException be) {
-        return this.userDAO.isPasswordCorrect(id, password);
+        return passwordEncoder.matches(password, userDAO.findPasswordById(id));
     }
 
 	@Override
@@ -109,12 +106,15 @@ public class UserServiceImpl implements UserService {
 	public void createNewUser(User user)throws BusinessException {
 		BusinessException be = new BusinessException();
 
-        // id car utilisateur pas en base de donnée
+        // id = 0 car utilisateur pas en base de donnée
         boolean isValid = isUsernameAvailable(user.getUserName(), 0, be);
 //      isValid &= -ajouter autant de paramètres de validation que nécessaire-
 
         if (isValid) {
             logger.info("Creating : " + user.toString());
+
+            //Todo: insérer l'encodage su motDePasse
+
             userDAO.insertNewUser(user);
         } else {
             logger.error("Error creating : " + user.toString());

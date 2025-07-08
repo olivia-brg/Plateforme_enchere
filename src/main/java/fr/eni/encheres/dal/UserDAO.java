@@ -9,8 +9,7 @@ public interface UserDAO {
     User login(String username, String password);
     boolean findId(String userName);
     boolean updateProfile(UserDTO user, int id);
-    boolean isPasswordCorrect(String username, String password);
-    boolean isPasswordCorrect(int id, String password);
+    String findPasswordById(int id);
     void insertNewUser(User user);
     User findByUsername(String username);
     boolean isUsernameAvailable(String username, int id);

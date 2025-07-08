@@ -7,6 +7,9 @@ import fr.eni.encheres.exception.BusinessException;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,10 +24,12 @@ public class LoginController {
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
     private final UserService userService;
 	private final StandardServletMultipartResolver standardServletMultipartResolver;
+	private final PasswordEncoder passwordEncoder;
 
-	public LoginController(UserService userService, StandardServletMultipartResolver standardServletMultipartResolver) {
+	public LoginController(UserService userService, StandardServletMultipartResolver standardServletMultipartResolver, PasswordEncoder passwordEncoder) {
         this.userService = userService;
 		this.standardServletMultipartResolver = standardServletMultipartResolver;
+		this.passwordEncoder = passwordEncoder;
 	}
 
     @GetMapping("/login")
@@ -32,34 +37,33 @@ public class LoginController {
         return "login";
     }
 
+	@GetMapping("/login?error")
+	public String loginError(){
+		System.out.println("Login unsuccessfull");
+		return "login";
+	}
+
     @ModelAttribute("connectedUser")
     public User AddUser(){
         return new User();
     }
 
-    @PostMapping("/login")
-    public String login(@RequestParam(name = "userName", required = true) String userName,
-                        @RequestParam(name = "password", required = true) String password,
+    @GetMapping("/loginSucess")
+    public String login(@AuthenticationPrincipal UserDetails userDetails,
                         @ModelAttribute("connectedUser") User connectedUser,
 						RedirectAttributes redirectAttributes) {
-        User user;
-		try {
-			user = this.userService.load(userName, password);
-			if (user != null) {
-	            connectedUser.setId(user.getId());
-	            connectedUser.setUserName(user.getUserName());
-	            connectedUser.setAdmin(user.isAdmin());
-	        } else {
-	            connectedUser.setId(0);
-	            connectedUser.setUserName(null);
-	            connectedUser.setAdmin(false);
-	        }
-	        logger.info("{} is connected", connectedUser.getUserName());
-	        return "redirect:/";
-		} catch (BusinessException e) {
-			redirectAttributes.addFlashAttribute("errorMessages", e.getMessages());
-	        return "redirect:/login";
-		}
+
+		connectedUser.setUserName(userDetails.getUsername());
+		connectedUser.setRole(userDetails.getAuthorities().iterator().next().getAuthority());
+		connectedUser.setId(userService.findByUsername(connectedUser.getUserName()).getId());
+
+		logger.info("{} is connected", connectedUser.getUserName());
+		logger.info("has role {}", connectedUser.getRole());
+		logger.info("has id {}", connectedUser.getId());
+
+
+		return "redirect:/";
+
     }
 
     @GetMapping(path="/signIn")
@@ -84,24 +88,26 @@ public class LoginController {
 	}
 
 
-    @GetMapping("/logout")
-    public String finSession(SessionStatus status) {
-        // Suppression des attributs de @SessionAttributs
-        status.setComplete();
-        return "redirect:/";
-    }
+
+//    @GetMapping("/logout")
+//    public String finSession(SessionStatus status) {
+//		status.setComplete();
+//        return "redirect:/";
+//    }
 
 	@PostMapping("/register")
 	public String registred(@ModelAttribute User user,@ModelAttribute("connectedUser") User connectedUser, Model model, RedirectAttributes redirectAttributes) {
 		System.out.println("méthode registred workin");
-
+		logger.info("méthode registred workin");
 
 		try {
 			System.out.println(user.getEmail());
+			//todo: est ce que c'est là qu'on met l'encodage ?
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
 			this.userService.createNewUser(user);
 
 
-			user = this.userService.load(user.getUserName(), user.getPassword());
+			user = this.userService.load(user.getUserName(), user.getId(), user.getPassword());
 			if (user != null) {
 				connectedUser.setId(user.getId());
 				connectedUser.setUserName(user.getUserName());
@@ -113,7 +119,7 @@ public class LoginController {
 				connectedUser.setCity(user.getCity());
 				connectedUser.setPostalCode(user.getPostalCode());
 				connectedUser.setCredit(user.getCredit());
-				connectedUser.setAdmin(user.isAdmin());
+				connectedUser.setRole(user.getRole());
 			} else {
 				connectedUser.setId(0);
 				connectedUser.setUserName(null);
@@ -125,7 +131,7 @@ public class LoginController {
 				connectedUser.setCity(null);
 				connectedUser.setPostalCode(null);
 				connectedUser.setCredit(0);
-				connectedUser.setAdmin(false);
+				connectedUser.setRole(null);
 			}
 			System.out.println(connectedUser);
 			return "redirect:/";
@@ -133,7 +139,7 @@ public class LoginController {
 		} catch (BusinessException e) {
 
 			redirectAttributes.addFlashAttribute("errorMessages", e.getMessages());
-			logger.warn("exception username already used");
+
 			return "redirect:/signIn";
 		}
 

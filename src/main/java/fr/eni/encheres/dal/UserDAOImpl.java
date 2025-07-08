@@ -23,6 +23,7 @@ public class UserDAOImpl implements UserDAO{
 	private static final Logger logger = LoggerFactory.getLogger(UserDAOImpl.class);
 
     private final String DELETE_USER_BY_USERNAME = "DELETE FROM auctionUsers WHERE id = :id";
+    private final String FIND_PASSWORD_BY_ID = "SELECT password FROM auctionUsers WHERE id = :id";
     private final String FIND_USERNAME_BY_ID = "SELECT COUNT(*) FROM auctionUsers WHERE userName = :userName";
     private final String FIND_IF_USERNAME_EXIST = "SELECT COUNT(*) FROM auctionUsers WHERE userName = :userName AND id != :id";
 
@@ -59,7 +60,7 @@ public class UserDAOImpl implements UserDAO{
                        city,
                        postalCode,
                        credit,
-                       isAdmin
+                       role
                 from auctionUsers
                 WHERE userName = :userName AND
                       password = :password
@@ -122,7 +123,7 @@ public class UserDAOImpl implements UserDAO{
             city,
             postalCode,
             credit,
-            isAdmin
+            role
             from auctionUsers
             WHERE id = ?
             """;
@@ -174,57 +175,13 @@ public class UserDAOImpl implements UserDAO{
         mapSqlParameterSource.addValue("postalCode", user.getPostalCode());
         logger.info("update {} (id : {}) : {}", user.getUserName(), id, String.valueOf(jdbcTemplate.update(UPDATE_USER, mapSqlParameterSource) == 1));
         return jdbcTemplate.update(UPDATE_USER, mapSqlParameterSource) == 1;
-
     }
 
     @Override
-    public boolean isPasswordCorrect(String username, String password) {
-        try {
-            if (username == null || password == null) {
-                return false;
-            }
-
-            MapSqlParameterSource params = new MapSqlParameterSource();
-            params.addValue("userName", username);
-            params.addValue("password", password);
-
-            Integer count = jdbcTemplate.queryForObject(
-                    IS_PASSWORD_CORRECT_BY_USERNAME,
-                    params,
-                    Integer.class
-            );
-            logger.info("isPasswordCorrect : " + (count != null && count > 0));
-            return count != null && count > 0;
-
-        } catch (Exception e) {
-            logger.error("Erreur lors de la vérification du mot de passe", e);
-            return false;
-        }
-    }
-
-    @Override
-    public boolean isPasswordCorrect(int id, String password) {
-        try {
-            if (id < 1 || password == null) {
-                return false;
-            }
-
-            MapSqlParameterSource params = new MapSqlParameterSource();
-            params.addValue("userName", id);
-            params.addValue("password", password);
-
-            Integer count = jdbcTemplate.queryForObject(
-                    IS_PASSWORD_CORRECT_BY_ID,
-                    params,
-                    Integer.class
-            );
-            logger.info("isPasswordCorrect : " + (count != null && count > 0));
-            return count != null && count > 0;
-
-        } catch (Exception e) {
-            logger.error("Erreur lors de la vérification du mot de passe", e);
-            return false;
-        }
+    public String findPasswordById(int id) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("id", id);
+        return jdbcTemplate.queryForObject(FIND_PASSWORD_BY_ID, mapSqlParameterSource, String.class);
     }
 
     @Override
@@ -308,7 +265,7 @@ public class UserDAOImpl implements UserDAO{
             user.setCity(rs.getString("city"));
             user.setPostalCode(rs.getString("postalCode"));
             user.setCredit(rs.getFloat("credit"));
-            user.setAdmin(rs.getBoolean("isAdmin"));
+            user.setRole(rs.getString("role"));
             return user;
         }
 

@@ -41,7 +41,7 @@ public class User {
 	@PositiveOrZero(message = "Le crédit ne peut pas être négatif.")
 	private float credit;
 
-	private boolean isAdmin;
+	private String role;
 
 	@Valid
 	private List<Bid> bids;
@@ -49,7 +49,7 @@ public class User {
 
 	//	Constructor without articles and bids
 	public User(int id, String pseudo, String name, String prenom, String email, String phoneNumber, String street,
-			String postalCode, String city, String password, float credit, boolean admin) {
+			String postalCode, String city, String password, float credit, String role) {
 
 		this.id = id;
 		this.userName = pseudo;
@@ -62,7 +62,7 @@ public class User {
 		this.city = city;
 		this.password = password;
 		this.credit = credit;
-		this.isAdmin = admin;
+		this.role = role;
 	}
 
 	public User() {
@@ -145,11 +145,11 @@ public class User {
 		this.credit = credit;
 	}
 
-	public boolean isAdmin() {
-		return isAdmin;
+	public String getRole() {
+		return role;
 	}
-	public void setAdmin(boolean isAdmin) {
-		this.isAdmin = isAdmin;
+	public void setRole(String role) {
+		 this.role = role;
 	}
 
 	public List<Bid> getBids() {
@@ -180,7 +180,7 @@ public class User {
 		sb.append(", city='").append(city).append('\'');
 		sb.append(", password='").append(password).append('\'');
 		sb.append(", credit=").append(credit);
-		sb.append(", isAdmin=").append(isAdmin);
+		sb.append(", Role=").append(role);
 		sb.append(", bids=").append(bids);
 		sb.append(", articles=").append(articles);
 		sb.append('}');
