@@ -1,6 +1,5 @@
 package fr.eni.encheres.bll.user;
 
-import fr.eni.encheres.bo.Bid;
 import fr.eni.encheres.bo.User;
 import fr.eni.encheres.dal.PasswordDTO;
 import fr.eni.encheres.dal.UserDAO;
@@ -169,7 +168,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(rollbackFor = BusinessException.class)
-    public boolean isCreditValid(int bidAmount,int userId) throws BusinessException{
+    public boolean isCreditValid(float bidAmount,int userId) throws BusinessException{
         BusinessException be = new BusinessException();
         User currentUser = userDAO.findUserById(userId);
 
@@ -182,5 +181,21 @@ public class UserServiceImpl implements UserService {
         return true;
 
     }
+
+    public void substractCredit(float bidAmount, int userId) throws BusinessException {
+
+        User currentUser = userDAO.findUserById(userId);
+        userDAO.updateCredit(userId, (int) (currentUser.getCredit() - bidAmount));
+
+    }
+
+    public void addCredit(float bidAmount,int userId) throws BusinessException {
+
+        User currentUser = userDAO.findUserById(userId);
+
+        userDAO.updateCredit(userId, currentUser.getCredit() + bidAmount);
+
+    }
+
 }
 
