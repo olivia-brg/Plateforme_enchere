@@ -20,6 +20,7 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.session.SessionManagementFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -34,7 +35,7 @@ public class WebSecurityConfig {
      * Récupération des utilisateurs de l'application via la base de données
      */
 
-    //protected final Log logger = LogFactory.getLog(getClass());
+    protected final Log logger = LogFactory.getLog(getClass());
 
     @Bean
     UserDetailsManager userDetailsManager(DataSource datasource) {
@@ -63,16 +64,25 @@ public class WebSecurityConfig {
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/img/**", "/js/**","/flipflop.mp3").permitAll()
                         .requestMatchers("/signIn").permitAll()
+                        .requestMatchers("/profile").permitAll()
+                        .requestMatchers("/profile/update").authenticated()
+                        .requestMatchers("/sell").authenticated()
+                        .requestMatchers("/bid").authenticated()
                         .requestMatchers("/register").permitAll()
-                        .requestMatchers("/detailArticle").authenticated()
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login").permitAll()
                         .defaultSuccessUrl("/loginSucess")
                 )
-                //todo: réparer le logout
-                .logout((logout) -> logout.permitAll().logoutUrl("/logout").logoutSuccessUrl("/"));
+                .logout(logout -> logout
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .deleteCookies("JSESSIONID")
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/")
+                .permitAll()
+        );
 
         return http.build();
     }

@@ -81,12 +81,12 @@ public class ProfilController {
             userService.updateProfile(profileForm.getUser(), connectedUser.getId());
 
             // Mise à jour mot de passe si champs remplis
-            PasswordDTO pwd = profileForm.getPasswordModification();
-            if (pwd.getNewPassword() != null && !pwd.getNewPassword().isBlank()) {
-;
-                userService.checkPasswordConfirmation(pwd.getNewPassword(), pwd.getConfirmPassword());
-                userService.updatePassword(pwd, connectedUser.getId());
-            }
+//            PasswordDTO pwd = profileForm.getPasswordModification();
+//            if (pwd.getNewPassword() != null && !pwd.getNewPassword().isBlank()) {
+//;
+//                userService.checkPasswordConfirmation(pwd.getNewPassword(), pwd.getConfirmPassword());
+//                userService.updatePassword(pwd, connectedUser.getId());
+//            }
 
             return "redirect:/profile?id=" + connectedUser.getId();
 

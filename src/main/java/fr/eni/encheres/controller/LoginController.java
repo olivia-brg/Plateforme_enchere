@@ -64,6 +64,9 @@ public class LoginController {
 		connectedUser.setId(userService.findByUsername(connectedUser.getUserName()).getId());
 
 		logger.info("{} is connected", connectedUser.getUserName());
+		logger.info("has role {}", connectedUser.getRole());
+		logger.info("has id {}", connectedUser.getId());
+
 
 		return "redirect:/";
 
@@ -91,10 +94,12 @@ public class LoginController {
 	}
 
 
-    @GetMapping("/logout")
-    public String finSession() {
-        return "redirect:/";
-    }
+
+//    @GetMapping("/logout")
+//    public String finSession(SessionStatus status) {
+//		status.setComplete();
+//        return "redirect:/";
+//    }
 
 	@PostMapping("/register")
 	public String registred(@ModelAttribute User user,@ModelAttribute("connectedUser") User connectedUser, Model model, RedirectAttributes redirectAttributes) {
