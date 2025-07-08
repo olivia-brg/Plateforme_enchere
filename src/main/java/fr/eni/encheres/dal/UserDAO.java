@@ -17,6 +17,7 @@ public interface UserDAO {
     boolean deleteUserById(int id);
     int findUserCreditByUserId(int id);
     boolean updatePassword(String newPassword, int id) throws BusinessException;
+    public void updateCredit(int id, float credit);
 
 
 }

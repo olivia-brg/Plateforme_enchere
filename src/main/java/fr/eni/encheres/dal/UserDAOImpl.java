@@ -130,6 +130,14 @@ public class UserDAOImpl implements UserDAO{
             SELECT credit FROM auctionUsers WHERE id = ?;
             """;
 
+    private final String UPDATE_CREDIT = """
+            UPDATE auctionUsers SET credit = :credit
+            WHERE id = :id
+            
+            """;
+
+
+
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public UserDAOImpl(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -291,6 +299,12 @@ public class UserDAOImpl implements UserDAO{
         jdbcTemplate.update(INSERT_NEW_USER, params);
     }
 
+    public void updateCredit(int id, float credit) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("credit", credit);
+        mapSqlParameterSource.addValue("id", id);
+        jdbcTemplate.update(UPDATE_CREDIT, mapSqlParameterSource);
+    }
 
     static class UserLoginRowMapper implements RowMapper<User> {
 

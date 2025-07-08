@@ -18,10 +18,10 @@ public interface ArticleService {
 
 	public Category consultCategoryById(int id);
 
-
-
 	public Address consultAddressById(int id);
 
 	public void createArticle(Article article,int userId);
+
+
 
 }

@@ -69,6 +69,7 @@ public class EnchereController {
 
         model.addAttribute("article", articles);
 
+
         return "encheres";
     }
 
@@ -128,7 +129,7 @@ public class EnchereController {
 
     @PostMapping("/bid")
     public String newBid(@ModelAttribute("connectedUser") User connectedUser,
-                         @RequestParam("user-bid") int bidAmount,
+                         @RequestParam("user-bid") float bidAmount,
                          @RequestParam("articleId") int articleId,
                          Model model) throws BusinessException {
 
@@ -140,19 +141,26 @@ public class EnchereController {
         currentArticle.setWithdrawalAddress(address);
         currentArticle.setCategory(category);
 
+
         Bid bid = new Bid();
 
         try {
             userService.isCreditValid(bidAmount, connectedUser.getId());
             bidService.isBidValid(bidAmount, currentArticle.getId());
 
+            userService.substractCredit(bidAmount, connectedUser.getId());
+            Bid maxBid = bidService.getHighestBid(currentArticle.getId());
+
+            if (maxBid != null) {
+            userService.addCredit(maxBid.getBidAmount(), maxBid.getArticle().getUser().getId());
+            }
 
             bid.setArticle(currentArticle);
             bid.setBidAmount(bidAmount);
             bid.setBidDate(LocalDate.now());
 
             bidService.createBid(bid, connectedUser.getId(), currentArticle.getId());
-            Bid maxBid = bidService.getHighestBid(currentArticle.getId());
+            maxBid = bidService.getHighestBid(currentArticle.getId());
 
             model.addAttribute("bid", bid);
             model.addAttribute("maxBid", maxBid);
