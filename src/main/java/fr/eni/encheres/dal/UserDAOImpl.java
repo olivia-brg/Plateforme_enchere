@@ -352,7 +352,7 @@ public class UserDAOImpl implements UserDAO{
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("credit", credit);
         mapSqlParameterSource.addValue("id", id);
-        jdbcTemplate.update(UPDATE_CREDIT, mapSqlParameterSource);
+        namedParameterJdbcTemplate.update(UPDATE_CREDIT, mapSqlParameterSource);
     }
 
     static class UserLoginRowMapper implements RowMapper<User> {

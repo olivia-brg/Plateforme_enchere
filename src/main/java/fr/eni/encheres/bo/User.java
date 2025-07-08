@@ -74,13 +74,16 @@ public class User {
 	}
 	public void setId(int id) {
 		this.id = id;
+		System.out.println("BEWARE NEW ID = " + id);
 	}
 
 	public String getUserName() {
 		return userName;
+
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
+		System.out.println("BEWARE NEW USERNAME = " + userName);
 	}
 
 	public String getLastName() {

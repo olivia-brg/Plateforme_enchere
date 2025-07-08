@@ -69,6 +69,8 @@
             <input type="text" id="seller" name="seller" readonly th:value="${article.user.firstName}+ ' ' +${article.user.lastName}">
         </div>
         <form data-th-object="${connectedUser}" method="POST" action="/bid" class="form-group">
+            <!-- CSRF Token -->
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
             <div th:if="${!connectedUser.isActive}" class="alert alert-warning">
                 Votre compte est désactivé. Vous ne pouvez pas participer aux enchères.
             </div>

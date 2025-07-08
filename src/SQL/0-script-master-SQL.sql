@@ -80,7 +80,7 @@ INSERT INTO auctionUsers(userName,firstName,LastName,email,phoneNumber,street,ci
 VALUES('makusu','maxime','jeannin','max.jeannin@hotmail.com','0245856335','boulevard du massacre','Nantes','44100','$2a$10$dm804LiUruKfdoS5BXFZLeIzIPnCTDWgXBwQb2Z4RM9t6cFsMNjbS',100,'ADMIN');
 
 INSERT INTO auctionUsers(userName,firstName,LastName,email,phoneNumber,street,city,postalCode,password,credit)
-VALUES('HappyBeer','pierrick','rouxel','pierrick.rouxel@hotmail.com','0245858435','rue du houblon','Nantes','44100','$2a$10$fsvFQmKlShqro1GXRh9/9eeG/9EMjo/xc1NfYMlginstKJ93Zpc3O',100);
+VALUES('HappyBeer','pierrick','rouxel','pierrick.rouxel@hotmail.com','0245858435','rue du houblon','Nantes','44100','$2a$10$fsvFQmKlShqro1GXRh9/9eeG/9EMjo/xc1NfYMlginstKJ93Zpc3O',10000);
 
 
 INSERT INTO categories(name) VALUES('bière')

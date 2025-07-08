@@ -60,8 +60,8 @@ public class LoginController {
 						RedirectAttributes redirectAttributes) {
 		connectedUser.setUserName(userDetails.getUsername());
 		connectedUser.setRole(userDetails.getAuthorities().iterator().next().getAuthority());
-		connectedUser.setIsActive(userDetails.isEnabled());
 		connectedUser.setId(userService.findByUsername(connectedUser.getUserName()).getId());
+		connectedUser.setIsActive(userService.findByUsername(connectedUser.getUserName()).getIsActive());
 
 		logger.info("{} is connected", connectedUser.getUserName());
 		logger.info("has role {}", connectedUser.getRole());
