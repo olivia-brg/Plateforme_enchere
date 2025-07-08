@@ -41,6 +41,7 @@ public class WebSecurityConfig {
         JdbcUserDetailsManager users = new JdbcUserDetailsManager(datasource);
 
 
+        //todo remplacer 1 par isActive
         users.setUsersByUsernameQuery("select username, password, 1 from auctionUsers where username=?");
         System.out.println("user database has been loaded");
         users.setAuthoritiesByUsernameQuery("select username, Role from auctionUsers where username =?");
