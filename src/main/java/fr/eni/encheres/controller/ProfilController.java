@@ -34,6 +34,7 @@ public class ProfilController {
         if (userFetched != null) {
             model.addAttribute("userFetched", userFetched);
             logger.info("USER FOUND : {}", userFetched);
+            System.out.println(userService.findById(id));
             return "profile";
         } else logger.info("Unknown user");
 

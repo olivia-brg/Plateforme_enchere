@@ -23,6 +23,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void deactivateUser(int id){
+    this.userDAO.deactivateUser(id);
+    }
+    @Override
+    public void activateUser(int id){
+        this.userDAO.activateUser(id);
+    }
+    @Override
     @Transactional(rollbackFor = BusinessException.class)
     public User load(String username, String password) throws BusinessException{
     	BusinessException be = new BusinessException();
@@ -105,6 +113,12 @@ public class UserServiceImpl implements UserService {
     public User findByUsername(String username) {
         return this.userDAO.findByUsername(username);
     }
+    @Override
+    public int findIdByUsername(String username) {
+        return this.userDAO.findIdByUsername(username);
+    }
+
+
 
     public boolean isUsernameAvailable(String username, int id, BusinessException be) {
 

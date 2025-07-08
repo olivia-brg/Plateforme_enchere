@@ -65,12 +65,19 @@
 
             <input type="text" id="seller" name="seller" readonly th:value="${article.user.firstName}+ ' ' +${article.user.lastName}">
         </div>
-        <form method= "POST" action="/bid" class="form-group">
-            <label for="user-bid">Ma propositon </label>
-            <input type="number" name="user-bid" id="user-bid"  th:value="${article.soldPrice}" th:min="${article.soldPrice > article.startingPrice} ? article.soldPrice : article.startingPrice">
+        <form data-th-object="${connectedUser}" method="POST" action="/bid" class="form-group">
+            <div th:if="${!connectedUser.isActive}" class="alert alert-warning">
+                Votre compte est désactivé. Vous ne pouvez pas participer aux enchères.
+            </div>
 
-            <button type="submit">Enchérir</button>
+            <label for="user-bid">Ma propositon </label>
+            <input type="number" name="user-bid" id="user-bid" th:value="${article.soldPrice}"
+                   th:min="${article.soldPrice > article.startingPrice} ? article.soldPrice : article.startingPrice"
+                   th:disabled="${!connectedUser.isActive}">
+
+            <button type="submit" th:disabled="${!connectedUser.isActive}">Enchérir</button>
         </form>
+
         <div class="form-group">
            <button type="submit"><a href="/">Back</a></button>
         </div>

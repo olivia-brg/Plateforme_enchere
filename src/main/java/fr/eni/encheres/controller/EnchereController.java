@@ -101,10 +101,11 @@ public class EnchereController {
     }
 
     @GetMapping("/detailArticle")
-    public String afficherUnArticle(@RequestParam(name = "id") int id, Model model) {
-
+    public String afficherUnArticle(@RequestParam(name = "id") int id, Model model, @ModelAttribute("connectedUser") User connectedUser) {
+        User user = connectedUser;
         Article current = articleService.consultArticleById(id);
         if (current != null) {
+
             User vendeur = userService.findById(current.getUser().getId());
             Address address = articleService.consultAddressById(current.getWithdrawalAddress().getDeliveryAddressId());
             Category category = articleService.consultCategoryById(current.getCategory().getId());
@@ -113,6 +114,7 @@ public class EnchereController {
             current.setCategory(category);
             System.out.println(current);
             model.addAttribute("article", current);
+            model.addAttribute("connectedUser", user);
         }else
         {System.out.println("Article inconnu!!");}
         return "detail-vente";
