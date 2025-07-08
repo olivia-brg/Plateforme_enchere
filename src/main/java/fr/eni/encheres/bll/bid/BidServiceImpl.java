@@ -37,7 +37,7 @@ public class BidServiceImpl implements BidService {
     public boolean isBidValid(int bidAmount, int articleId ) throws BusinessException{
         BusinessException be = new BusinessException();
         Bid maxBid = getHighestBid(articleId);
-        if (maxBid == null || bidAmount < maxBid.getBidAmount()) {
+        if (maxBid != null && bidAmount < maxBid.getBidAmount()) {
             be.add("L'enchère doit être suppérieur à l'enchère la plus haute");
             throw be;
         }
@@ -50,6 +50,10 @@ public class BidServiceImpl implements BidService {
 //    we are looking for the highest bid for an article
     public Bid getHighestBid(int articleId) {
         List<Bid> listBid = bidDAO.readAllFromArticleId(articleId);
+
+        if (listBid.isEmpty() || listBid == null) {
+            return null;
+        }
         return Collections.max(listBid, Comparator.comparing(Bid::getBidAmount));
     }
 

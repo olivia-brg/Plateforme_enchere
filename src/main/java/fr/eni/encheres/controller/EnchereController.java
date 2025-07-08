@@ -143,7 +143,9 @@ public class EnchereController {
         Bid bid = new Bid();
 
         try {
+            userService.isCreditValid(bidAmount, connectedUser.getId());
             bidService.isBidValid(bidAmount, currentArticle.getId());
+
 
             bid.setArticle(currentArticle);
             bid.setBidAmount(bidAmount);
@@ -161,7 +163,8 @@ public class EnchereController {
             return "detail-vente";
 
         }catch (BusinessException be){
-
+            Bid maxBid = bidService.getHighestBid(currentArticle.getId());
+            model.addAttribute("maxBid", maxBid);
             model.addAttribute("bid", bid);
             model.addAttribute("article", currentArticle);
             model.addAttribute("errorMessages", be.getMessages());
