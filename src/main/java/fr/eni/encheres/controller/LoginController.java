@@ -66,13 +66,13 @@ public class LoginController {
         logger.info("{} is connected", connectedUser.getUserName());
         logger.info("has role {}", connectedUser.getRole());
         logger.info("has id {}", connectedUser.getId());
+        logger.info("is it active? {} ", connectedUser.getIsActive());
 
 
         return "redirect:/";
 
 //        User user;
 //		try {
-//			user = this.userService.load(userName, password);
 //			if (user != null) {
 //	            connectedUser.setId(user.getId());
 //	            connectedUser.setUserName(user.getUserName());
@@ -163,7 +163,7 @@ public class LoginController {
 
             redirectAttributes.addFlashAttribute("errorMessages", e.getMessages());
             logger.warn("exception username already used");
-            return "redirect:/signIn";
+            return "redirect:/";
         }
 
 

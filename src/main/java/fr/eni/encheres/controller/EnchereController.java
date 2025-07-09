@@ -71,9 +71,9 @@ public class EnchereController {
 
         List<Article> articles = articleService.getFilteredArticles(criteria, userId, page, size);
         // Vérifiez que chaque article a bien son ID
-        articles.forEach(article -> {
-            System.out.println("Article ID: " + article.getId() + ", Name: " + article.getName());
-        });
+//        articles.forEach(article -> {
+//            System.out.println("Article ID: " + article.getId() + ", Name: " + article.getName());
+//        });
 
         int totalArticles = articleService.countFilteredArticles(criteria, userId);
         int totalPages = (int) Math.ceil((double) totalArticles / size);
@@ -180,7 +180,10 @@ public class EnchereController {
             bidService.isBidValid(bidAmount, currentArticle.getId());
 
             userService.substractCredit(bidAmount, connectedUser.getId());
+
             Bid maxBid = bidService.getHighestBid(currentArticle.getId());
+
+
 
             if (maxBid != null) {
                 userService.addCredit(maxBid.getBidAmount(), maxBid.getArticle().getUser().getId());
