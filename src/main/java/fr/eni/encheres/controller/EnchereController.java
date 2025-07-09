@@ -63,6 +63,8 @@ public class EnchereController {
         List<Category> listeCategories = articleService.consultCategories();
         model.addAttribute("listeCategories", listeCategories);
 
+
+
         // suppression du caratère de recherche fantôme
         if (criteria.getSearchText() != null && criteria.getSearchText().isEmpty()) criteria.setSearchText(null);
 
@@ -75,6 +77,18 @@ public class EnchereController {
 //            System.out.println("Article ID: " + article.getId() + ", Name: " + article.getName());
 //        });
 
+
+        for (Article article : articles) {
+            System.out.println("IS USER :" + article.getId());
+            if (!articleService.isOnSaleArticle(article.getId())){
+                articleService.closeSale(article.getId());
+
+            }
+
+        }
+
+
+
         int totalArticles = articleService.countFilteredArticles(criteria, userId);
         int totalPages = (int) Math.ceil((double) totalArticles / size);
 
@@ -82,6 +96,7 @@ public class EnchereController {
         model.addAttribute("criteria", criteria);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("currentPage", page);
+
         model.addAttribute("article", articles);
 
         return "encheres";
@@ -130,6 +145,7 @@ public class EnchereController {
             current.setUser(vendeur);
             current.setWithdrawalAddress(address);
             current.setCategory(category);
+
             model.addAttribute("article", current);
 
 
@@ -178,6 +194,8 @@ public class EnchereController {
         try {
             userService.isCreditValid(bidAmount, connectedUser.getId());
             bidService.isBidValid(bidAmount, currentArticle.getId());
+            articleService.isOnSaleArticle(currentArticle.getId());
+
 
             userService.substractCredit(bidAmount, connectedUser.getId());
 
@@ -193,7 +211,11 @@ public class EnchereController {
             bid.setBidAmount(bidAmount);
             bid.setBidDate(LocalDate.now());
 
+
             bidService.createBid(bid, connectedUser.getId(), currentArticle.getId());
+
+            articleDAO.updateSoldPrice(articleId, bidService.getHighestBid(articleId).getBidAmount());
+
             maxBid = bidService.getHighestBid(currentArticle.getId());
 
             model.addAttribute("bid", bid);
