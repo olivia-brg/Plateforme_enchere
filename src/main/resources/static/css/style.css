@@ -14,6 +14,17 @@ body {
     max-width: 1200px;
     background-color: #f9f9f9;
     color: #333;
+    background-image: url("../img/logo.png");
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+/* ###### MAIN STYLES ###### */
+main {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 1rem;
 }
 
 /* ########### TITRES ########### */
@@ -22,12 +33,11 @@ h1 {
     margin-bottom: 2rem;
 }
 
-/* ########### FORMULAIRE ########### */
-form {
+/* ########### FORMULAIRE GÉNÉRAL ########### */
+.articleForm, .userForm, .filterForm {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 400px;
     margin: auto;
     background-color: white;
     padding: 1.5rem;
@@ -35,18 +45,134 @@ form {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
+.articleForm, .userForm {
+    max-width: 500px;
+}
+
+/* ########### FORMULAIRE DE FILTRES RESPONSIVE ########### */
+.filtres {
+    margin-bottom: 2rem;
+}
+
+.filtres h2 {
+    margin-bottom: 1rem;
+    color: #333;
+    font-size: 1.2rem;
+}
+
+.filtres form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Layout responsive pour le formulaire de filtres */
+@media (min-width: 768px) {
+    .filtres form {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+
+    .filtres form > input[name="searchText"] {
+        grid-column: 1 / -1; /* Prend toute la largeur */
+    }
+
+    .filtres form > button[type="submit"] {
+        grid-column: 1 / -1; /* Prend toute la largeur */
+        justify-self: center;
+        max-width: 200px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .filtres form {
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 2rem;
+        align-items: start;
+    }
+
+    .filtres form > input[name="searchText"] {
+        grid-column: 1 / -1; /* Prend toute la largeur */
+    }
+
+    .filtres form > label[for="category"] {
+        grid-column: 1;
+    }
+
+    .filtres form > select[name="categoryId"] {
+        grid-column: 1;
+    }
+
+    .filtres form > fieldset {
+        grid-column: span 1;
+    }
+
+    .filtres form > button[type="submit"] {
+        grid-column: 1 / -1; /* Prend toute la largeur */
+        justify-self: center;
+        max-width: 200px;
+    }
+}
+
+/* Style des fieldsets */
+fieldset {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 1rem;
+    background-color: #fafafa;
+}
+
+fieldset:disabled {
+    opacity: 0.6;
+    background-color: #f5f5f5;
+}
+
+fieldset legend {
+    padding: 0 0.5rem;
+    font-weight: 600;
+    color: #333;
+}
+
+fieldset label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: normal;
+}
+
+fieldset input[type="radio"] {
+    margin: 0;
+    width: auto;
+}
+
+/* ########### STYLES INPUTS GÉNÉRAUX ########### */
 label {
     margin-bottom: 0.25rem;
     font-weight: 600;
 }
 
-input:not([type="checkbox"]) {
+input:not([type="checkbox"]):not([type="radio"]) {
     padding: 10px;
     font-size: 1rem;
     width: 100%;
     margin-bottom: 1rem;
     border: 1px solid #ccc;
     border-radius: 4px;
+}
+
+select {
+    padding: 10px;
+    font-size: 1rem;
+    width: 100%;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
 }
 
 input[readonly] {
@@ -63,7 +189,7 @@ input[readonly] {
 }
 
 button {
-    padding: 10px;
+    padding: 10px 20px;
     font-size: 1rem;
     margin-bottom: 1rem;
     background-color: #007bff;
@@ -72,6 +198,7 @@ button {
     border-radius: 6px;
     cursor: pointer;
     transition: background 0.2s ease-in-out;
+    width: 100%;
 }
 
 button:hover {
@@ -94,12 +221,26 @@ a:hover {
     text-decoration: underline;
 }
 
-/* ########### ARTICLES ########### */
+/* ########### ARTICLES RESPONSIVE ########### */
 .articles {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
     width: 100%;
+    margin-bottom: 2rem;
+}
+
+/* Responsive grid pour les articles */
+@media (min-width: 768px) {
+    .articles {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .articles {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
 .single-article {
@@ -109,35 +250,55 @@ a:hover {
     border: 2px solid #ddd;
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    height: fit-content;
+}
+
+.single-article:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 .single-article img {
     width: 100%;
-    height: auto;
+    height: 200px;
     object-fit: cover;
-    padding: 1rem;
+    padding: 0;
 }
 
-.single-article .content {
+.single-article .article-infos {
     padding: 1rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Desktop layout */
-@media (min-width: 768px) {
-    .single-article {
-        flex-direction: row;
-        align-items: center;
-    }
+.single-article h5 {
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    color: #333;
+}
 
-    .single-article img {
-        width: 200px;
-        padding: 1rem;
-    }
+.single-article p {
+    margin-bottom: 0.3rem;
+    color: #666;
+    font-size: 0.9rem;
+}
 
-    .single-article .content {
-        flex: 1;
-    }
+.single-article a {
+    margin-top: auto;
+    padding: 0.5rem 1rem;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    text-align: center;
+    transition: background-color 0.2s ease;
+}
+
+.single-article a:hover {
+    background-color: #0056b3;
 }
 
 /* ########### PAGINATION ########### */
@@ -194,7 +355,10 @@ a:hover {
 .exception {
     color: red;
     text-align: center;
-    margin: 1rem 0;
+    background-color: white;
+    border-radius: 5px;
+    width: fit-content;
+    margin: 1rem auto;
 }
 
 .bu {
@@ -225,115 +389,7 @@ a:hover {
     padding: 10px;
 }
 
-/*!* ########## HEADER ########## *!*/
-/*header {*/
-/*    width: 100%;*/
-/*    background-color: white;*/
-/*    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);*/
-/*    position: sticky;*/
-/*    top: 0;*/
-/*    z-index: 100;*/
-/*}*/
-
-/*.navbar {*/
-/*    display: flex;*/
-/*    justify-content: space-between;*/
-/*    align-items: center;*/
-/*    padding: 1rem;*/
-/*    flex-wrap: wrap;*/
-/*}*/
-
-/*!* Titre / logo *!*/
-/*#nav-title {*/
-/*    font-size: 1.5rem;*/
-/*    font-weight: bold;*/
-/*}*/
-
-/*#nav-title a {*/
-/*    text-decoration: none;*/
-/*    color: #333;*/
-/*}*/
-
-/*!* Burger (mobile only) *!*/
-/*.burger {*/
-/*    font-size: 2rem;*/
-/*    cursor: pointer;*/
-/*    user-select: none;*/
-/*    display: block;*/
-/*}*/
-
-/*!* Menu (mobile hidden by default) *!*/
-/*#nav-links {*/
-/*    display: none;*/
-/*    flex-direction: column;*/
-/*    width: 100%;*/
-/*    padding-top: 1rem;*/
-/*}*/
-
-/*#nav-links.active {*/
-/*    display: flex;*/
-/*}*/
-
-/*!* Liens de menu *!*/
-/*#nav-links li {*/
-/*    list-style: none;*/
-/*    margin: 0.5rem 0;*/
-/*}*/
-
-/*#nav-links li a {*/
-/*    display: block;*/
-/*    width: 100%;*/
-/*    text-align: center;*/
-/*    padding: 0.75rem;*/
-/*    font-size: 1rem;*/
-/*    text-decoration: none;*/
-/*    color: #007bff;*/
-/*    border-radius: 6px;*/
-/*    transition: background 0.3s;*/
-/*}*/
-
-/*#nav-links li a:hover {*/
-/*    background-color: rgba(0, 123, 255, 0.1);*/
-/*}*/
-
-/*!* ########## DESKTOP ########## *!*/
-/*@media (min-width: 768px) {*/
-/*    .navbar {*/
-/*        flex-wrap: nowrap;*/
-/*        padding: 1rem 2rem;*/
-/*    }*/
-
-/*    .burger {*/
-/*        display: none;*/
-/*    }*/
-
-/*    #nav-links {*/
-/*        display: flex !important;*/
-/*        flex-direction: row;*/
-/*        justify-content: flex-end;*/
-/*        align-items: center;*/
-/*        gap: 1.5rem;*/
-/*        width: auto;*/
-/*        padding-top: 0;*/
-/*    }*/
-
-/*    #nav-links li {*/
-/*        margin: 0;*/
-/*    }*/
-
-/*    #nav-links li a {*/
-/*        padding: 0.5rem 1rem;*/
-/*        font-size: 0.95rem;*/
-/*        text-align: left;*/
-/*    }*/
-/*}*/
-
-
-
-/*!* ######################## *!*/
-/*!* ##### STYLE HEADER ##### *!*/
-/*!* ######################## *!*/
-/*!* Mobile First Navbar Style *!*/
+/* ########### HEADER ########### */
 header {
     width: 100%;
     background-color: white;
@@ -417,7 +473,6 @@ header {
         text-align: left;
         background: none;
     }
-
 }
 
 /* Optional: image/logo styling */
@@ -481,65 +536,3 @@ header {
         display: flex !important;
     }
 }
-/* ############################ */
-/* ##### FIN STYLE HEADER ##### */
-/* ############################ */
-
-
-/*!* ########################## *!*/
-/*!* ##### STYLE NAV PAGE ##### *!*/
-/*!* ########################## *!*/
-/*!* Base container *!*/
-/*.pagination-container {*/
-/*    display: flex;*/
-/*    justify-content: center;*/
-/*    padding: 1rem;*/
-/*}*/
-
-/*!* Pagination list *!*/
-/*.pagination-list {*/
-/*    list-style: none;*/
-/*    display: flex;*/
-/*    gap: 0.5rem;*/
-/*    flex-wrap: wrap;*/
-/*    padding: 0;*/
-/*    margin: 0;*/
-/*}*/
-
-/*!* Pagination link *!*/
-/*.pagination-link {*/
-/*    display: inline-block;*/
-/*    padding: 0.5rem 0.75rem;*/
-/*    font-size: 1rem;*/
-/*    color: #007bff;*/
-/*    background-color: #fff;*/
-/*    border: 1px solid #dee2e6;*/
-/*    border-radius: 0.25rem;*/
-/*    text-decoration: none;*/
-/*    transition: background-color 0.2s, color 0.2s;*/
-/*}*/
-
-/*.pagination-link:hover {*/
-/*    background-color: #e9ecef;*/
-/*    color: #0056b3;*/
-/*}*/
-
-/*!* Active page *!*/
-/*.pagination-link.active {*/
-/*    color: #fff;*/
-/*    background-color: #007bff;*/
-/*    border-color: #007bff;*/
-/*    cursor: default;*/
-/*    pointer-events: none;*/
-/*}*/
-
-/*!* Responsive adjustments *!*/
-/*@media (max-width: 480px) {*/
-/*    .pagination-link {*/
-/*        font-size: 0.875rem;*/
-/*        padding: 0.4rem 0.6rem;*/
-/*    }*/
-/*}*/
-/*!* ############################## *!*/
-/*!* ##### FIN STYLE NAV PAGE ##### *!*/
-/*!* ############################## *!*/

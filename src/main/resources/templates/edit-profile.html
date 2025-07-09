@@ -12,7 +12,7 @@
 <main>
     <h2>Modifier mon profil</h2>
 
-    <form action="/profile/update" method="post" data-th-object="${profileForm}">
+    <form action="/profile/update" method="post" data-th-object="${profileForm}" class="userForm">
         <h3>Modifier mes informations</h3>
         <div class="exception" th:if="${errorMessages}">
             <span th:each="msg : ${errorMessages}" th:text="${msg}"></span>

@@ -13,8 +13,8 @@
     <h1>ENI-Auctions</h1>
 
     <div class="filtres">
+        <form method="get" th:action="@{/encheres}" class="filterForm">
         <h2>Filtres :</h2>
-        <form method="get" th:action="@{/encheres}">
             <input name="searchText" placeholder="Search.." type="text" th:value="${criteria.searchText}">
 
             <label for="category">Catégories </label>

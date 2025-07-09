@@ -15,7 +15,7 @@
         <span th:each="msg : ${errorMessage}" th:text="${msg}"></span>
 	</div>
 
-    <form data-th-action="@{/login}" method="post">
+    <form data-th-action="@{/login}" method="post" class="userForm">
         <label for="userName">Identifiant :</label>
         <input type="text" id="username" name="username" required>
 

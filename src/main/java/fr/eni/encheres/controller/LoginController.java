@@ -63,6 +63,9 @@ public class LoginController {
 		connectedUser.setIsActive(userService.findByUsername(connectedUser.getUserName()).getIsActive());
 
 
+        logger.error(connectedUser.toString());
+
+
         logger.info("{} is connected", connectedUser.getUserName());
         logger.info("has role {}", connectedUser.getRole());
         logger.info("has id {}", connectedUser.getId());
@@ -70,24 +73,6 @@ public class LoginController {
 
 
         return "redirect:/";
-
-//        User user;
-//		try {
-//			if (user != null) {
-//	            connectedUser.setId(user.getId());
-//	            connectedUser.setUserName(user.getUserName());
-//	            connectedUser.setAdmin(user.isAdmin());
-//	        } else {
-//	            connectedUser.setId(0);
-//	            connectedUser.setUserName(null);
-//	            connectedUser.setAdmin(false);
-//	        }
-//	        logger.info("{} is connected", connectedUser.getUserName());
-//	        return "redirect:/";
-//		} catch (BusinessException e) {
-//			redirectAttributes.addFlashAttribute("errorMessages", e.getMessages());
-//	        return "redirect:/login";
-//		}
     }
 
     @GetMapping(path = "/signIn")
