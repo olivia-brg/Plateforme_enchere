@@ -54,6 +54,7 @@ public class LoginController {
 	            connectedUser.setUserName(null);
 	            connectedUser.setAdmin(false);
 	        }
+			System.out.println(user);
 	        logger.info("{} is connected", connectedUser.getUserName());
 	        return "redirect:/";
 		} catch (BusinessException e) {

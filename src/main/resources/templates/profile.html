@@ -12,7 +12,9 @@
 <main>
     <h2 th:text="'Profil de ' + ${userFetched.userName}"></h2>
 
-    <form data-th-object="${userFetched}">
+    <form data-th-object="${userFetched}" action="deactivateUser" method="post">
+        <input type="text" id="userId" name="userId" th:value="*{id}" readonly>
+        <input type="text" id="userSts" name="userSts" th:value="*{isActive}" readonly>
         <div class="form-group">
             <label for="userName">Username:</label>
             <input type="text" id="userName" name="userName" th:value="*{userName}" readonly>
@@ -60,9 +62,22 @@
                 <strong>Supprimer l'utilisateur</strong>
             </button>
         </th:block>
+        <th:block th:if="${connectedUser.isAdmin()}">
+
+            <button type="submit" style="background-color: #ff1827; color: white; border-radius: 5px">
+                <strong th:text="*{isActive} ? 'Désactiver le compte' : 'Activer le compte'"></strong>
+
+            </button>
+            <button type="button" style="background-color: #ff1827; color: white; border-radius: 5px"
+                    onclick="window.location.href=''">
+                <strong>Supprimer l'utilisateur</strong>
+            </button>
+        </th:block>
 
     </form>
 </main>
+
+
 </body>
 
 </html>
