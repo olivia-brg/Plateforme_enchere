@@ -20,12 +20,14 @@ public interface ArticleService {
 
 	public Address consultAddressById(int id);
 
-    void createArticle(Article article, int userId);
+  void createArticle(Article article, int userId);
+
 
 	public boolean isOnSaleArticle(int articleId) throws BusinessException;
 
-//	public User articleClosed (int articleId);
-
 	public void closeSale(int articleId);
+
+
+	int countFilteredArticles(ArticleSearchCriteria criteria, int currentUserId);
 
 }

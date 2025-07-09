@@ -50,32 +50,33 @@ public class EnchereController {
     }
 
     @RequestMapping(path = {"/", "/encheres"}, method = {RequestMethod.GET, RequestMethod.POST})
+
     public String search(
-            @ModelAttribute("connectedUser") User connectedUser,
+            @ModelAttribute(value = "connectedUser", binding = false) User connectedUser,
             @ModelAttribute ArticleSearchCriteria criteria,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "6") int size,
             Model model
     ) throws BusinessException {
 
 
         List<Category> listeCategories = articleService.consultCategories();
         model.addAttribute("listeCategories", listeCategories);
-        List<Article> articles = new ArrayList<>();
 
 
 
         // suppression du caratère de recherche fantôme
         if (criteria.getSearchText() != null && criteria.getSearchText().isEmpty()) criteria.setSearchText(null);
 
-        if (criteria == null) {
-            logger.warn("critères null");
-            articles = articleService.consultArticles();
-        } else {
-            logger.warn(criteria.toString());
-            int userId = connectedUser.getId();
-            articles = articleService.getFilteredArticles(criteria, userId, page, size);
-        }
+        logger.warn(criteria.toString());
+        int userId = connectedUser.getId();
+
+        List<Article> articles = articleService.getFilteredArticles(criteria, userId, page, size);
+        // Vérifiez que chaque article a bien son ID
+//        articles.forEach(article -> {
+//            System.out.println("Article ID: " + article.getId() + ", Name: " + article.getName());
+//        });
+
 
         for (Article article : articles) {
             System.out.println("IS USER :" + article.getId());
@@ -87,7 +88,17 @@ public class EnchereController {
         }
 
 
+
+        int totalArticles = articleService.countFilteredArticles(criteria, userId);
+        int totalPages = (int) Math.ceil((double) totalArticles / size);
+
+
+        model.addAttribute("criteria", criteria);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("currentPage", page);
+
         model.addAttribute("article", articles);
+
         return "encheres";
     }
 
@@ -120,13 +131,14 @@ public class EnchereController {
     }
 
     @GetMapping("/detailArticle")
-    public String afficherUnArticle(@RequestParam(name = "id") int id,
-                                    @ModelAttribute("connectedUser") User connectedUser,
-                                    Model model) {
-        User user = connectedUser;
-        Article current = articleService.consultArticleById(id);
-        if (current != null) {
+    public String afficherUnArticle(@RequestParam("articleId") int id, Model model, @ModelAttribute("connectedUser") User connectedUser) {
+        // On garde une référence à l'ID de l'utilisateur connecté
+        int connectedUserId = connectedUser.getId();
+        System.out.println("user ID is" + connectedUserId);
 
+        Article current = articleService.consultArticleById(id);
+
+        if (current != null) {
             User vendeur = userService.findById(current.getUser().getId());
             Address address = articleService.consultAddressById(current.getWithdrawalAddress().getDeliveryAddressId());
             Category category = articleService.consultCategoryById(current.getCategory().getId());
@@ -134,24 +146,34 @@ public class EnchereController {
             current.setWithdrawalAddress(address);
             current.setCategory(category);
 
-
-
             model.addAttribute("article", current);
-            model.addAttribute("connectedUser", user);
+
 
             Bid maxBid = bidService.getHighestBid(current.getId());
             model.addAttribute("maxBid", maxBid);
-        } else {
-            System.out.println("Article inconnu!");
-        }
+            System.out.println("vendeur is : " + vendeur);
+            System.out.println("connected user is : " + connectedUser);
+            // On s'assure que l'ID de l'utilisateur connecté n'a pas changé
+
+
+        }else
+        {System.out.println("Article inconnu!!");}
+        connectedUser.setId(connectedUserId);
+
         return "detail-vente";
     }
 
+    //doublon avec celle de login controller
     @ModelAttribute("connectedUser")
-    public User AddUser() {
-        System.out.println("Add Attribut User to Session");
-        return new User();
+    public User initConnectedUser(@ModelAttribute(value = "connectedUser", binding = false) User connectedUser) {
+        if (connectedUser.getId() == 0) {
+            // Si l'utilisateur n'est pas initialisé, on retourne un nouvel utilisateur
+            return new User();
+        }
+        // Sinon, on retourne l'utilisateur existant sans le modifier
+        return connectedUser;
     }
+
 
     @PostMapping("/bid")
     public String newBid(@ModelAttribute("connectedUser") User connectedUser,
@@ -176,7 +198,10 @@ public class EnchereController {
 
 
             userService.substractCredit(bidAmount, connectedUser.getId());
+
             Bid maxBid = bidService.getHighestBid(currentArticle.getId());
+
+
 
             if (maxBid != null) {
                 userService.addCredit(maxBid.getBidAmount(), maxBid.getArticle().getUser().getId());
@@ -197,7 +222,12 @@ public class EnchereController {
             model.addAttribute("maxBid", maxBid);
             model.addAttribute("article", currentArticle);
 
-            return "detail-vente";
+
+
+
+            return "redirect:/detailArticle?id=" + articleId;
+
+
 
         } catch (BusinessException be) {
             Bid maxBid = bidService.getHighestBid(currentArticle.getId());
@@ -205,7 +235,9 @@ public class EnchereController {
             model.addAttribute("bid", bid);
             model.addAttribute("article", currentArticle);
             model.addAttribute("errorMessages", be.getMessages());
-            return "detail-vente";
+
+            return "redirect:/detailArticle?id=" + articleId;
+
         }
     }
 

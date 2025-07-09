@@ -134,6 +134,11 @@ input[readonly] {
     color: #555;
 }
 
+
+
+/* ######################## */
+/* ##### STYLE HEADER ##### */
+/* ######################## */
 /* Mobile First Navbar Style */
 header {
     box-shadow: 0 1px 8px #ddd;
@@ -283,3 +288,65 @@ header {
         display: flex !important;
     }
 }
+/* ############################ */
+/* ##### FIN STYLE HEADER ##### */
+/* ############################ */
+
+
+/* ########################## */
+/* ##### STYLE NAV PAGE ##### */
+/* ########################## */
+/* Base container */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+}
+
+/* Pagination list */
+.pagination-list {
+    list-style: none;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+}
+
+/* Pagination link */
+.pagination-link {
+    display: inline-block;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    color: #007bff;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.pagination-link:hover {
+    background-color: #e9ecef;
+    color: #0056b3;
+}
+
+/* Active page */
+.pagination-link.active {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .pagination-link {
+        font-size: 0.875rem;
+        padding: 0.4rem 0.6rem;
+    }
+}
+/* ############################## */
+/* ##### FIN STYLE NAV PAGE ##### */
+/* ############################## */

@@ -15,10 +15,10 @@
     <div class="filtres">
         <h2>Filtres :</h2>
         <form method="get" th:action="@{/encheres}">
-            <input name="searchText" placeholder="Search.." type="text">
+            <input name="searchText" placeholder="Search.." type="text" th:value="${criteria.searchText}">
 
             <label for="category">Catégories </label>
-            <select id="category" name="categoryId">
+            <select id="category" name="categoryId" th:value="${criteria.categoryId}">
 
             <option value="" th:selected="${category == null}">Toutes</option>
             <option th:each="categoryFromList : ${listeCategories}"
@@ -29,9 +29,9 @@
 
             </select>
 
-            <th:block th:if="${connectedUser != null && connectedUser.id > 0}">
+            <th:block th:if="${#authorization.expression('isAuthenticated()')}">
                 <!-- Groupe Achats -->
-                <fieldset id="purchasesOptions">
+                <fieldset id="purchasesOptions" >
                     <legend>
                         <label for="auctionFilter">Achats</label>
                         <input id="auctionFilter" name="filterType" type="radio" value="purchases">
@@ -68,8 +68,27 @@
         <button type="submit">rechercher</button>
         </form>
     </div>
+    <nav class="pagination-container">
+        <ul class="pagination-list">
+            <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                <a class="pagination-link"
+                   th:href="@{/encheres(
+                        page=${i},
+                        searchText=${criteria.searchText},
+                        categoryId=${criteria.categoryId},
+                        searchFilter=${criteria.searchFilter}
+                    )}"
+                   th:text="${i + 1}"
+                   th:classappend="${i == currentPage} ? 'active' : ''"></a>
+            </li>
+        </ul>
+    </nav>
+
     <div class="articles">
         <div class="single-article" th:each="a : ${article}" th:if="${category == null or a.category.id == category}">
+            <!-- Debug temporaire -->
+            <span th:text="'Debug - ID: ' + ${a.id}"></span>
+
             <img th:alt="${a.getDescription()}" th:src="${a.getImageURL()}">
             <div class="article-infos">
                 <h5 th:text="${a.name}">Exemple</h5>
@@ -78,12 +97,27 @@
                 <p th:text="${'Fin de l''enchère : ' + a.auctionEndDate}">Fin de l'enchère: </p>
                 <!--<p th:text="'Retrait : ' + ${a.withdrawalAddress.street} + ' ' + ${a.withdrawalAddress.city} + ' ' + ${a.withdrawalAddress.postalCode}">Retrait: </p>-->
                 <p th:text="'Vendeur : ' + ${a.user.firstName} + ' ' + ${a.user.lastName}">Vendeur: </p>
-                <a th:if="${connectedUser.getId() > 0}"
-                        th:href="@{/detailArticle(id=${a.id})}">Détail de la vente</a>
+                <a data-th-if="${#authorization.expression('isAuthenticated()')}"
+                        th:href="@{/detailArticle(articleId=${a.id})}">Détail de la vente</a>
             </div>
         </div>
-
     </div>
+    <nav class="pagination-container">
+        <ul class="pagination-list">
+            <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                <a class="pagination-link"
+                   th:href="@{/encheres(
+                        page=${i},
+                        searchText=${criteria.searchText},
+                        categoryId=${criteria.categoryId},
+                        searchFilter=${criteria.searchFilter}
+                    )}"
+                   th:text="${i + 1}"
+                   th:classappend="${i == currentPage} ? 'active' : ''"></a>
+            </li>
+        </ul>
+    </nav>
+
 
     <script>
         const radioButtons = document.querySelectorAll('input[name="filterType"]');

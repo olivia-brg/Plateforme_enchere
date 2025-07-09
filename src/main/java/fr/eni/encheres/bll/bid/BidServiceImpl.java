@@ -74,4 +74,7 @@ public class BidServiceImpl implements BidService {
     public List<Bid> consultBidsByArticleId(int id) {
         return bidDAO.readAllFromArticleId(id);
     }
+
+
+
 }
