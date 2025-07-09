@@ -16,9 +16,7 @@ import java.util.List;
 public class BidServiceImpl implements BidService {
 
     private final ArticleService articleService;
-
-    private BidDAO bidDAO;
-
+    private final BidDAO bidDAO;
 
     public BidServiceImpl(ArticleService articleService, BidDAO bidDAO) {
         this.articleService = articleService;
@@ -30,22 +28,26 @@ public class BidServiceImpl implements BidService {
 
     }
 
-
     @Transactional(rollbackFor = BusinessException.class)
-    public boolean isBidValid(float bidAmount, int articleId ) throws BusinessException{
+    public boolean isBidValid(float bidAmount, int articleId) throws BusinessException {
         BusinessException be = new BusinessException();
         Bid maxBid = getHighestBid(articleId);
+
         if (maxBid != null && bidAmount < maxBid.getBidAmount()) {
-            be.add("L'enchère doit être suppérieur à l'enchère la plus haute");
+            be.add("La mise doit être suppérieur à l'enchère la plus haute !");
+        }
+
+        if (bidAmount < articleService.consultArticleById(articleId).getStartingPrice()){
+            be.add("La mise doit être supperieur au prix de départ !");
+        }
+
+        if (be.hasError()){
             throw be;
         }
         return true;
-
     }
 
-
-
-//    we are looking for the highest bid for an article
+    // we are looking for the highest bid for an article
     public Bid getHighestBid(int articleId) {
         List<Bid> listBid = bidDAO.readAllFromArticleId(articleId);
 
@@ -61,14 +63,11 @@ public class BidServiceImpl implements BidService {
 
     @Override
     public Bid consultBidById(int id) {
-        return null;
+        return bidDAO.read(id);
     }
 
     @Override
     public List<Bid> consultBidsByArticleId(int id) {
         return bidDAO.readAllFromArticleId(id);
     }
-
-
-
 }

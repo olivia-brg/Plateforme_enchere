@@ -1,6 +1,6 @@
 package fr.eni.encheres.bll;
 
-import fr.eni.encheres.dal.PasswordDTO;
+import fr.eni.encheres.dto.PasswordDTO;
 import fr.eni.encheres.exception.ValidatePasswordUpdate;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

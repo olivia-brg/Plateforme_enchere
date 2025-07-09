@@ -9,8 +9,7 @@ import java.util.List;
 public interface BidService {
     void createBid(Bid bid, int userId, int articleId);
     Bid getHighestBid(int articleId);
-    public Bid consultBidById(int id);
-    public List<Bid> consultBidsByArticleId(int id);
-    public boolean isBidValid(float bidAmount, int articleId ) throws BusinessException;
-
+    Bid consultBidById(int id);
+    List<Bid> consultBidsByArticleId(int id);
+    boolean isBidValid(float bidAmount, int articleId ) throws BusinessException;
 }

@@ -1,7 +1,6 @@
-package fr.eni.encheres.dal;
+package fr.eni.encheres.dto;
 
 import fr.eni.encheres.exception.ValidatePasswordUpdate;
-import jakarta.validation.constraints.NotBlank;
 
 @ValidatePasswordUpdate
 public class PasswordDTO {

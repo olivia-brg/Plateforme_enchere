@@ -2,13 +2,14 @@ package fr.eni.encheres.controller;
 
 import fr.eni.encheres.bll.user.UserService;
 import fr.eni.encheres.bo.User;
-import fr.eni.encheres.dal.PasswordDTO;
-import fr.eni.encheres.dal.ProfileFormDTO;
-import fr.eni.encheres.dal.UserDTO;
+import fr.eni.encheres.dto.PasswordDTO;
+import fr.eni.encheres.dto.ProfileFormDTO;
+import fr.eni.encheres.dto.UserDTO;
 import fr.eni.encheres.exception.BusinessException;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,9 +23,11 @@ public class ProfilController {
 
     private static final Logger logger = LoggerFactory.getLogger(ProfilController.class);
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
-    public ProfilController(UserService userService) {
+    public ProfilController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -34,9 +37,7 @@ public class ProfilController {
         User userFetched = this.userService.findById(id);
         if (userFetched != null) {
             model.addAttribute("userFetched", userFetched);
-
             logger.info("USER FOUND : {}", userFetched);
-            System.out.println(userService.findById(id));
             return "profile";
         } else logger.info("Unknown user");
 
@@ -86,12 +87,14 @@ public class ProfilController {
             userService.updateProfile(profileForm.getUser(), connectedUser.getId());
 
             // Mise à jour mot de passe si champs remplis
-//            PasswordDTO pwd = profileForm.getPasswordModification();
-//            if (pwd.getNewPassword() != null && !pwd.getNewPassword().isBlank()) {
-//;
-//                userService.checkPasswordConfirmation(pwd.getNewPassword(), pwd.getConfirmPassword());
-//                userService.updatePassword(pwd, connectedUser.getId());
-//            }
+            PasswordDTO pwd = profileForm.getPasswordModification();
+            if ((pwd.getNewPassword() != null && !pwd.getNewPassword().isBlank()) ||
+                    (pwd.getConfirmPassword() != null && !pwd.getConfirmPassword().isBlank())
+            ) {
+                logger.info("PASSWORD CHANGED : {}", pwd.getNewPassword());
+                userService.checkPasswordConfirmation(pwd.getNewPassword(), pwd.getConfirmPassword());
+                userService.updatePassword(pwd, connectedUser.getId());
+            }
 
             return "redirect:/profile?id=" + connectedUser.getId();
 

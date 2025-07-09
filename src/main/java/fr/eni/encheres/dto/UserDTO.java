@@ -1,4 +1,4 @@
-package fr.eni.encheres.dal;
+package fr.eni.encheres.dto;
 
 import jakarta.validation.constraints.*;
 

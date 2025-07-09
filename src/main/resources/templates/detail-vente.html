@@ -77,7 +77,7 @@
                 Votre compte est désactivé. Vous ne pouvez pas participer aux enchères.
             </div>
 
-            <label for="user-bid">Ma propositon </label>
+            <label for="user-bid">Ma propositon :</label>
 
             <input type="number" name="user-bid" id="user-bid" th:value="${article.soldPrice}"
                    th:min="${article.soldPrice > article.startingPrice} ? article.soldPrice : article.startingPrice"
@@ -89,11 +89,11 @@
 
 
 
+
             <!-- Ajout d'un champ caché pour l'ID de l'article -->
             <input type="hidden" name="articleId" th:value="${article.id}"/>
 
         </form>
-
         <div class="form-group">
            <button type="submit"><a href="/">Back</a></button>
         </div>
