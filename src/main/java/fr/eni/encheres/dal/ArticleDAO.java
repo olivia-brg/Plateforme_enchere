@@ -17,5 +17,5 @@ public interface ArticleDAO {
 
 	List<Article> searchWithFilters(ArticleSearchCriteria criteria, int currentUserId, int page, int size, LocalDateTime dateNow);
 
-	int countFilteredArticles(ArticleSearchCriteria criteria, int currentUserId);
+	int countFilteredArticles(ArticleSearchCriteria criteria, int currentUserId, LocalDateTime dateNow);
 }

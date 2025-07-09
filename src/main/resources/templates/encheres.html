@@ -71,6 +71,7 @@
     <nav class="pagination-container">
         <ul class="pagination-list">
             <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                <th:block th:if="${i >= 0}">
                 <a class="pagination-link"
                    th:href="@{/encheres(
                         page=${i},
@@ -80,6 +81,7 @@
                     )}"
                    th:text="${i + 1}"
                    th:classappend="${i == currentPage} ? 'active' : ''"></a>
+                </th:block>
             </li>
         </ul>
     </nav>
@@ -102,15 +104,17 @@
     <nav class="pagination-container">
         <ul class="pagination-list">
             <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-                <a class="pagination-link"
-                   th:href="@{/encheres(
+                <th:block th:if="${i >= 0}">
+                    <a class="pagination-link"
+                       th:href="@{/encheres(
                         page=${i},
                         searchText=${criteria.searchText},
                         categoryId=${criteria.categoryId},
                         searchFilter=${criteria.searchFilter}
                     )}"
-                   th:text="${i + 1}"
-                   th:classappend="${i == currentPage} ? 'active' : ''"></a>
+                       th:text="${i + 1}"
+                       th:classappend="${i == currentPage} ? 'active' : ''"></a>
+                </th:block>
             </li>
         </ul>
     </nav>

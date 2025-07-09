@@ -160,8 +160,7 @@ public class ArticleDAOImpl implements ArticleDAO {
     }
 
     @Override
-    public int countFilteredArticles(ArticleSearchCriteria criteria, int currentUserId) {
-        LocalDateTime now = LocalDateTime.now();
+    public int countFilteredArticles(ArticleSearchCriteria criteria, int currentUserId, LocalDateTime dateNow) {
         MapSqlParameterSource namedParameters = new MapSqlParameterSource();
         StringBuilder sql = new StringBuilder("SELECT COUNT(DISTINCT a.id) FROM articles a ");
 
@@ -186,7 +185,7 @@ public class ArticleDAOImpl implements ArticleDAO {
                 switch (filter) {
                     case openAuctions:
                         sql.append("AND a.auctionStartDate < :now AND a.auctionEndDate > :now ");
-                        namedParameters.addValue("now", now);
+                        namedParameters.addValue("now", dateNow);
                         break;
                     case ongoingAuctions:
                         sql.append("AND b.userId = :currentUserId ");
@@ -196,19 +195,19 @@ public class ArticleDAOImpl implements ArticleDAO {
                         sql.append("AND a.userId = :currentUserId ");
                         sql.append("AND a.auctionStartDate < :now AND a.auctionEndDate > :now ");
                         namedParameters.addValue("currentUserId", currentUserId);
-                        namedParameters.addValue("now", now);
+                        namedParameters.addValue("now", dateNow);
                         break;
                     case notStartedSales:
                         sql.append("AND a.userId = :currentUserId ");
                         sql.append("AND a.auctionStartDate > :now ");
                         namedParameters.addValue("currentUserId", currentUserId);
-                        namedParameters.addValue("now", now);
+                        namedParameters.addValue("now", dateNow);
                         break;
                     case finishedSales:
                         sql.append("AND a.userId = :currentUserId ");
                         sql.append("AND a.auctionEndDate < :now ");
                         namedParameters.addValue("currentUserId", currentUserId);
-                        namedParameters.addValue("now", now);
+                        namedParameters.addValue("now", dateNow);
                         break;
                 }
             }
