@@ -32,8 +32,16 @@ public class BidServiceImpl implements BidService {
     public boolean isBidValid(float bidAmount, int articleId) throws BusinessException {
         BusinessException be = new BusinessException();
         Bid maxBid = getHighestBid(articleId);
+
         if (maxBid != null && bidAmount < maxBid.getBidAmount()) {
-            be.add("L'enchère doit être suppérieur à l'enchère la plus haute");
+            be.add("La mise doit être suppérieur à l'enchère la plus haute !");
+        }
+
+        if (bidAmount < articleService.consultArticleById(articleId).getStartingPrice()){
+            be.add("La mise doit être supperieur au prix de départ !");
+        }
+
+        if (be.hasError()){
             throw be;
         }
         return true;
