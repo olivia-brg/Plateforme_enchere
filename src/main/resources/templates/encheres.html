@@ -86,6 +86,9 @@
 
     <div class="articles">
         <div class="single-article" th:each="a : ${article}" th:if="${category == null or a.category.id == category}">
+            <!-- Debug temporaire -->
+            <span th:text="'Debug - ID: ' + ${a.id}"></span>
+
             <img th:alt="${a.getDescription()}" th:src="${a.getImageURL()}">
             <div class="article-infos">
                 <h5 th:text="${a.name}">Exemple</h5>
@@ -95,7 +98,7 @@
                 <!--<p th:text="'Retrait : ' + ${a.withdrawalAddress.street} + ' ' + ${a.withdrawalAddress.city} + ' ' + ${a.withdrawalAddress.postalCode}">Retrait: </p>-->
                 <p th:text="'Vendeur : ' + ${a.user.firstName} + ' ' + ${a.user.lastName}">Vendeur: </p>
                 <a data-th-if="${#authorization.expression('isAuthenticated()')}"
-                        th:href="@{/detailArticle(id=${a.id})}">Détail de la vente</a>
+                        th:href="@{/detailArticle(articleId=${a.id})}">Détail de la vente</a>
             </div>
         </div>
     </div>

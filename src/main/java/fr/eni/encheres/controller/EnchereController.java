@@ -70,6 +70,11 @@ public class EnchereController {
         int userId = connectedUser.getId();
 
         List<Article> articles = articleService.getFilteredArticles(criteria, userId, page, size);
+        // Vérifiez que chaque article a bien son ID
+        articles.forEach(article -> {
+            System.out.println("Article ID: " + article.getId() + ", Name: " + article.getName());
+        });
+
         int totalArticles = articleService.countFilteredArticles(criteria, userId);
         int totalPages = (int) Math.ceil((double) totalArticles / size);
 
@@ -111,7 +116,7 @@ public class EnchereController {
     }
 
     @GetMapping("/detailArticle")
-    public String afficherUnArticle(@RequestParam int id, Model model, @ModelAttribute("connectedUser") User connectedUser) {
+    public String afficherUnArticle(@RequestParam("articleId") int id, Model model, @ModelAttribute("connectedUser") User connectedUser) {
         // On garde une référence à l'ID de l'utilisateur connecté
         int connectedUserId = connectedUser.getId();
         System.out.println("user ID is" + connectedUserId);
