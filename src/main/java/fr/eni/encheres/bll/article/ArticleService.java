@@ -2,14 +2,9 @@ package fr.eni.encheres.bll.article;
 
 import java.util.List;
 
-import fr.eni.encheres.bo.Address;
-import fr.eni.encheres.bo.Article;
-import fr.eni.encheres.bo.Bid;
-import fr.eni.encheres.bo.Category;
+import fr.eni.encheres.bo.*;
 import fr.eni.encheres.dto.ArticleSearchCriteria;
 import fr.eni.encheres.exception.BusinessException;
-
-import java.util.List;
 
 public interface ArticleService {
 
@@ -26,5 +21,11 @@ public interface ArticleService {
 	public Address consultAddressById(int id);
 
     void createArticle(Article article, int userId);
+
+	public boolean isOnSaleArticle(int articleId) throws BusinessException;
+
+//	public User articleClosed (int articleId);
+
+	public void closeSale(int articleId);
 
 }

@@ -42,6 +42,14 @@ public class ArticleDAOImpl implements ArticleDAO {
                    IMAGEURL 
             FROM ARTICLES WHERE ID = :id""";
 
+    private final String UPDATE_ISONSALE = """
+                UPDATE articles SET isOnSale = :isOnSale
+                WHERE id = :id
+            """;
+    private final String UPDATE_SOLDPRICE = """
+                UPDATE articles SET soldPrice = :soldPrice
+                WHERE id = :id
+            """;
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -75,6 +83,22 @@ public class ArticleDAOImpl implements ArticleDAO {
         System.out.println("L'article ajouté : " + article);
         // les dates sont nulles pour le moment
         return namedParameterJdbcTemplate.update(INSERT_NEW_ARTICLE, namedParameters);
+    }
+
+    @Override
+    public void updateIsOnSale(int articleId, boolean isOnSale) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("isOnSale", isOnSale);
+        mapSqlParameterSource.addValue("id", articleId);
+        namedParameterJdbcTemplate.update(UPDATE_ISONSALE, mapSqlParameterSource);
+    }
+
+    @Override
+    public void updateSoldPrice(int articleId, float soldPrice) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("soldPrice", soldPrice);
+        mapSqlParameterSource.addValue("id", articleId);
+        namedParameterJdbcTemplate.update(UPDATE_SOLDPRICE, mapSqlParameterSource);
     }
 
 

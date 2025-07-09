@@ -12,5 +12,9 @@ public interface ArticleDAO {
 
 	int create(Article article, int userId, int deliveryAddressId);
 
+	void updateIsOnSale(int articleId, boolean isOnSale);
+
+	void updateSoldPrice(int articleId, float soldPrice);
+
 //	List<Article> searchByFilters(int categoryId, String search, String purchasesOptions);
 }
