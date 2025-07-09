@@ -42,19 +42,23 @@ public class LoginController {
         return "login";
     }
 
-    @ModelAttribute("connectedUser")
-    public User AddUser() {
-        return new User();
-    }
+
+//    @ModelAttribute("connectedUser")
+//    public User AddUser(){
+//        return new User();
+//    }
+
 
     @GetMapping("/loginSucess")
     public String login(@AuthenticationPrincipal UserDetails userDetails,
                         @ModelAttribute("connectedUser") User connectedUser,
-                        RedirectAttributes redirectAttributes) {
-        connectedUser.setUserName(userDetails.getUsername());
-        connectedUser.setRole(userDetails.getAuthorities().iterator().next().getAuthority());
-        connectedUser.setIsActive(userDetails.isEnabled());
-        connectedUser.setId(userService.findByUsername(connectedUser.getUserName()).getId());
+
+						RedirectAttributes redirectAttributes) {
+		connectedUser.setUserName(userDetails.getUsername());
+		connectedUser.setRole(userDetails.getAuthorities().iterator().next().getAuthority());
+		connectedUser.setId(userService.findByUsername(connectedUser.getUserName()).getId());
+		connectedUser.setIsActive(userService.findByUsername(connectedUser.getUserName()).getIsActive());
+
 
         logger.info("{} is connected", connectedUser.getUserName());
         logger.info("has role {}", connectedUser.getRole());

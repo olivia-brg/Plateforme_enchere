@@ -94,7 +94,7 @@
                 <p th:text="${'Fin de l''enchère : ' + a.auctionEndDate}">Fin de l'enchère: </p>
                 <!--<p th:text="'Retrait : ' + ${a.withdrawalAddress.street} + ' ' + ${a.withdrawalAddress.city} + ' ' + ${a.withdrawalAddress.postalCode}">Retrait: </p>-->
                 <p th:text="'Vendeur : ' + ${a.user.firstName} + ' ' + ${a.user.lastName}">Vendeur: </p>
-                <a th:if="${connectedUser.getId() > 0}"
+                <a data-th-if="${#authorization.expression('isAuthenticated()')}"
                         th:href="@{/detailArticle(id=${a.id})}">Détail de la vente</a>
             </div>
         </div>
