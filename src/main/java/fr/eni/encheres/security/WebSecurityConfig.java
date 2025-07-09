@@ -43,7 +43,7 @@ public class WebSecurityConfig {
 
 
         //todo remplacer 1 par isActive
-        users.setUsersByUsernameQuery("select username, password, 1 from auctionUsers where username=?");
+        users.setUsersByUsernameQuery("select username, password, isActive from auctionUsers where username=?");
         System.out.println("user database has been loaded");
         users.setAuthoritiesByUsernameQuery("select username, Role from auctionUsers where username =?");
         return users;
@@ -62,10 +62,8 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/").permitAll()
-
                         .requestMatchers("/encheres").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/img/**", "/js/**","/flipflop.mp3").permitAll()
-
                         .requestMatchers("/signIn").permitAll()
                         .requestMatchers("/profile").permitAll()
                         .requestMatchers("/profile/update").authenticated()

@@ -77,7 +77,8 @@ public class UserDAOImpl implements UserDAO {
                        street,
                        city,
                        postalCode,
-                       credit
+                       credit,
+                       isActive
                 from auctionUsers
                 WHERE userName = :userName
             """;
@@ -349,6 +350,7 @@ public class UserDAOImpl implements UserDAO {
             user.setCity(rs.getString("city"));
             user.setPostalCode(rs.getString("postalCode"));
             user.setCredit(rs.getFloat("credit"));
+            user.setIsActive(rs.getBoolean("isActive"));
             return user;
         }
     }
