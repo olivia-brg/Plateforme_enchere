@@ -73,75 +73,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public List<Article> getFilteredArticles(ArticleSearchCriteria criteria, int currentUserId, int page, int size) {
-        LocalDateTime now = LocalDateTime.now();
-        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        LocalDateTime dateNow = LocalDateTime.now();
 
-        // Base requête SQL
-        StringBuilder sql = new StringBuilder("SELECT DISTINCT a.* FROM articles a ");
-
-        // jointure pour récupérer les enchères de l'utilisateur actif
-        if (criteria.getSearchFilter() != null && criteria.getSearchFilter().contains(FilterType.ongoingAuctions)) {
-            sql.append("JOIN bids b ON b.articleId = a.id ");
-        }
-
-        sql.append("WHERE 1=1 ");
-
-
-        if (criteria.getSearchText() != null && !criteria.getSearchText().isBlank()) {
-            sql.append("AND LOWER(a.name) LIKE LOWER(:searchText) ");
-            namedParameters.addValue("searchText", "%" + criteria.getSearchText() + "%");
-        }
-
-        if (criteria.getCategoryId() != null) {
-            sql.append("AND a.categoryId = :categoryId ");
-            namedParameters.addValue("categoryId", criteria.getCategoryId());
-        }
-
-        if (criteria.getSearchFilter() != null) {
-            for (FilterType filter : criteria.getSearchFilter()) {
-                switch (filter) {
-                    case openAuctions:
-                        logger.warn("Filter openAuctions");
-                        sql.append("AND a.auctionStartDate < :now AND a.auctionEndDate > :now ");
-                        namedParameters.addValue("now", now);
-                        break;
-                    case ongoingAuctions:
-                        logger.warn("Filter ongoingAuctions");
-                        sql.append("AND b.userId = :currentUserId ");
-                        namedParameters.addValue("currentUserId", currentUserId);
-                        break;
-                    case CurrentSales:
-                        logger.warn("Filter CurrentSales");
-                        sql.append("AND a.userId = :currentUserId ");
-                        sql.append("AND a.auctionStartDate < :now AND a.auctionEndDate > :now ");
-                        namedParameters.addValue("currentUserId", currentUserId);
-                        namedParameters.addValue("now", now);
-                        break;
-                    case notStartedSales:
-                        logger.warn("Filter notStartedSales");
-                        sql.append("AND a.userId = :currentUserId ");
-                        sql.append("AND a.auctionStartDate > :now ");
-                        namedParameters.addValue("currentUserId", currentUserId);
-                        namedParameters.addValue("now", now);
-                        break;
-                    case finishedSales:
-                        logger.warn("Filter finishedSales");
-                        sql.append("AND a.userId = :currentUserId ");
-                        sql.append("AND a.auctionEndDate < :now ");
-                        namedParameters.addValue("currentUserId", currentUserId);
-                        namedParameters.addValue("now", now);
-                        break;
-                }
-            }
-        }
-
-//        namedParameters.addValue("limit", size);
-        namedParameters.addValue("offset", page * size);
-        sql.append("ORDER BY a.auctionEndDate ASC ");
-//        sql.append("LIMIT :limit OFFSET :offset");
-        logger.warn(sql.toString());
-
-        return namedParameterJdbcTemplate.query(sql.toString(), namedParameters, new ArticleDAOImpl.ArticleRowMapper());
+        return articleDAO.searchWithFilters(criteria, currentUserId, page, size, dateNow);
     }
 
     @Override
@@ -168,5 +102,10 @@ public class ArticleServiceImpl implements ArticleService {
         }
         //enfin on crée l'article
         articleDAO.create(article, userId, address.getDeliveryAddressId());
+    }
+
+    @Override
+    public int countFilteredArticles(ArticleSearchCriteria criteria, int currentUserId) {
+        return articleDAO.countFilteredArticles(criteria, currentUserId);
     }
 }
