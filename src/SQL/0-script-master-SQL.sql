@@ -56,7 +56,7 @@ CREATE TABLE articles
     isOnSale          BIT,
     CONSTRAINT fk_article_user FOREIGN KEY (userId) REFERENCES auctionUsers (id),
     CONSTRAINT fk_article_category FOREIGN KEY (categoryId) REFERENCES categories (id),
-    CONSTRAINT fk_article_delivery FOREIGN KEY (deliveryAddressId) REFERENCES deliveryAddress (id) ON DELETE CASCADE
+    CONSTRAINT fk_article_delivery FOREIGN KEY (deliveryAddressId) REFERENCES deliveryAddress (id)
 );
 
 -- 💸 ENCHÈRES
@@ -67,8 +67,8 @@ CREATE TABLE bids
     bidAmount NUMERIC(10),
     userId    INT,
     articleId INT,
-    CONSTRAINT fk_bid_user FOREIGN KEY (userId) REFERENCES auctionUsers (id),
-    CONSTRAINT fk_bid_article FOREIGN KEY (articleId) REFERENCES articles (id)
+    CONSTRAINT fk_bid_user FOREIGN KEY (userId) REFERENCES auctionUsers (id) ON DELETE CASCADE,
+    CONSTRAINT fk_bid_article FOREIGN KEY (articleId) REFERENCES articles (id) ON DELETE CASCADE
 );
 
 -- 🔍 INDEXES RECOMMANDÉS
