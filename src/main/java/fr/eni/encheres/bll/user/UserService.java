@@ -14,7 +14,7 @@ public interface UserService {
     boolean updateProfile(UserDTO user, int id) throws BusinessException;
     boolean updatePassword(PasswordDTO passwordModif, int id) throws BusinessException;
     boolean isPasswordCorrect(int id, String password, BusinessException be);
-    boolean doesUserExist(String userName, BusinessException be);
+    boolean isUsernameTaken(String userName, BusinessException be);
     boolean deleteUserById(int id);
     boolean isUsernameAvailable(String username, int id, BusinessException be);
     boolean checkPasswordConfirmation(String firstPassword, String secondPassword) throws BusinessException;

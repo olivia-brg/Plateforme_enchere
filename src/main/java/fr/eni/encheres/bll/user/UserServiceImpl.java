@@ -38,9 +38,9 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = BusinessException.class)
     public User load(String username, int id, String password) throws BusinessException {
         BusinessException be = new BusinessException();
-        boolean userExists = doesUserExist(username, be);
+        boolean usernameTaken = isUsernameTaken(username, be);
         boolean isPasswordCorrect = isPasswordCorrect(id, password, be);
-        if (userExists && isPasswordCorrect) {
+        if (usernameTaken && isPasswordCorrect) {
 
             return this.userDAO.login(username, password);
         } else {
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean doesUserExist(String userName, BusinessException be) {
+    public boolean isUsernameTaken(String userName, BusinessException be) {
 
         return this.userDAO.findId(userName);
     }
