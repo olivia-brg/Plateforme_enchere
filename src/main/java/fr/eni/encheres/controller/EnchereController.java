@@ -70,6 +70,12 @@ public class EnchereController {
         int userId = connectedUser.getId();
 
         List<Article> articles = articleService.getFilteredArticles(criteria, userId, page, size);
+
+        //seul l'idUser est renseigné, on boucle pour pouvoir update les autres info user
+        for(Article article: articles){
+            article.setUser(userService.findById(article.getUser().getId()));
+        }
+
         // Vérifiez que chaque article a bien son ID
 //        articles.forEach(article -> {
 //            System.out.println("Article ID: " + article.getId() + ", Name: " + article.getName());
@@ -203,7 +209,7 @@ public class EnchereController {
 
 
 
-            return "redirect:/detailArticle?id=" + articleId;
+            return "detail-vente" ;
 
 
 
@@ -214,7 +220,7 @@ public class EnchereController {
             model.addAttribute("article", currentArticle);
             model.addAttribute("errorMessages", be.getMessages());
 
-            return "redirect:/detailArticle?id=" + articleId;
+            return "detail-vente" ;
 
         }
     }
