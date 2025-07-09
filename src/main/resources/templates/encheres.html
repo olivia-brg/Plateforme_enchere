@@ -12,11 +12,13 @@
 <main>
     <h1>ENI-Auctions</h1>
 
-<div class="filtres">
-    <h2>Filtres :</h2>
-    <form method="get" th:action="@{/encheres}">
-        <label for="category">Catégories </label>
-        <select id="category" name="category">
+    <div class="filtres">
+        <h2>Filtres :</h2>
+        <form method="get" th:action="@{/encheres}">
+            <input name="searchText" placeholder="Search.." type="text">
+
+            <label for="category">Catégories </label>
+            <select id="category" name="categoryId">
 
             <option value="" th:selected="${category == null}">Toutes</option>
             <option th:each="categoryFromList : ${listeCategories}"
@@ -24,14 +26,51 @@
                     th:text="${categoryFromList.name}"
                     th:selected="${categoryFromList.id == category}">
             </option>
-        </select>
-        <input type="text" placeholder="Search.." name = "search">
+
+            </select>
+
+            <th:block th:if="${connectedUser != null && connectedUser.id > 0}">
+                <!-- Groupe Achats -->
+                <fieldset id="purchasesOptions">
+                    <legend>
+                        <label for="auctionFilter">Achats</label>
+                        <input id="auctionFilter" name="filterType" type="radio" value="purchases">
+                    </legend>
+                    <label>
+                        <input name="searchFilter" type="radio" value="openAuctions">Enchères ouvertes
+                    </label><br>
+                    <label>
+                        <input name="searchFilter" type="radio" value="ongoingAuctions">Mes enchères
+                    </label><br>
+                    <label>
+                        <input name="searchFilter" type="radio" value="wonAuctions">Enchères remportées
+                    </label><br>
+                </fieldset>
+
+                <!-- Groupe Ventes -->
+                <fieldset disabled id="salesOptions">
+                    <legend>
+                        <label for="salesFilter">Ventes</label>
+                        <input id="salesFilter" name="filterType" type="radio" value="sales">
+                    </legend>
+                    <label>
+                        <input name="searchFilter" type="radio" value="CurrentSales">Mes ventes en cours
+                    </label><br>
+                    <label>
+                        <input name="searchFilter" type="radio" value="notStartedSales">Ventes non débutées
+                    </label><br>
+                    <label>
+                        <input name="searchFilter" type="radio" value="finishedSales">Vente terminées
+                    </label><br>
+                </fieldset>
+            </th:block>
+
         <button type="submit">rechercher</button>
-
-
+        </form>
+    </div>
     <div class="articles">
         <div class="single-article" th:each="a : ${article}" th:if="${category == null or a.category.id == category}">
-            <img th:src="${a.getImageURL()}" th:alt="${a.getDescription()}" >
+            <img th:alt="${a.getDescription()}" th:src="${a.getImageURL()}">
             <div class="article-infos">
                 <h5 th:text="${a.name}">Exemple</h5>
                 <p>Prix: </p>
@@ -45,6 +84,48 @@
         </div>
 
     </div>
+
+    <script>
+        const radioButtons = document.querySelectorAll('input[name="filterType"]');
+        const purchasesFieldset = document.getElementById('purchasesOptions');
+        const salesFieldset = document.getElementById('salesOptions');
+
+        function toggleFieldsets() {
+            const selected = document.querySelector('input[name="filterType"]:checked').value;
+
+            if (selected === "purchases") {
+                // Activer achats, désactiver ventes
+                purchasesFieldset.disabled = false;
+                salesFieldset.disabled = true;
+
+                // Décocher les cases ventes
+                salesFieldset.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+
+                // Cocher les cases par défaut pour achats
+                purchasesFieldset.querySelectorAll('.defaultCheckbox').forEach(cb => cb.checked = true);
+            } else {
+                // Activer ventes, désactiver achats
+                purchasesFieldset.disabled = true;
+                salesFieldset.disabled = false;
+
+                // Décocher les cases achats
+                purchasesFieldset.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+
+                // Cocher les cases par défaut pour ventes
+                salesFieldset.querySelectorAll('.defaultCheckbox').forEach(cb => cb.checked = true);
+            }
+        }
+
+        // Attacher les événements
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', toggleFieldsets);
+        });
+
+        // Exécuter au chargement
+        toggleFieldsets();
+    </script>
+
+
 </main>
 </body>
 

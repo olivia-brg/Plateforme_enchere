@@ -63,7 +63,7 @@
             <input id="city" type="text" th:field="*{user.city}">
         </div>
 
-        <!--  A remettre si nécessaire
+        <!--  A remettre si nécessaire -->
         <h3>Changer de mot de passe</h3>
 
 
@@ -84,7 +84,7 @@
             <div class="text-danger exception" th:errors="*{passwordModification.confirmPassword}"></div>
             <label for="confirmPassword">Confirm Password:</label>
             <input type="password" th:field="*{passwordModification.confirmPassword}">
-        </div>-->
+        </div>
         <button type="submit">Save</button>
         <button type="button" onclick="window.location.href='/profile/delete'">Delete my account</button>
         <button type="button" onclick="window.location.href='/'">Back</button>

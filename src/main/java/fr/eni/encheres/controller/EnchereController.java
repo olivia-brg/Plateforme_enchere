@@ -2,51 +2,46 @@ package fr.eni.encheres.controller;
 
 
 import fr.eni.encheres.bll.article.ArticleService;
-
 import fr.eni.encheres.bll.bid.BidService;
 import fr.eni.encheres.bll.user.UserService;
 import fr.eni.encheres.bo.*;
+import fr.eni.encheres.dal.AddressDAO;
+import fr.eni.encheres.dal.ArticleDAO;
+import fr.eni.encheres.dal.CategoryDAO;
+import fr.eni.encheres.dto.ArticleSearchCriteria;
 import fr.eni.encheres.exception.BusinessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import fr.eni.encheres.dal.AddressDAO;
-import fr.eni.encheres.dal.ArticleDAO;
-
-import fr.eni.encheres.dal.CategoryDAO;
-import org.springframework.stereotype.Controller;
-
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.*;
-
-
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
 @SessionAttributes({"connectedUser"})
 public class EnchereController {
 
-
+    private static final Logger logger = LoggerFactory.getLogger(EnchereController.class);
     private final UserService userService;
-    private ArticleDAO articleDAO;
-    private ArticleService articleService;
-    private AddressDAO addressDAO;
-    private CategoryDAO categoryDAO;
-    private BidService bidService;
+    private final ArticleDAO articleDAO;
+    private final ArticleService articleService;
+    private final AddressDAO addressDAO;
+    private final CategoryDAO categoryDAO;
+    private final BidService bidService;
 
 
-    EnchereController(ArticleService articleService, ArticleDAO articleDAO, AddressDAO addressDAO, CategoryDAO categoryDAO, UserService userService, BidService bidService) {
-		this.articleService = articleService ;
+    EnchereController(ArticleService articleService,
+                      ArticleDAO articleDAO,
+                      AddressDAO addressDAO,
+                      CategoryDAO categoryDAO,
+                      UserService userService,
+                      BidService bidService) {
+        this.articleService = articleService;
         this.articleDAO = articleDAO;
         this.addressDAO = addressDAO;
         this.categoryDAO = categoryDAO;
@@ -55,26 +50,36 @@ public class EnchereController {
     }
 
     @RequestMapping(path = {"/", "/encheres"}, method = {RequestMethod.GET, RequestMethod.POST})
-    public String accueil(@ModelAttribute("connectedUser") User connectedUser,@RequestParam(required = false) Long category,@RequestParam(required = false) String search, Model model) throws BusinessException {
-    	List<Article> articles = articleService.consultArticles();
+    public String search(
+            @ModelAttribute("connectedUser") User connectedUser,
+            @ModelAttribute ArticleSearchCriteria criteria,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model
+    ) throws BusinessException {
+
         List<Category> listeCategories = articleService.consultCategories();
-
         model.addAttribute("listeCategories", listeCategories);
-        model.addAttribute("category", category);
+        List<Article> articles = new ArrayList<>();
 
-        if (search != null && !search.isBlank()) {
-            articles = articles.stream().filter( article ->article.getName().toLowerCase().contains(search.toLowerCase()))
-                    .collect(Collectors.toList());
+        // suppression du caratère de recherche fantôme
+        if (criteria.getSearchText() != null && criteria.getSearchText().isEmpty()) criteria.setSearchText(null);
+
+        if (criteria == null) {
+            logger.warn("critères null");
+            articles = articleService.consultArticles();
+        } else {
+            logger.warn(criteria.toString());
+            int userId = connectedUser.getId();
+            articles = articleService.getFilteredArticles(criteria, userId, page, size);
         }
 
         model.addAttribute("article", articles);
-
-
         return "encheres";
     }
 
     @GetMapping("/sell")
-    public String newArticle(@ModelAttribute("connectedUser") User connectedUser, Model model){
+    public String newArticle(@ModelAttribute("connectedUser") User connectedUser, Model model) {
         List<Category> listeCategories = articleService.consultCategories();
         Article article = new Article();
         Address tempAdress = new Address();
@@ -87,8 +92,10 @@ public class EnchereController {
         return "new-product";
     }
 
-    @PostMapping(path="/sell")
-    String insererArticle(@ModelAttribute("article") Article article, @ModelAttribute("connectedUser") User connectedUser, Model model ){
+    @PostMapping(path = "/sell")
+    String insererArticle(@ModelAttribute("article") Article article,
+                          @ModelAttribute("connectedUser") User connectedUser,
+                          Model model) {
         article.setUser(connectedUser);
         article.setAuctionStartDate(LocalDateTime.now());
         //On appelle la méthode du service qui créera l'article
@@ -96,13 +103,13 @@ public class EnchereController {
 
         model.addAttribute("article", article);
 
-
-       
         return "/detail-vente";
     }
 
     @GetMapping("/detailArticle")
-    public String afficherUnArticle(@RequestParam(name = "id") int id, Model model, @ModelAttribute("connectedUser") User connectedUser) {
+    public String afficherUnArticle(@RequestParam(name = "id") int id,
+                                    @ModelAttribute("connectedUser") User connectedUser,
+                                    Model model) {
         User user = connectedUser;
         Article current = articleService.consultArticleById(id);
         if (current != null) {
@@ -115,14 +122,13 @@ public class EnchereController {
             current.setCategory(category);
 
             model.addAttribute("article", current);
-
             model.addAttribute("connectedUser", user);
 
             Bid maxBid = bidService.getHighestBid(current.getId());
             model.addAttribute("maxBid", maxBid);
-
-        }else
-        {System.out.println("Article inconnu!!");}
+        } else {
+            System.out.println("Article inconnu!");
+        }
         return "detail-vente";
     }
 
@@ -146,7 +152,6 @@ public class EnchereController {
         currentArticle.setWithdrawalAddress(address);
         currentArticle.setCategory(category);
 
-
         Bid bid = new Bid();
 
         try {
@@ -157,7 +162,7 @@ public class EnchereController {
             Bid maxBid = bidService.getHighestBid(currentArticle.getId());
 
             if (maxBid != null) {
-            userService.addCredit(maxBid.getBidAmount(), maxBid.getArticle().getUser().getId());
+                userService.addCredit(maxBid.getBidAmount(), maxBid.getArticle().getUser().getId());
             }
 
             bid.setArticle(currentArticle);
@@ -171,11 +176,9 @@ public class EnchereController {
             model.addAttribute("maxBid", maxBid);
             model.addAttribute("article", currentArticle);
 
-
-
             return "detail-vente";
 
-        }catch (BusinessException be){
+        } catch (BusinessException be) {
             Bid maxBid = bidService.getHighestBid(currentArticle.getId());
             model.addAttribute("maxBid", maxBid);
             model.addAttribute("bid", bid);

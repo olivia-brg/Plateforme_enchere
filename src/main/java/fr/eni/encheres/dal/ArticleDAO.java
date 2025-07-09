@@ -11,4 +11,6 @@ public interface ArticleDAO {
 	Article findArticleById(long id);
 
 	int create(Article article, int userId, int deliveryAddressId);
+
+//	List<Article> searchByFilters(int categoryId, String search, String purchasesOptions);
 }

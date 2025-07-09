@@ -6,13 +6,18 @@ import fr.eni.encheres.bo.Address;
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Bid;
 import fr.eni.encheres.bo.Category;
+import fr.eni.encheres.dto.ArticleSearchCriteria;
 import fr.eni.encheres.exception.BusinessException;
 
+import java.util.List;
+
 public interface ArticleService {
-	
+
 	public Article consultArticleById(int id);
-	
+
 	public List<Article> consultArticles() throws BusinessException;
+
+	List<Article> getFilteredArticles(ArticleSearchCriteria criteria, int currentUserId, int page, int size);
 
 	public List<Category> consultCategories();
 
@@ -20,8 +25,6 @@ public interface ArticleService {
 
 	public Address consultAddressById(int id);
 
-	public void createArticle(Article article,int userId);
-
-
+    void createArticle(Article article, int userId);
 
 }

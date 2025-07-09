@@ -1,10 +1,11 @@
 package fr.eni.encheres.dal;
 
 import fr.eni.encheres.bo.User;
+import fr.eni.encheres.dto.UserDTO;
 import fr.eni.encheres.exception.BusinessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -17,35 +18,36 @@ import java.util.Map;
 
 @Repository
 
-public class UserDAOImpl implements UserDAO{
+public class UserDAOImpl implements UserDAO {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserDAOImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserDAOImpl.class);
 
     private final String DELETE_USER_BY_USERNAME = "DELETE FROM auctionUsers WHERE id = :id";
+    private final String FIND_PASSWORD_BY_ID = "SELECT password FROM auctionUsers WHERE id = :id";
     private final String FIND_USERNAME_BY_ID = "SELECT COUNT(*) FROM auctionUsers WHERE userName = :userName";
     private final String FIND_IF_USERNAME_EXIST = "SELECT COUNT(*) FROM auctionUsers WHERE userName = :userName AND id != :id";
 
     private final String INSERT_NEW_USER = """
-            INSERT INTO auctionUsers(userName,
-	                                    firstName,
-	                                    LastName,
-	                                    email,
-	                                    phoneNumber,
-	                                    street,
-	                                    city,
-	                                    postalCode,
-	                                    password,
-	                                    credit)
-	        VALUES (:userName,
-	                :firstName,
-	                :LastName,
-	                :email,
-	                :phoneNumber,
-	                :street,
-	                :city,
-	                :postalCode,
-	                :password,
-	                100)""";
+               INSERT INTO auctionUsers(userName,
+                                        firstName,
+                                        LastName,
+                                        email,
+                                        phoneNumber,
+                                        street,
+                                        city,
+                                        postalCode,
+                                        password,
+                                        credit)
+                VALUES (:userName,
+                        :firstName,
+                        :LastName,
+                        :email,
+                        :phoneNumber,
+                        :street,
+                        :city,
+                        :postalCode,
+                        :password,
+                        100)""";
 
     private final String FIND_USER = """
                 SELECT id,
@@ -76,7 +78,7 @@ public class UserDAOImpl implements UserDAO{
                        city,
                        postalCode,
                        credit
-                       from auctionUsers
+                from auctionUsers
                 WHERE userName = :userName
             """;
 
@@ -141,8 +143,8 @@ public class UserDAOImpl implements UserDAO{
 
 
     private final String FIND_ID_BY_USERNAME = """
-            SELECT id FROM auctionUsers WHERE userName = :userName
-        """;
+                SELECT id FROM auctionUsers WHERE userName = :userName
+            """;
     private final String DEACTIVATE_STATUS = """
             UPDATE auctionUsers
             SET isActive = 0
@@ -169,7 +171,7 @@ public class UserDAOImpl implements UserDAO{
     }
 
     @Override
-    public void deactivateUser(int id){
+    public void deactivateUser(int id) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("id", id);
         namedParameterJdbcTemplate.update(DEACTIVATE_STATUS, mapSqlParameterSource);
@@ -177,8 +179,9 @@ public class UserDAOImpl implements UserDAO{
         namedParameterJdbcTemplate.update(DELETE_ARTICLES, mapSqlParameterSource);
 
     }
+
     @Override
-    public void activateUser(int id){
+    public void activateUser(int id) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("id", id);
         namedParameterJdbcTemplate.update(ACTIVATE_STATUS, mapSqlParameterSource);
@@ -220,61 +223,15 @@ public class UserDAOImpl implements UserDAO{
         mapSqlParameterSource.addValue("street", user.getStreet());
         mapSqlParameterSource.addValue("city", user.getCity());
         mapSqlParameterSource.addValue("postalCode", user.getPostalCode());
-        logger.info("update {} (id : {}) : {}", user.getUserName(), id, String.valueOf(namedParameterJdbcTemplate.update(UPDATE_USER, mapSqlParameterSource) == 1));
+        logger.info("update {} (id : {}) : {}", user.getUserName(), id, namedParameterJdbcTemplate.update(UPDATE_USER, mapSqlParameterSource) == 1);
         return namedParameterJdbcTemplate.update(UPDATE_USER, mapSqlParameterSource) == 1;
-
-
     }
 
     @Override
-    public boolean isPasswordCorrect(String username, String password) {
-        try {
-            if (username == null || password == null) {
-                return false;
-            }
-
-            MapSqlParameterSource params = new MapSqlParameterSource();
-            params.addValue("userName", username);
-            params.addValue("password", password);
-
-
-            Integer count = namedParameterJdbcTemplate.queryForObject(
-                    IS_PASSWORD_CORRECT_BY_USERNAME,
-                    params,
-                    Integer.class
-            );
-            logger.info("isPasswordCorrect : " + (count != null && count > 0));
-            return count != null && count > 0;
-
-        } catch (Exception e) {
-            logger.error("Erreur lors de la vérification du mot de passe", e);
-            return false;
-        }
-    }
-
-    @Override
-    public boolean isPasswordCorrect(int id, String password) {
-        try {
-            if (id < 1 || password == null) {
-                return false;
-            }
-
-            MapSqlParameterSource params = new MapSqlParameterSource();
-            params.addValue("userName", id);
-            params.addValue("password", password);
-
-            Integer count = namedParameterJdbcTemplate.queryForObject(
-                    IS_PASSWORD_CORRECT_BY_ID,
-                    params,
-                    Integer.class
-            );
-            logger.info("isPasswordCorrect : " + (count != null && count > 0));
-            return count != null && count > 0;
-
-        } catch (Exception e) {
-            logger.error("Erreur lors de la vérification du mot de passe", e);
-            return false;
-        }
+    public String findPasswordById(int id) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("id", id);
+        return namedParameterJdbcTemplate.queryForObject(FIND_PASSWORD_BY_ID, mapSqlParameterSource, String.class);
     }
 
     @Override
@@ -352,7 +309,7 @@ public class UserDAOImpl implements UserDAO{
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("credit", credit);
         mapSqlParameterSource.addValue("id", id);
-        jdbcTemplate.update(UPDATE_CREDIT, mapSqlParameterSource);
+        namedParameterJdbcTemplate.update(UPDATE_CREDIT, mapSqlParameterSource);
     }
 
     static class UserLoginRowMapper implements RowMapper<User> {
