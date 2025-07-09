@@ -49,10 +49,10 @@ public class LoginController {
 		return "/";
 	}
 
-    @ModelAttribute("connectedUser")
-    public User AddUser(){
-        return new User();
-    }
+//    @ModelAttribute("connectedUser")
+//    public User AddUser(){
+//        return new User();
+//    }
 
     @GetMapping("/loginSucess")
     public String login(@AuthenticationPrincipal UserDetails userDetails,

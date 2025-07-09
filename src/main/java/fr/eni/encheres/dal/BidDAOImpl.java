@@ -51,7 +51,7 @@ public class BidDAOImpl implements BidDAO{
 
     @Override
     public List<Bid> readAllFromArticleIdByUserId(long articleId, long userId) {
-        String SQL = "SELECT bidDate, bidAmount, userId, articleId FROM bids WHERE (articleId = ? AND userId = ?)"   ;
+        String SQL = "SELECT bidDate, bidAmount, userId, articleId FROM bids WHERE (articleId = ? AND userId = ?)";
         return namedParameterJdbcTemplate.getJdbcOperations().query(SQL, new BeanPropertyRowMapper<>(Bid.class), articleId, userId);
     }
 }

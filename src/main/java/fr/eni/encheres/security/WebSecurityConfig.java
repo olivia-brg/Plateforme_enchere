@@ -62,6 +62,7 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/").permitAll()
+                        .requestMatchers("/encheres").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/img/**", "/js/**","/flipflop.mp3").permitAll()
                         .requestMatchers("/signIn").permitAll()
                         .requestMatchers("/profile").permitAll()

@@ -55,7 +55,8 @@ public class EnchereController {
     }
 
     @RequestMapping(path = {"/", "/encheres"}, method = {RequestMethod.GET, RequestMethod.POST})
-    public String accueil(@ModelAttribute("connectedUser") User connectedUser,@RequestParam(required = false) Long category,@RequestParam(required = false) String search, Model model) throws BusinessException {
+    public String accueil(@ModelAttribute(value = "connectedUser", binding = false) User connectedUser,
+                          @RequestParam(required = false) Long category,@RequestParam(required = false) String search, Model model) throws BusinessException {
     	List<Article> articles = articleService.consultArticles();
         List<Category> listeCategories = articleService.consultCategories();
 
@@ -102,35 +103,45 @@ public class EnchereController {
     }
 
     @GetMapping("/detailArticle")
-    public String afficherUnArticle(@RequestParam(name = "id") int id, Model model, @ModelAttribute("connectedUser") User connectedUser) {
-        User user = connectedUser;
+    public String afficherUnArticle(@RequestParam int id, Model model, @ModelAttribute("connectedUser") User connectedUser) {
+        // On garde une référence à l'ID de l'utilisateur connecté
+        int connectedUserId = connectedUser.getId();
+        System.out.println("user ID is" + connectedUserId);
+
         Article current = articleService.consultArticleById(id);
         if (current != null) {
-
             User vendeur = userService.findById(current.getUser().getId());
             Address address = articleService.consultAddressById(current.getWithdrawalAddress().getDeliveryAddressId());
             Category category = articleService.consultCategoryById(current.getCategory().getId());
             current.setUser(vendeur);
             current.setWithdrawalAddress(address);
             current.setCategory(category);
-
             model.addAttribute("article", current);
-
-            model.addAttribute("connectedUser", user);
 
             Bid maxBid = bidService.getHighestBid(current.getId());
             model.addAttribute("maxBid", maxBid);
+            System.out.println("vendeur is : " + vendeur);
+            System.out.println("connected user is : " + connectedUser);
+            // On s'assure que l'ID de l'utilisateur connecté n'a pas changé
+
 
         }else
         {System.out.println("Article inconnu!!");}
+        connectedUser.setId(connectedUserId);
         return "detail-vente";
     }
 
+    //doublon avec celle de login controller
     @ModelAttribute("connectedUser")
-    public User AddUser() {
-        System.out.println("Add Attribut User to Session");
-        return new User();
+    public User initConnectedUser(@ModelAttribute(value = "connectedUser", binding = false) User connectedUser) {
+        if (connectedUser.getId() == 0) {
+            // Si l'utilisateur n'est pas initialisé, on retourne un nouvel utilisateur
+            return new User();
+        }
+        // Sinon, on retourne l'utilisateur existant sans le modifier
+        return connectedUser;
     }
+
 
     @PostMapping("/bid")
     public String newBid(@ModelAttribute("connectedUser") User connectedUser,
@@ -173,7 +184,8 @@ public class EnchereController {
 
 
 
-            return "detail-vente";
+            return "redirect:/detailArticle?id=" + articleId;
+
 
         }catch (BusinessException be){
             Bid maxBid = bidService.getHighestBid(currentArticle.getId());
@@ -181,7 +193,9 @@ public class EnchereController {
             model.addAttribute("bid", bid);
             model.addAttribute("article", currentArticle);
             model.addAttribute("errorMessages", be.getMessages());
-            return "detail-vente";
+
+            return "redirect:/detailArticle?id=" + articleId;
+
         }
     }
 
