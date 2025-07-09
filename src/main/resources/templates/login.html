@@ -11,12 +11,10 @@
 <body>
 <main>
     <h1>ENI-Enchères</h1>
-    <div class="exception" th:if="${errorMessages}">
-    
-        <span th:each="msg : ${errorMessages}" th:text="${msg}"></span>
-    
+    <div class="exception" th:if="${errorMessage}">
+        <span th:each="msg : ${errorMessage}" th:text="${msg}"></span>
 	</div>
-    
+
     <form data-th-action="@{/login}" method="post">
         <label for="userName">Identifiant :</label>
         <input type="text" id="username" name="username" required>
@@ -25,6 +23,7 @@
         <input type="password" id="password" name="password" required>
 
         <button type="submit" id="loginBu">Connexion</button>
+        <button type="submit"  onclick="window.location.href='/signIn'">Créer un compte</button>
 
         <div class="checkbox-container">
             <input type="checkbox" id="remember-me" name="remember-me">
@@ -36,7 +35,7 @@
         </div>
     </form>
 
-    <button class="create-account" type="submit"  onclick="window.location.href='/signIn'">Créer un compte</button>
+
 </main>
 
 <script src="/js/sIScript.js" ></script>

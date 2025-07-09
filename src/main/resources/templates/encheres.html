@@ -68,29 +68,11 @@
         <button type="submit">rechercher</button>
         </form>
     </div>
-    <nav class="pagination-container">
-        <ul class="pagination-list">
-            <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-                <th:block th:if="${i >= 0}">
-                <a class="pagination-link"
-                   th:href="@{/encheres(
-                        page=${i},
-                        searchText=${criteria.searchText},
-                        categoryId=${criteria.categoryId},
-                        searchFilter=${criteria.searchFilter}
-                    )}"
-                   th:text="${i + 1}"
-                   th:classappend="${i == currentPage} ? 'active' : ''"></a>
-                </th:block>
-            </li>
-        </ul>
-    </nav>
+
+    <div th:replace="~{fragments/pagination-form :: page-frag}"></div>
 
     <div class="articles">
         <div class="single-article" th:each="a : ${article}" th:if="${category == null or a.category.id == category}">
-            <!-- Debug temporaire -->
-            <span th:text="'Debug - ID: ' + ${a.id}"></span>
-
             <img th:alt="${a.getDescription()}" th:src="${a.getImageURL()}">
             <div class="article-infos">
                 <h5 th:text="${a.name}">Exemple</h5>
@@ -104,24 +86,8 @@
             </div>
         </div>
     </div>
-    <nav class="pagination-container">
-        <ul class="pagination-list">
-            <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-                <th:block th:if="${i >= 0}">
-                    <a class="pagination-link"
-                       th:href="@{/encheres(
-                        page=${i},
-                        searchText=${criteria.searchText},
-                        categoryId=${criteria.categoryId},
-                        searchFilter=${criteria.searchFilter}
-                    )}"
-                       th:text="${i + 1}"
-                       th:classappend="${i == currentPage} ? 'active' : ''"></a>
-                </th:block>
-            </li>
-        </ul>
-    </nav>
 
+    <div th:replace="~{fragments/pagination-form :: page-frag}"></div>
 
     <script>
         const radioButtons = document.querySelectorAll('input[name="filterType"]');
