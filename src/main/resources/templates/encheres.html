@@ -92,7 +92,7 @@
             <img th:alt="${a.getDescription()}" th:src="${a.getImageURL()}">
             <div class="article-infos">
                 <h5 th:text="${a.name}">Exemple</h5>
-                <p>Prix: </p>
+                <p th:text="${a.soldPrice} ">Prix: </p>
                 <p>Classement: </p>
                 <p th:text="${'Fin de l''enchère : ' + a.auctionEndDate}">Fin de l'enchère: </p>
                 <!--<p th:text="'Retrait : ' + ${a.withdrawalAddress.street} + ' ' + ${a.withdrawalAddress.city} + ' ' + ${a.withdrawalAddress.postalCode}">Retrait: </p>-->
