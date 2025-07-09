@@ -54,27 +54,29 @@ public class EnchereController {
             @ModelAttribute("connectedUser") User connectedUser,
             @ModelAttribute ArticleSearchCriteria criteria,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "6") int size,
             Model model
     ) throws BusinessException {
 
         List<Category> listeCategories = articleService.consultCategories();
         model.addAttribute("listeCategories", listeCategories);
-        List<Article> articles = new ArrayList<>();
 
         // suppression du caratère de recherche fantôme
         if (criteria.getSearchText() != null && criteria.getSearchText().isEmpty()) criteria.setSearchText(null);
 
-        if (criteria == null) {
-            logger.warn("critères null");
-            articles = articleService.consultArticles();
-        } else {
-            logger.warn(criteria.toString());
-            int userId = connectedUser.getId();
-            articles = articleService.getFilteredArticles(criteria, userId, page, size);
-        }
+        logger.warn(criteria.toString());
+        int userId = connectedUser.getId();
 
+        List<Article> articles = articleService.getFilteredArticles(criteria, userId, page, size);
+        int totalArticles = articleService.countFilteredArticles(criteria, userId);
+        int totalPages = (int) Math.ceil((double) totalArticles / size);
+
+
+        model.addAttribute("criteria", criteria);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("currentPage", page);
         model.addAttribute("article", articles);
+
         return "encheres";
     }
 
@@ -112,8 +114,8 @@ public class EnchereController {
                                     Model model) {
         User user = connectedUser;
         Article current = articleService.consultArticleById(id);
-        if (current != null) {
 
+        if (current != null) {
             User vendeur = userService.findById(current.getUser().getId());
             Address address = articleService.consultAddressById(current.getWithdrawalAddress().getDeliveryAddressId());
             Category category = articleService.consultCategoryById(current.getCategory().getId());
@@ -129,6 +131,7 @@ public class EnchereController {
         } else {
             System.out.println("Article inconnu!");
         }
+
         return "detail-vente";
     }
 

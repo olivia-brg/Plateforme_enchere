@@ -27,4 +27,5 @@ public interface ArticleService {
 
     void createArticle(Article article, int userId);
 
+	int countFilteredArticles(ArticleSearchCriteria criteria, int currentUserId);
 }
