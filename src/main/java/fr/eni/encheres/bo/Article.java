@@ -40,7 +40,8 @@ public class Article {
 
 	@NotNull(message = "L'utilisateur est obligatoire.")
 	private User user;
-	
+
+
 //	Full constructor
 	public Article(int id, String name, String description, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate,
 				   float minBid, float actualPrice, boolean isOnSale, Category category, Address withdrawalAddress, User user) {

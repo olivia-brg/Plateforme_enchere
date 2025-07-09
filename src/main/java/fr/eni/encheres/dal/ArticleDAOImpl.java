@@ -48,6 +48,14 @@ public class ArticleDAOImpl implements ArticleDAO {
                    IMAGEURL 
             FROM ARTICLES WHERE ID = :id""";
 
+    private final String UPDATE_ISONSALE = """
+                UPDATE articles SET isOnSale = :isOnSale
+                WHERE id = :id
+            """;
+    private final String UPDATE_SOLDPRICE = """
+                UPDATE articles SET soldPrice = :soldPrice
+                WHERE id = :id
+            """;
 
     private static final Logger logger = LoggerFactory.getLogger(EnchereController.class);
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -88,6 +96,23 @@ public class ArticleDAOImpl implements ArticleDAO {
     }
 
     @Override
+
+    public void updateIsOnSale(int articleId, boolean isOnSale) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("isOnSale", isOnSale);
+        mapSqlParameterSource.addValue("id", articleId);
+        namedParameterJdbcTemplate.update(UPDATE_ISONSALE, mapSqlParameterSource);
+    }
+
+    @Override
+    public void updateSoldPrice(int articleId, float soldPrice) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("soldPrice", soldPrice);
+        mapSqlParameterSource.addValue("id", articleId);
+        namedParameterJdbcTemplate.update(UPDATE_SOLDPRICE, mapSqlParameterSource);
+    }
+
+
     public List<Article> searchWithFilters(ArticleSearchCriteria criteria, int currentUserId, int page, int size, LocalDateTime dateNow) {
 
         MapSqlParameterSource namedParameters = new MapSqlParameterSource();
@@ -215,6 +240,7 @@ public class ArticleDAOImpl implements ArticleDAO {
 
         return namedParameterJdbcTemplate.queryForObject(sql.toString(), namedParameters, Integer.class);
     }
+
 
 
 
