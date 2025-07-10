@@ -24,5 +24,9 @@ public interface ArticleDAO {
 
     int countFilteredArticles(ArticleSearchCriteria criteria, int currentUserId, LocalDateTime dateNow);
 
+
+	public void updateArticle(Article article,int id);
+
     boolean deleteArticle(int articleId);
+
 }
