@@ -16,17 +16,21 @@ public class Bid {
 	@Positive(message = "Le montant de l'enchère doit être strictement positif.")
 	private float bidAmount;
 
+	private User user;
+
+
 	@Valid
 	@NotNull(message = "L'article est obligatoire.")
 	private Article article;
 
 
 //	Full constructor
-	public Bid(LocalDate auctionDate, float auctionAmount, Article article) {
+	public Bid(LocalDate auctionDate, float auctionAmount, Article article, User user) {
 	
 		this.bidDate = auctionDate;
 		this.bidAmount = auctionAmount;
 		this.article = article;
+		this.user = user;
 	}
 
 	public Bid() {
@@ -53,6 +57,9 @@ public class Bid {
 		this.article = article;
 	}
 
-
+	public User getUser() {return user;}
+	public void setUser(int userId) {
+		this.user = user;
+	}
 	
 }

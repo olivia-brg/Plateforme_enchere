@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -61,6 +60,8 @@ public class EnchereController {
 
         List<Category> listeCategories = articleService.consultCategories();
         model.addAttribute("listeCategories", listeCategories);
+//        List<Bid> topFiveBids = new ArrayList<Bid>(5);
+//        model.addAttribute("topFiveBids", topFiveBids);
 
         // suppression du caratère de recherche fantôme
         if (criteria.getSearchText() != null && criteria.getSearchText().isEmpty()) criteria.setSearchText(null);
@@ -73,6 +74,8 @@ public class EnchereController {
         //seul l'idUser est renseigné, on boucle pour pouvoir update les autres info user
         for(Article article: articles){
             article.setUser(userService.findById(article.getUser().getId()));
+            List<Bid> topFiveBids = articleService.topFiveBids(article.getId());
+            article.setTopFiveBids(topFiveBids);
         }
 
         // Vérifiez que chaque article a bien son ID
@@ -197,7 +200,7 @@ public class EnchereController {
 
             Bid maxBid = bidService.getHighestBid(currentArticle.getId());
             if (maxBid != null) {
-                userService.addCredit(maxBid.getBidAmount(), maxBid.getArticle().getUser().getId());
+                userService.addCredit(maxBid.getBidAmount(), maxBid.getUser().getId());
             }
 
             bid.setArticle(currentArticle);

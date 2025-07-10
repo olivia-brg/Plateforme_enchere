@@ -3,6 +3,8 @@ package fr.eni.encheres.bo;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Article {
 	// Attribut
@@ -41,10 +43,12 @@ public class Article {
 	@NotNull(message = "L'utilisateur est obligatoire.")
 	private User user;
 
+	private List<Bid> topFiveBids;
+
 
 //	Full constructor
 	public Article(int id, String name, String description, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate,
-				   float minBid, float actualPrice, boolean isOnSale, Category category, Address withdrawalAddress, User user) {
+				   float minBid, float actualPrice, boolean isOnSale, Category category, Address withdrawalAddress, User user, List<Bid> topFiveBids) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -56,7 +60,8 @@ public class Article {
 		this.category = category;
 		this.withdrawalAddress = withdrawalAddress;
 		this.user = user;
-	}
+		this.topFiveBids = topFiveBids;
+    }
 
 	public Article() {
 	}
@@ -146,6 +151,11 @@ public class Article {
 	}
 	public void setImageURL(String imageURL) {
 		this.imageURL = imageURL;
+	}
+
+	public List<Bid> getTopFiveBids() {return topFiveBids;}
+	public void setTopFiveBids(List<Bid> topFiveBids) {
+		this.topFiveBids =  topFiveBids;
 	}
 
 	@Override

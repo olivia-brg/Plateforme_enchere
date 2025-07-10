@@ -2,6 +2,7 @@ package fr.eni.encheres.bll.article;
 
 import fr.eni.encheres.bo.Address;
 import fr.eni.encheres.bo.Article;
+import fr.eni.encheres.bo.Bid;
 import fr.eni.encheres.bo.Category;
 import fr.eni.encheres.dto.ArticleSearchCriteria;
 import fr.eni.encheres.exception.BusinessException;
@@ -31,5 +32,7 @@ public interface ArticleService {
     int countFilteredArticles(ArticleSearchCriteria criteria, int currentUserId);
 
     boolean deleteArticle(int articleId);
+
+	public List<Bid> topFiveBids(int articleId);
 
 }
