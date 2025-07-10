@@ -77,7 +77,10 @@
             <div class="article-infos">
                 <h5 th:text="${a.name}">Exemple</h5>
                 <p th:text="'Prix : '+${a.soldPrice} "></p>
-                <p>Classement: </p>
+                <h5>Classement :</h5>
+                <p th:each="bid, stat : ${a.getTopFiveBids()}">
+                    <span th:text="'Top '+ ${stat.index + 1}+' : ' +${bid.bidAmount}"></span>
+                </p>
                 <p th:text="${'Debut de l''enchère : ' + a.auctionStartDate}">Début de l'enchère: </p>
                 <p th:text="${'Fin de l''enchère : ' + a.auctionEndDate}">Fin de l'enchère: </p>
                 <!--<p th:text="'Retrait : ' + ${a.withdrawalAddress.street} + ' ' + ${a.withdrawalAddress.city} + ' ' + ${a.withdrawalAddress.postalCode}">Retrait: </p>-->
