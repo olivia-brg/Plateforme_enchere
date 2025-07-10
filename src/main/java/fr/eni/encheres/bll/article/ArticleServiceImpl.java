@@ -9,6 +9,8 @@ import fr.eni.encheres.dto.ArticleSearchCriteria;
 import fr.eni.encheres.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -106,6 +108,12 @@ public class ArticleServiceImpl implements ArticleService {
         }
         //enfin on crée l'article
         articleDAO.create(article, userId, address.getDeliveryAddressId());
+    }
+
+    @Override
+    public void updateArticle(Article article,int id) {
+        articleDAO.updateArticle(article,id);
+        logger.info("{} has been updated", article.getId());
     }
 
 

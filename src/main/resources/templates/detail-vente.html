@@ -83,6 +83,9 @@
                 Votre compte est désactivé. Vous ne pouvez pas participer aux enchères.
             </div>
 
+
+            
+
             <div th:with="currentDateTime=${#temporals.format(#temporals.createNow(), 'yyyyMMddHHmm')},
                               auctionStartDateTime=${#temporals.format(article.auctionStartDate, 'yyyyMMddHHmm')},
                               auctionEndDateTime=${#temporals.format(article.auctionEndDate, 'yyyyMMddHHmm')}">
@@ -98,7 +101,7 @@
 
                     <button th:disabled="${!connectedUser.isActive}" type="submit">Enchérir</button>
                 </th:block>
-
+                <span th:each="msg : ${errorMessages}" th:text="${msg}"></span>
                 <th:block th:unless="${connectedUser.id!=article.user.id}">
                     <th:block th:if="${auctionStartDateTime > currentDateTime}">
 
@@ -113,12 +116,19 @@
                     </th:block>
                 </th:block>
             </div>
-
-
             <!-- Ajout d'un champ caché pour l'ID de l'article -->
             <input name="articleId" th:value="${article.id}" type="hidden"/>
-
         </form>
+        <th:block th:unless="${connectedUser.id!=article.user.id}">
+            <div th:with="currentDateTime=${#temporals.format(#temporals.createNow(), 'yyyyMMddHHmm')},
+             auctionDateTime=${#temporals.format(article.auctionStartDate, 'yyyyMMddHHmm')}">
+                <button th:if="${auctionDateTime > currentDateTime}"
+                        th:onclick="'window.location.href=\'' + @{/changeArticle(articleId=${article.id})} + '\''"
+                        type="submit">
+                    Modifier
+                </button>
+            </div>
+        </th:block>
         <div class="form-group">
             <button onclick="window.location.href='/'" type="submit">Back</button>
         </div>

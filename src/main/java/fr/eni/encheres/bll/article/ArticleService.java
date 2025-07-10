@@ -21,9 +21,14 @@ public interface ArticleService {
 
     Category consultCategoryById(int id);
 
+
+  	void createArticle(Article article, int userId);
+
+	void updateArticle(Article article,int id);
+
     Address consultAddressById(int id);
 
-    void createArticle(Article article, int userId);
+
 
     boolean isOnSaleArticle(int articleId) throws BusinessException;
 

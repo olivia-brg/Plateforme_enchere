@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html data-th-replace="~{layouts/layout :: layout-eni-auction(title=~{:: title},
+<html xmlns:th="http://www.thymeleaf.org"
+      data-th-replace="~{layouts/layout :: layout-eni-auction(title=~{:: title},
                                                               content=~{:: main},
-                                                              ressourcesSupp=~{})}"
-      xmlns:th="http://www.thymeleaf.org">
+                                                              ressourcesSupp=~{})}">
 
 <head>
     <title th:text="'Détail de ' + ${article.getName()}"></title>

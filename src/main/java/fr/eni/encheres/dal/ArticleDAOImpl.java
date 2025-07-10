@@ -152,6 +152,18 @@ public class ArticleDAOImpl implements ArticleDAO {
                         sql.append("AND b.userId = :currentUserId ");
                         namedParameters.addValue("currentUserId", currentUserId);
                         break;
+                    case wonAuctions:
+                        //vraiment c'est GPT qui a produit ça moi j'ai pas réussi après maintes essais signé Pierrick
+                        sql.append("AND a.isOnSale = 0 ");
+                        sql.append("AND EXISTS ( " +
+                                "SELECT 1 FROM bids b2 " +
+                                "WHERE b2.articleId = a.id " +
+                                "AND b2.bidId = (SELECT MAX(b3.bidId) FROM bids b3 WHERE b3.articleId = a.id) " +
+                                "AND b2.userId = :currentUserId " +
+                                ") ");
+                        // jusque la :'(
+                        namedParameters.addValue("currentUserId", currentUserId);
+                        break;
                     case CurrentSales:
                         logger.info("Filter CurrentSales");
                         sql.append("AND a.userId = :currentUserId ");
@@ -217,6 +229,18 @@ public class ArticleDAOImpl implements ArticleDAO {
                         sql.append("AND b.userId = :currentUserId ");
                         namedParameters.addValue("currentUserId", currentUserId);
                         break;
+                    case wonAuctions:
+                        //vraiment c'est GPT qui a produit ça moi j'ai pas réussi après maintes essais signé Pierrick
+                        sql.append("AND a.isOnSale = 0 ");
+                        sql.append("AND EXISTS ( " +
+                                "SELECT 1 FROM bids b2 " +
+                                "WHERE b2.articleId = a.id " +
+                                "AND b2.bidId = (SELECT MAX(b3.bidId) FROM bids b3 WHERE b3.articleId = a.id) " +
+                                "AND b2.userId = :currentUserId " +
+                                ") ");
+                        // jusque la :'(
+                        namedParameters.addValue("currentUserId", currentUserId);
+                        break;
                     case CurrentSales:
                         sql.append("AND a.userId = :currentUserId ");
                         sql.append("AND a.auctionStartDate < :now AND a.auctionEndDate > :now ");
@@ -242,6 +266,20 @@ public class ArticleDAOImpl implements ArticleDAO {
         return namedParameterJdbcTemplate.queryForObject(sql.toString(), namedParameters, Integer.class);
     }
 
+    public void updateArticle(Article article,int id) {
+        String sql = "UPDATE articles SET name = :name, description = :description, auctionStartDate = :auctionStartDate, auctionEndDate = :auctionEndDate, startingPrice = :startingPrice, categoryid = :categoryId WHERE id = :id";
+        MapSqlParameterSource nameParameters = new MapSqlParameterSource();
+        nameParameters.addValue("id", id);
+        nameParameters.addValue("name", article.getName());
+        nameParameters.addValue("description", article.getDescription());
+        nameParameters.addValue("categoryId", article.getCategory().getId());
+        nameParameters.addValue("auctionStartDate", article.getAuctionStartDate());
+        nameParameters.addValue("auctionEndDate", article.getAuctionEndDate());
+        nameParameters.addValue("startingPrice", article.getStartingPrice());
+        namedParameterJdbcTemplate.update(sql, nameParameters);
+    }
+
+
     @Override
     public boolean deleteArticle(int articleId) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
@@ -249,6 +287,7 @@ public class ArticleDAOImpl implements ArticleDAO {
         logger.info("Deleting {}", articleId);
         return namedParameterJdbcTemplate.update(DELETE_ARTICLE_BY_ID, mapSqlParameterSource) == 1;
     }
+
 
 
     public static class ArticleRowMapper implements RowMapper<Article> {
