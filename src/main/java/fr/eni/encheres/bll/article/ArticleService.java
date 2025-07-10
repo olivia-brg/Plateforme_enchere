@@ -31,10 +31,7 @@ public interface ArticleService {
 
     int countFilteredArticles(ArticleSearchCriteria criteria, int currentUserId);
 
-    List<Bid> topFiveBids(int articleId);
+    boolean deleteArticle(int articleId);
 
-    List<Bid> topFiveBids(int articleId);
-
-    List<Bid> topFiveBids(int articleId);
-
+	List<Bid> topFiveBids(int articleId);
 }

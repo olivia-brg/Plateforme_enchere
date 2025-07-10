@@ -13,8 +13,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -111,7 +109,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
 
-   public boolean isOnSaleArticle(int articleId) throws BusinessException {
+    public boolean isOnSaleArticle(int articleId) throws BusinessException {
         BusinessException be = new BusinessException();
         Article article = this.consultArticleById(articleId);
 
@@ -122,11 +120,10 @@ public class ArticleServiceImpl implements ArticleService {
             articleDAO.updateIsOnSale(articleId, false);
             be.add("La vente est finie !");
             return false;
-        }
-        else{
+        } else {
             return true;
-       }
-     }
+        }
+    }
 
     public void closeSale(int articleId) {
 
@@ -153,7 +150,7 @@ public class ArticleServiceImpl implements ArticleService {
     public List<Bid> topFiveBids(int articleId) {
 
         List<Bid> fiveFirstBids = bidDAO.readAllFromArticleId(articleId);
-        fiveFirstBids = fiveFirstBids.subList(0,Math.min(5, fiveFirstBids.size()));
+        fiveFirstBids = fiveFirstBids.subList(0, Math.min(5, fiveFirstBids.size()));
         Collections.reverse(fiveFirstBids);
         return fiveFirstBids;
     }
