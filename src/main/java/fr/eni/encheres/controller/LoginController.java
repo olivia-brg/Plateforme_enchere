@@ -10,10 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -32,7 +29,13 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public String login() {
+    public String loginPage(
+            @RequestParam(value = "error", required = false) String error,
+            Model model
+    ) {
+        if (error != null) {
+            model.addAttribute("errorMessage", "Nom d'utilisateur ou mot de passe incorrect.");
+        }
         return "login";
     }
 
@@ -60,6 +63,9 @@ public class LoginController {
 		connectedUser.setIsActive(userService.findByUsername(connectedUser.getUserName()).getIsActive());
 
 
+        logger.error(connectedUser.toString());
+
+
         logger.info("{} is connected", connectedUser.getUserName());
         logger.info("has role {}", connectedUser.getRole());
         logger.info("has id {}", connectedUser.getId());
@@ -67,24 +73,6 @@ public class LoginController {
 
 
         return "redirect:/";
-
-//        User user;
-//		try {
-//			if (user != null) {
-//	            connectedUser.setId(user.getId());
-//	            connectedUser.setUserName(user.getUserName());
-//	            connectedUser.setAdmin(user.isAdmin());
-//	        } else {
-//	            connectedUser.setId(0);
-//	            connectedUser.setUserName(null);
-//	            connectedUser.setAdmin(false);
-//	        }
-//	        logger.info("{} is connected", connectedUser.getUserName());
-//	        return "redirect:/";
-//		} catch (BusinessException e) {
-//			redirectAttributes.addFlashAttribute("errorMessages", e.getMessages());
-//	        return "redirect:/login";
-//		}
     }
 
     @GetMapping(path = "/signIn")

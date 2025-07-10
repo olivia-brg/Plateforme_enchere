@@ -6,11 +6,9 @@ import fr.eni.encheres.bo.*;
 import fr.eni.encheres.controller.EnchereController;
 import fr.eni.encheres.dal.*;
 import fr.eni.encheres.dto.ArticleSearchCriteria;
-import fr.eni.encheres.dto.FilterType;
 import fr.eni.encheres.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -140,7 +138,8 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public int countFilteredArticles(ArticleSearchCriteria criteria, int currentUserId) {
-        return articleDAO.countFilteredArticles(criteria, currentUserId);
+        LocalDateTime dateNow = LocalDateTime.now();
+        return articleDAO.countFilteredArticles(criteria, currentUserId, dateNow);
     }
 
 }

@@ -111,6 +111,9 @@ DECLARE @i INT = 0;
 
 WHILE @i < 100
     BEGIN
+        DECLARE @startDate DATETIME = DATEADD(DAY, -50 + @i, GETDATE());
+        DECLARE @endDate DATETIME = DATEADD(DAY, 7, @startDate); -- 7 jours plus tard
+
         INSERT INTO articles (userId, deliveryAddressId, categoryId, name, description,
                               auctionStartDate, auctionEndDate, startingPrice, soldPrice, isOnSale, imageURL)
         VALUES (1 + (@i % 3),
@@ -118,15 +121,15 @@ WHILE @i < 100
                 1 + (@i % 5),
                 CONCAT('Article numéro ', @i),
                 CONCAT('Description de larticle numéro ', @i),
-                DATEADD(DAY, -@i, GETDATE()),
-                DATEADD(DAY, 7 - @i, GETDATE()),
+                @startDate,
+                @endDate,
                 10 + (@i * 2),
                 NULL,
                 1,
                 'https://cdn.pratico-pratiques.com/app/uploads/sites/4/2018/08/30162023/les-differentes-varietes-de-biere.jpeg');
+
         SET @i = @i + 1;
     END
-
 -- 💰 ENCHÈRES DE DÉMO SUR LES 30 PREMIERS ARTICLES
 DECLARE @j INT = 1;
 WHILE @j <= 30
