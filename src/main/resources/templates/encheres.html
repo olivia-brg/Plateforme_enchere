@@ -78,6 +78,7 @@
                 <h5 th:text="${a.name}">Exemple</h5>
                 <p th:text="'Prix : '+${a.soldPrice} "></p>
                 <p>Classement: </p>
+                <p th:text="${'Debut de l''enchère : ' + a.auctionStartDate}">Début de l'enchère: </p>
                 <p th:text="${'Fin de l''enchère : ' + a.auctionEndDate}">Fin de l'enchère: </p>
                 <!--<p th:text="'Retrait : ' + ${a.withdrawalAddress.street} + ' ' + ${a.withdrawalAddress.city} + ' ' + ${a.withdrawalAddress.postalCode}">Retrait: </p>-->
                 <p th:text="'Vendeur : ' + ${a.user.firstName} + ' ' + ${a.user.lastName}">Vendeur: </p>
