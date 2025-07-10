@@ -10,11 +10,9 @@
 
 <body>
 <main>
-    <h1>ENI-Enchères</h1>
-    <h2>Détail vente</h2>
     <div class="detail-objet articleForm">
         <h3 th:text="${article.name}"></h3>
-        <img alt="" src="pic.jpg">
+        <img th:alt="${article.getDescription()}" th:src="${article.getImageURL()}">
         <div class="form-group">
             <label for="description">Description:</label>
             <input id="description" name="description" readonly th:value="${article.description}" type="text">
@@ -41,12 +39,12 @@
         </div>
         <div class="form-group">
             <label for="auction-start">Fin de l'enchère:</label>
-            <input id="auction-start" name="auction-start" readonly th:value="${article.auctionStartDate}"
+            <input id="auction-start" name="auction-start" readonly th:value="${article.auctionEndDate}"
                    type="datetime">
         </div>
         <div class="form-group">
             <label for="auction-end">Début de l'enchère :</label>
-            <input id="auction-end" name="auction-end" readonly th:value="${article.auctionEndDate}" type="datetime">
+            <input id="auction-end" name="auction-end" readonly th:value="${article.auctionStartDate}" type="datetime">
         </div>
         <h4><label for="withdraw_Address">Adresse de retrait :</label></h4>
         <div id="withdraw_Address" th:fragment="adress-form-frag" th:object="${article.withdrawalAddress}">
@@ -68,8 +66,11 @@
         </div>
         <div class="form-group">
             <label for="seller">Vendeur: </label>
-            <input id="seller" name="seller" readonly th:value="${article.user.firstName}+ ' ' +${article.user.lastName}"
-                   type="text">
+            <a th:href="@{/profile(id=${article.user.id})}">
+                <input id="seller" name="seller" readonly style="text-decoration: underline; color: #0056b3; cursor: pointer"
+                       th:value="${article.user.firstName}+ ' ' +${article.user.lastName}"
+                       type="text">
+            </a>
         </div>
         <form action="/bid" class="form-group" method="POST">
             <!-- CSRF Token -->
@@ -95,11 +96,17 @@
             <th:block th:unless="${connectedUser.id!=article.user.id}">
                 <div th:with="currentDateTime=${#temporals.format(#temporals.createNow(), 'yyyyMMddHHmm')},
              auctionDateTime=${#temporals.format(article.auctionStartDate, 'yyyyMMddHHmm')}">
-                    <button th:if="${auctionDateTime > currentDateTime}"
-                            th:onclick="'window.location.href=\'' + @{/changeArticle(id=${article.id})} + '\''"
-                            type="submit">
-                        Modifier
-                    </button>
+                    <th:block th:if="${auctionDateTime > currentDateTime}">
+
+                        <button th:onclick="'window.location.href=\'' + @{/changeArticle(articleId=${article.id})} + '\''"
+                                type="submit">
+                            Modifier
+                        </button>
+                        <button th:onclick="'window.location.href=\'' + @{/delete(articleId=${article.id})} + '\''"
+                                type="button">
+                            Annuler la vente
+                        </button>
+                    </th:block>
                 </div>
             </th:block>
             <span th:each="msg : ${errorMessages}" th:text="${msg}"></span>

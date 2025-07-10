@@ -142,4 +142,9 @@ public class ArticleServiceImpl implements ArticleService {
         return articleDAO.countFilteredArticles(criteria, currentUserId, dateNow);
     }
 
+    @Override
+    public boolean deleteArticle(int articleId) {
+        return articleDAO.deleteArticle(articleId);
+    }
+
 }

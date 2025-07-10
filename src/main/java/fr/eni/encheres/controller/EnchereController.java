@@ -59,11 +59,8 @@ public class EnchereController {
             Model model
     ) throws BusinessException {
 
-
         List<Category> listeCategories = articleService.consultCategories();
         model.addAttribute("listeCategories", listeCategories);
-
-
 
         // suppression du caratère de recherche fantôme
         if (criteria.getSearchText() != null && criteria.getSearchText().isEmpty()) criteria.setSearchText(null);
@@ -77,7 +74,6 @@ public class EnchereController {
 //            System.out.println("Article ID: " + article.getId() + ", Name: " + article.getName());
 //        });
 
-
         for (Article article : articles) {
             System.out.println("IS USER :" + article.getId());
             if (!articleService.isOnSaleArticle(article.getId())){
@@ -87,16 +83,12 @@ public class EnchereController {
 
         }
 
-
-
         int totalArticles = articleService.countFilteredArticles(criteria, userId);
         int totalPages = (int) Math.ceil((double) totalArticles / size);
-
 
         model.addAttribute("criteria", criteria);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("currentPage", page);
-
         model.addAttribute("article", articles);
 
         return "encheres";
@@ -195,14 +187,9 @@ public class EnchereController {
             userService.isCreditValid(bidAmount, connectedUser.getId());
             bidService.isBidValid(bidAmount, currentArticle.getId());
             articleService.isOnSaleArticle(currentArticle.getId());
-
-
             userService.substractCredit(bidAmount, connectedUser.getId());
 
             Bid maxBid = bidService.getHighestBid(currentArticle.getId());
-
-
-
             if (maxBid != null) {
                 userService.addCredit(maxBid.getBidAmount(), maxBid.getArticle().getUser().getId());
             }
@@ -211,9 +198,7 @@ public class EnchereController {
             bid.setBidAmount(bidAmount);
             bid.setBidDate(LocalDate.now());
 
-
             bidService.createBid(bid, connectedUser.getId(), currentArticle.getId());
-
             articleDAO.updateSoldPrice(articleId, bidService.getHighestBid(articleId).getBidAmount());
 
             maxBid = bidService.getHighestBid(currentArticle.getId());
@@ -221,9 +206,6 @@ public class EnchereController {
             model.addAttribute("bid", bid);
             model.addAttribute("maxBid", maxBid);
             model.addAttribute("article", currentArticle);
-
-
-
 
             return "redirect:/detailArticle?id=" + articleId;
 
@@ -248,6 +230,12 @@ public class EnchereController {
         current.setWithdrawalAddress(address);
         model.addAttribute("article", current);
         return "change-product";
+    }
+
+    @GetMapping("/delete")
+    public String deleteArticle(@RequestParam(name = "articleId") int id, Model model) {
+        articleService.deleteArticle(id);
+        return "redirect:/encheres";
     }
 
 
