@@ -152,6 +152,18 @@ public class ArticleDAOImpl implements ArticleDAO {
                         sql.append("AND b.userId = :currentUserId ");
                         namedParameters.addValue("currentUserId", currentUserId);
                         break;
+                    case wonAuctions:
+                        //vraiment c'est GPT qui a produit ça moi j'ai pas réussi après maintes essais signé Pierrick
+                        sql.append("AND a.isOnSale = 0 ");
+                        sql.append("AND EXISTS ( " +
+                                "SELECT 1 FROM bids b2 " +
+                                "WHERE b2.articleId = a.id " +
+                                "AND b2.bidId = (SELECT MAX(b3.bidId) FROM bids b3 WHERE b3.articleId = a.id) " +
+                                "AND b2.userId = :currentUserId " +
+                                ") ");
+                        // jusque la :'(
+                        namedParameters.addValue("currentUserId", currentUserId);
+                        break;
                     case CurrentSales:
                         logger.warn("Filter CurrentSales");
                         sql.append("AND a.userId = :currentUserId ");
@@ -215,6 +227,18 @@ public class ArticleDAOImpl implements ArticleDAO {
                         break;
                     case ongoingAuctions:
                         sql.append("AND b.userId = :currentUserId ");
+                        namedParameters.addValue("currentUserId", currentUserId);
+                        break;
+                    case wonAuctions:
+                        //vraiment c'est GPT qui a produit ça moi j'ai pas réussi après maintes essais signé Pierrick
+                        sql.append("AND a.isOnSale = 0 ");
+                        sql.append("AND EXISTS ( " +
+                                "SELECT 1 FROM bids b2 " +
+                                "WHERE b2.articleId = a.id " +
+                                "AND b2.bidId = (SELECT MAX(b3.bidId) FROM bids b3 WHERE b3.articleId = a.id) " +
+                                "AND b2.userId = :currentUserId " +
+                                ") ");
+                        // jusque la :'(
                         namedParameters.addValue("currentUserId", currentUserId);
                         break;
                     case CurrentSales:
