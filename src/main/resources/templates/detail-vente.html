@@ -39,12 +39,12 @@
             <input type="number" id="intial-price" name="intial-price" readonly th:value="${article.startingPrice}">
         </div>
         <div class="form-group">
-            <label for="auction-start">Fin de l'enchère:</label>
-            <input type="datetime" id="auction-start" name="auction-start" readonly th:value="${article.auctionStartDate}">
+            <label for="auction-end">Début de l'enchère :</label>
+            <input type="datetime" id="auction-end" name="auction-end" readonly th:value="${article.auctionStartDate}">
         </div>
         <div class="form-group">
-            <label for="auction-end">Début de l'enchère :</label>
-            <input type="datetime" id="auction-end" name="auction-end" readonly th:value="${article.auctionEndDate}">
+            <label for="auction-start">Fin de l'enchère:</label>
+            <input type="datetime" id="auction-start" name="auction-start" readonly th:value="${article.auctionEndDate}">
         </div>
         <h4><label for="withdraw_Address">Adresse de retrait :</label></h4>
         <div id="withdraw_Address" th:object="${article.withdrawalAddress}" th:fragment="adress-form-frag">
@@ -61,8 +61,8 @@
                 <input readonly type="text" id="city" th:field="*{city}" required>
             </div>
         </div>
-        <div hidden="hidden" class="form-group">
-            <input name="userId" readonly th:value="${article.user.id}">
+        <div class="form-group">
+            <input type="hidden" name="userId" readonly th:value="${article.user.id}">
         </div>
         <div class="form-group">
             <label for="seller">Vendeur: </label>
