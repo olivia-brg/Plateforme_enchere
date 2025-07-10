@@ -15,8 +15,6 @@ body {
     background-color: #f9f9f9;
     color: #333;
     background-image: url("../img/logo.png");
-    width: 1920px;
-    height: 1080px;
     background-size: cover;
     background-attachment: fixed;
     image-rendering: pixelated;

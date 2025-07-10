@@ -85,15 +85,12 @@ public class EnchereController {
 //            logger.info("Article ID: " + article.getId() + ", Name: " + article.getName());
 //        });
 
-
         // verifie si l'article est en vente et met a jour le soldPrice
         for (Article article : articles) {
             logger.info("IS USER : {}", article.getId());
             if (!articleService.isOnSaleArticle(article.getId())){
                 articleService.closeSale(article.getId());
-
             }
-
         }
 
         int totalArticles = articleService.countFilteredArticles(criteria, userId);
