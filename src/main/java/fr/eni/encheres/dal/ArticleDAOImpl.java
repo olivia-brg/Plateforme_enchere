@@ -27,6 +27,7 @@ import java.util.List;
 public class ArticleDAOImpl implements ArticleDAO {
 
     private final String FIND_ALL = "SELECT ID, NAME, DESCRIPTION, AUCTIONSTARTDATE, AUCTIONENDDATE, STARTINGPRICE, SOLDPRICE, ISONSALE, CATEGORYID, DELIVERYADDRESSID, USERID, ImageURL FROM ARTICLES";
+    private final String DELETE_ARTICLE_BY_ID = "DELETE FROM articles WHERE id = :id";
 
     private final String INSERT_NEW_ARTICLE = """
             	INSERT INTO articles(userID,categoryId,deliveryAddressId,name,description,auctionStartDate,auctionEndDate,startingPrice,isOnSale,IMAGEURL)
@@ -265,6 +266,27 @@ public class ArticleDAOImpl implements ArticleDAO {
         return namedParameterJdbcTemplate.queryForObject(sql.toString(), namedParameters, Integer.class);
     }
 
+    public void updateArticle(Article article,int id) {
+        String sql = "UPDATE articles SET name = :name, description = :description, auctionStartDate = :auctionStartDate, auctionEndDate = :auctionEndDate, startingPrice = :startingPrice, categoryid = :categoryId WHERE id = :id";
+        MapSqlParameterSource nameParameters = new MapSqlParameterSource();
+        nameParameters.addValue("id", id);
+        nameParameters.addValue("name", article.getName());
+        nameParameters.addValue("description", article.getDescription());
+        nameParameters.addValue("categoryId", article.getCategory().getId());
+        nameParameters.addValue("auctionStartDate", article.getAuctionStartDate());
+        nameParameters.addValue("auctionEndDate", article.getAuctionEndDate());
+        nameParameters.addValue("startingPrice", article.getStartingPrice());
+        namedParameterJdbcTemplate.update(sql, nameParameters);
+    }
+
+
+    @Override
+    public boolean deleteArticle(int articleId) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("id", articleId);
+        logger.info("Deleting {}", articleId);
+        return namedParameterJdbcTemplate.update(DELETE_ARTICLE_BY_ID, mapSqlParameterSource) == 1;
+    }
 
 
 

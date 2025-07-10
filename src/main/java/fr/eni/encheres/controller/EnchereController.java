@@ -14,7 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -58,13 +60,10 @@ public class EnchereController {
             Model model
     ) throws BusinessException {
 
-
         List<Category> listeCategories = articleService.consultCategories();
         model.addAttribute("listeCategories", listeCategories);
 //        List<Bid> topFiveBids = new ArrayList<Bid>(5);
 //        model.addAttribute("topFiveBids", topFiveBids);
-
-
 
         // suppression du caratère de recherche fantôme
         if (criteria.getSearchText() != null && criteria.getSearchText().isEmpty()) criteria.setSearchText(null);
@@ -86,7 +85,9 @@ public class EnchereController {
 //            System.out.println("Article ID: " + article.getId() + ", Name: " + article.getName());
 //        });
 
+
         // verifie si l'article est en vente et met a jour le soldPrice
+
         for (Article article : articles) {
 
             if (!articleService.isOnSaleArticle(article.getId())){
@@ -96,16 +97,12 @@ public class EnchereController {
 
         }
 
-
-
         int totalArticles = articleService.countFilteredArticles(criteria, userId);
         int totalPages = (int) Math.ceil((double) totalArticles / size);
-
 
         model.addAttribute("criteria", criteria);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("currentPage", page);
-
         model.addAttribute("article", articles);
 
         return "encheres";
@@ -130,7 +127,7 @@ public class EnchereController {
                           @ModelAttribute("connectedUser") User connectedUser,
                           Model model) {
         article.setUser(connectedUser);
-        article.setAuctionStartDate(LocalDateTime.now());
+        //article.setAuctionStartDate(LocalDateTime.now());
         //On appelle la méthode du service qui créera l'article
         articleService.createArticle(article, connectedUser.getId());
 
@@ -204,14 +201,9 @@ public class EnchereController {
             userService.isCreditValid(bidAmount, connectedUser.getId());
             bidService.isBidValid(bidAmount, currentArticle.getId());
             articleService.isOnSaleArticle(currentArticle.getId());
-
-
             userService.substractCredit(bidAmount, connectedUser.getId());
 
             Bid maxBid = bidService.getHighestBid(currentArticle.getId());
-
-
-
             if (maxBid != null) {
                 userService.addCredit(maxBid.getBidAmount(), maxBid.getUser().getId());
             }
@@ -220,9 +212,7 @@ public class EnchereController {
             bid.setBidAmount(bidAmount);
             bid.setBidDate(LocalDate.now());
 
-
             bidService.createBid(bid, connectedUser.getId(), currentArticle.getId());
-
             articleDAO.updateSoldPrice(articleId, bidService.getHighestBid(articleId).getBidAmount());
 
             maxBid = bidService.getHighestBid(currentArticle.getId());
@@ -231,11 +221,7 @@ public class EnchereController {
             model.addAttribute("maxBid", maxBid);
             model.addAttribute("article", currentArticle);
 
-
             return "detail-vente" ;
-
-
-
 
         } catch (BusinessException be) {
             Bid maxBid = bidService.getHighestBid(currentArticle.getId());
@@ -244,20 +230,39 @@ public class EnchereController {
             model.addAttribute("article", currentArticle);
             model.addAttribute("errorMessages", be.getMessages());
 
-
             return "detail-vente" ;
 
         }
     }
 
     @GetMapping("/changeArticle")
-    public String changeArticle(@RequestParam(name = "id") int id, Model model) {
-        Article current = articleService.consultArticleById(id);
-        Address address = articleService.consultAddressById(current.getWithdrawalAddress().getDeliveryAddressId());
-        current.setWithdrawalAddress(address);
-        model.addAttribute("article", current);
+    public String changeArticle(@RequestParam(name="articleId") int id, Model model) {
+        Article article = articleService.consultArticleById(id);
+        article.setId(id);
+        List<Category> listeCategories = articleService.consultCategories();
+        User vendeur = userService.findById(article.getUser().getId());
+        article.setUser(vendeur);
+        model.addAttribute("listeCategories", listeCategories);
+        Address address = articleService.consultAddressById(article.getWithdrawalAddress().getDeliveryAddressId());
+        article.setWithdrawalAddress(address);
+        model.addAttribute("article", article);
         return "change-product";
     }
 
+
+    @PostMapping("/changeArticle")
+    public String updateArticle(@RequestParam(name="articleId") int id,@ModelAttribute("article") Article article, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("article", article);
+        articleService.updateArticle(article,id);
+        logger.info("errors : {}", bindingResult.hasErrors());
+        return "redirect:/";
+    }
+
+
+    @GetMapping("/delete")
+    public String deleteArticle(@RequestParam(name = "articleId") int id, Model model) {
+        articleService.deleteArticle(id);
+        return "redirect:/encheres";
+    }
 
 }
