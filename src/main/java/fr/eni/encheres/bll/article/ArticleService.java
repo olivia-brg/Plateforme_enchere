@@ -30,4 +30,8 @@ public interface ArticleService {
 
 	int countFilteredArticles(ArticleSearchCriteria criteria, int currentUserId);
 
+	public List<Bid> topFiveBids(int articleId);
+
+	public List<Bid> topFiveBids(int articleId);
+
 }

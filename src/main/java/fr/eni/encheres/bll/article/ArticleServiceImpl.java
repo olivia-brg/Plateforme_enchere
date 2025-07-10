@@ -13,6 +13,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -31,7 +34,7 @@ public class ArticleServiceImpl implements ArticleService {
 
 
     public ArticleServiceImpl(ArticleDAO articleDAO, AddressDAO addressDAO, BidDAO bidDAO, CategoryDAO categoryDAO,
-                              UserDAO userDAO, NamedParameterJdbcTemplate namedParameterJdbcTemplate,BidService bidService, UserService userService) {
+                              UserDAO userDAO, NamedParameterJdbcTemplate namedParameterJdbcTemplate, BidService bidService, UserService userService) {
 
         this.articleDAO = articleDAO;
         this.addressDAO = addressDAO;
@@ -142,4 +145,16 @@ public class ArticleServiceImpl implements ArticleService {
         return articleDAO.countFilteredArticles(criteria, currentUserId, dateNow);
     }
 
+    @Override
+    public boolean deleteArticle(int articleId) {
+        return articleDAO.deleteArticle(articleId);
+    }
+
+    public List<Bid> topFiveBids(int articleId) {
+
+        List<Bid> fiveFirstBids = bidDAO.readAllFromArticleId(articleId);
+        fiveFirstBids = fiveFirstBids.subList(0,Math.min(5, fiveFirstBids.size()));
+        Collections.reverse(fiveFirstBids);
+        return fiveFirstBids;
+    }
 }
