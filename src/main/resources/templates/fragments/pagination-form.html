@@ -1,0 +1,74 @@
+<nav class="pagination-container"
+     xmlns:th="http://www.thymeleaf.org"
+     data-th-fragment="page-frag">
+
+    <th:block th:if="${totalPages > 0}">
+        <ul class="pagination-list">
+
+            <!-- première page -->
+            <li th:if="${currentPage > 5}">
+                <a class="pagination-link"
+                   th:href="@{/encheres(
+                        page=0,
+                        searchText=${criteria.searchText},
+                        categoryId=${criteria.categoryId},
+                        searchFilter=${criteria.searchFilter}
+                    )}">« 1</a>
+            </li>
+
+            <!-- Précédente -->
+            <li>
+                <a class="pagination-link"
+                   th:classappend="${currentPage == 0} ? ' disabled' : ''"
+                   th:href="@{/encheres(
+                        page=${currentPage - 1},
+                        searchText=${criteria.searchText},
+                        categoryId=${criteria.categoryId},
+                        searchFilter=${criteria.searchFilter}
+                    )}"
+                   th:unless="${currentPage == 0}">← Précédente</a>
+                <span class="pagination-link disabled" th:if="${currentPage == 0}">← Précédente</span>
+            </li>
+
+            <!-- 5 pages avant/après -->
+            <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                th:if="${i >= currentPage - 5 and i <= currentPage + 5}">
+                <a class="pagination-link"
+                   th:href="@{/encheres(
+                        page=${i},
+                        searchText=${criteria.searchText},
+                        categoryId=${criteria.categoryId},
+                        searchFilter=${criteria.searchFilter}
+                    )}"
+                   th:text="${i + 1}"
+                   th:classappend="${i == currentPage} ? ' active' : ''"></a>
+            </li>
+
+            <!-- Suivante -->
+            <li>
+                <a class="pagination-link"
+                   th:classappend="${currentPage + 1 >= totalPages} ? ' disabled' : ''"
+                   th:href="@{/encheres(
+                        page=${currentPage + 1},
+                        searchText=${criteria.searchText},
+                        categoryId=${criteria.categoryId},
+                        searchFilter=${criteria.searchFilter}
+                    )}"
+                   th:unless="${currentPage + 1 >= totalPages}">Suivante →</a>
+                <span class="pagination-link disabled" th:if="${currentPage + 1 >= totalPages}">Suivante →</span>
+            </li>
+
+            <!-- dernière page -->
+            <li th:if="${currentPage < totalPages - 6}">
+                <a class="pagination-link"
+                   th:href="@{/encheres(
+                        page=${totalPages - 1},
+                        searchText=${criteria.searchText},
+                        categoryId=${criteria.categoryId},
+                        searchFilter=${criteria.searchFilter}
+                    )}">» [[${totalPages}]]</a>
+            </li>
+
+        </ul>
+    </th:block>
+</nav>

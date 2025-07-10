@@ -1,61 +1,215 @@
+/* ########### RESET ########### */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ########### GLOBAL ########### */
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
+    line-height: 1.5;
     padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100vh;
+    margin: 0 auto;
+    max-width: 1200px;
+    background-color: #f9f9f9;
+    color: #333;
+    background-image: url("../img/logo.png");
+    background-size: cover;
+    background-attachment: fixed;
 }
 
+/* ###### MAIN STYLES ###### */
+main {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 1rem;
+}
+
+/* ########### TITRES ########### */
 h1 {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 2rem;
 }
 
-form {
+/* ########### FORMULAIRE GÉNÉRAL ########### */
+.articleForm, .userForm, .filterForm {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 300px;
+    margin: auto;
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
+.articleForm, .userForm {
+    max-width: 500px;
+}
+
+/* ########### FORMULAIRE DE FILTRES RESPONSIVE ########### */
+.filtres {
+    margin-bottom: 2rem;
+}
+
+.filtres h2 {
+    margin-bottom: 1rem;
+    color: #333;
+    font-size: 1.2rem;
+}
+
+.filtres form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Layout responsive pour le formulaire de filtres */
+@media (min-width: 768px) {
+    .filtres form {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+
+    .filtres form > input[name="searchText"] {
+        grid-column: 1 / -1; /* Prend toute la largeur */
+    }
+
+    .filtres form > button[type="submit"] {
+        grid-column: 1 / -1; /* Prend toute la largeur */
+        justify-self: center;
+        max-width: 200px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .filtres form {
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 2rem;
+        align-items: start;
+    }
+
+    .filtres form > input[name="searchText"] {
+        grid-column: 1 / -1; /* Prend toute la largeur */
+    }
+
+    .filtres form > label[for="category"] {
+        grid-column: 1;
+    }
+
+    .filtres form > select[name="categoryId"] {
+        grid-column: 1;
+    }
+
+    .filtres form > fieldset {
+        grid-column: span 1;
+    }
+
+    .filtres form > button[type="submit"] {
+        grid-column: 1 / -1; /* Prend toute la largeur */
+        justify-self: center;
+        max-width: 200px;
+    }
+}
+
+/* Style des fieldsets */
+fieldset {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 1rem;
+    background-color: #fafafa;
+}
+
+fieldset:disabled {
+    opacity: 0.6;
+    background-color: #f5f5f5;
+}
+
+fieldset legend {
+    padding: 0 0.5rem;
+    font-weight: 600;
+    color: #333;
+}
+
+fieldset label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: normal;
+}
+
+fieldset input[type="radio"] {
+    margin: 0;
+    width: auto;
+}
+
+/* ########### STYLES INPUTS GÉNÉRAUX ########### */
 label {
-    margin: 10px 0 5px;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
 }
 
-input:not([type="checkbox"]){
+input:not([type="checkbox"]):not([type="radio"]) {
     padding: 10px;
-    font-size: 16px;
+    font-size: 1rem;
     width: 100%;
-    box-sizing: border-box;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+select {
+    padding: 10px;
+    font-size: 1rem;
+    width: 100%;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+}
+
+input[readonly] {
+    background-color: #f0f0f0;
+    color: #666;
+    border: 1px solid #ccc;
 }
 
 .checkbox-container {
     display: flex;
     align-items: center;
     margin: 10px 0;
-}
-
-.checkbox-container input {
-    margin-right: 10px;
-}
-
-.forgot-password {
-    margin-bottom: 20px;
+    gap: 10px;
 }
 
 button {
-    padding: 10px;
-    font-size: 16px;
-    margin-bottom: 20px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #0056b3;
 }
 
 .create-account {
-    padding: 15px;
-    font-size: 16px;
-    width: 100%;
-    max-width: 300px;
+    margin: auto;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 1rem;
 }
 
 a {
@@ -67,83 +221,182 @@ a:hover {
     text-decoration: underline;
 }
 
+/* ########### ARTICLES RESPONSIVE ########### */
+.articles {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+/* Responsive grid pour les articles */
+@media (min-width: 768px) {
+    .articles {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .articles {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.single-article {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    height: fit-content;
+}
+
+.single-article:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.single-article img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    padding: 0;
+}
+
+.single-article .article-infos {
+    padding: 1rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.single-article h5 {
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.single-article p {
+    margin-bottom: 0.3rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.single-article a {
+    margin-top: auto;
+    padding: 0.5rem 1rem;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    text-align: center;
+    transition: background-color 0.2s ease;
+}
+
+.single-article a:hover {
+    background-color: #0056b3;
+}
+
+/* ########### PAGINATION ########### */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 1rem 0;
+}
+
+.pagination-list {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+}
+
+.pagination-link {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid #ccc;
+    background-color: white;
+    border-radius: 4px;
+    color: #007bff;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.pagination-link:hover {
+    background-color: #e9ecef;
+}
+
+.pagination-link.active {
+    background-color: #007bff;
+    color: white;
+    pointer-events: none;
+}
+
+.pagination-link.disabled {
+    color: #aaa;
+    border-color: #eee;
+    pointer-events: none;
+}
+
+@media (max-width: 480px) {
+    .pagination-link {
+        font-size: 0.875rem;
+        padding: 0.4rem 0.6rem;
+    }
+}
+
+/* ########### MESSAGES / UTILS ########### */
+.exception {
+    color: red;
+    text-align: center;
+    background-color: white;
+    border-radius: 5px;
+    width: fit-content;
+    margin: 1rem auto;
+}
+
 .bu {
-    margin-top: 1em;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-}
-
-.form-group {
-    display: block;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.form-group label {
-    width: 120px;
-    /* Largeur fixe pour aligner les inputs */
-    margin-right: 10px;
-}
-
-.form-group input {
-    flex: 1;
-    /* L'input prend le reste de l'espace */
+    gap: 1rem;
 }
 
 .sIsU {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    gap: 1rem;
 }
 
+.form-group {
+    margin-bottom: 1rem;
+}
 
+.form-group label {
+    display: block;
+    margin-bottom: 0.25rem;
+}
 
-.articles {
+.form-group input {
     width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+    padding: 10px;
 }
 
-.single-article {
-    height: 50%;
-    border: solid black 3px;
-    display: flex;
-    flex-direction: row;
-    position: relative;
-    margin-bottom: 1em;
-}
-
-.single-article img {
-    width: 25%;
-
-
-    position: relative;
-    padding: 1em;
-}
-
-.exception {
-    color: red;
-}
-
-
-input[readonly] {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    color: #555;
-}
-
-
-
-/* ######################## */
-/* ##### STYLE HEADER ##### */
-/* ######################## */
-/* Mobile First Navbar Style */
+/* ########### HEADER ########### */
 header {
-    box-shadow: 0 1px 8px #ddd;
-    width: 100vw;
+    width: 100%;
     background-color: white;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .navbar {
@@ -220,11 +473,6 @@ header {
         text-align: left;
         background: none;
     }
-
-    #nav-links li a:hover {
-        background: none;
-        color: rgb(0, 128, 192);
-    }
 }
 
 /* Optional: image/logo styling */
@@ -288,65 +536,3 @@ header {
         display: flex !important;
     }
 }
-/* ############################ */
-/* ##### FIN STYLE HEADER ##### */
-/* ############################ */
-
-
-/* ########################## */
-/* ##### STYLE NAV PAGE ##### */
-/* ########################## */
-/* Base container */
-.pagination-container {
-    display: flex;
-    justify-content: center;
-    padding: 1rem;
-}
-
-/* Pagination list */
-.pagination-list {
-    list-style: none;
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    padding: 0;
-    margin: 0;
-}
-
-/* Pagination link */
-.pagination-link {
-    display: inline-block;
-    padding: 0.5rem 0.75rem;
-    font-size: 1rem;
-    color: #007bff;
-    background-color: #fff;
-    border: 1px solid #dee2e6;
-    border-radius: 0.25rem;
-    text-decoration: none;
-    transition: background-color 0.2s, color 0.2s;
-}
-
-.pagination-link:hover {
-    background-color: #e9ecef;
-    color: #0056b3;
-}
-
-/* Active page */
-.pagination-link.active {
-    color: #fff;
-    background-color: #007bff;
-    border-color: #007bff;
-    cursor: default;
-    pointer-events: none;
-}
-
-/* Responsive adjustments */
-@media (max-width: 480px) {
-    .pagination-link {
-        font-size: 0.875rem;
-        padding: 0.4rem 0.6rem;
-    }
-}
-/* ############################## */
-/* ##### FIN STYLE NAV PAGE ##### */
-/* ############################## */

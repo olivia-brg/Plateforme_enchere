@@ -10,9 +10,9 @@
 
 <body>
 <main>
-    <h2 th:text="'Profil de ' + ${userFetched.userName}"></h2>
 
-    <form data-th-object="${userFetched}" action="deactivateUser" method="post">
+    <form data-th-object="${userFetched}" action="deactivateUser" method="post" class="userForm">
+    <h2 th:text="'Profil de ' + ${userFetched.userName}"></h2>
         <!-- CSRF Token -->
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <input type="text" id="userId" name="userId" th:value="*{id}" readonly>

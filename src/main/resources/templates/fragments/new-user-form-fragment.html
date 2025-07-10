@@ -1,4 +1,4 @@
-<form th:action="@{/register}" method="post" th:object="${user}" th:fragment="new-user-form-frag">
+<form th:action="@{/register}" method="post" th:object="${user}" th:fragment="new-user-form-frag" class="userForm">
     <div class="text-danger exception" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></div>
     <label for="userName">Username:</label>
     <input id="username" type="text" th:field="*{userName}" required>

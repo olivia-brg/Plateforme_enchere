@@ -1,5 +1,5 @@
 
-<form action="/sell" method="post" th:fragment="article-form-frag" th:object="${article}">
+<form class="articleForm" action="/sell" method="post" th:fragment="article-form-frag" th:object="${article}">
     <div class="form-group">
         <label for="article">Article:</label>
         <input type="text" id="article" th:field="*{name}">

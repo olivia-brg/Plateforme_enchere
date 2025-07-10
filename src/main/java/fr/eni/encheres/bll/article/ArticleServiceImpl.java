@@ -1,17 +1,14 @@
 package fr.eni.encheres.bll.article;
 
-import fr.eni.encheres.bo.Address;
-import fr.eni.encheres.bo.Article;
-import fr.eni.encheres.bo.Category;
-import fr.eni.encheres.bo.User;
+import fr.eni.encheres.bll.bid.BidService;
+import fr.eni.encheres.bll.user.UserService;
+import fr.eni.encheres.bo.*;
 import fr.eni.encheres.controller.EnchereController;
 import fr.eni.encheres.dal.*;
 import fr.eni.encheres.dto.ArticleSearchCriteria;
-import fr.eni.encheres.dto.FilterType;
 import fr.eni.encheres.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -29,9 +26,12 @@ public class ArticleServiceImpl implements ArticleService {
     private final UserDAO userDAO;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    private final BidService bidService;
+    private final UserService userService;
+
 
     public ArticleServiceImpl(ArticleDAO articleDAO, AddressDAO addressDAO, BidDAO bidDAO, CategoryDAO categoryDAO,
-                              UserDAO userDAO, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+                              UserDAO userDAO, NamedParameterJdbcTemplate namedParameterJdbcTemplate,BidService bidService, UserService userService) {
 
         this.articleDAO = articleDAO;
         this.addressDAO = addressDAO;
@@ -39,6 +39,9 @@ public class ArticleServiceImpl implements ArticleService {
         this.categoryDAO = categoryDAO;
         this.userDAO = userDAO;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+
+        this.bidService = bidService;
+        this.userService = userService;
     }
 
     public Article consultArticleById(int id) {
@@ -104,8 +107,39 @@ public class ArticleServiceImpl implements ArticleService {
         articleDAO.create(article, userId, address.getDeliveryAddressId());
     }
 
+
+   public boolean isOnSaleArticle(int articleId) throws BusinessException {
+        BusinessException be = new BusinessException();
+        Article article = this.consultArticleById(articleId);
+
+        LocalDateTime dateNow = LocalDateTime.now();
+        LocalDateTime endDate = article.getAuctionEndDate();
+
+        if (dateNow.isAfter(endDate)) {
+            articleDAO.updateIsOnSale(articleId, false);
+            be.add("La vente est finie !");
+            return false;
+        }
+        else{
+            return true;
+       }
+     }
+
+    public void closeSale(int articleId) {
+
+        articleDAO.updateIsOnSale(articleId, false);
+
+        if (bidService.getHighestBid(articleId) != null) {
+            articleDAO.updateSoldPrice(articleId, bidService.getHighestBid(articleId).getBidAmount());
+        }
+
+    }
+
+
     @Override
     public int countFilteredArticles(ArticleSearchCriteria criteria, int currentUserId) {
-        return articleDAO.countFilteredArticles(criteria, currentUserId);
+        LocalDateTime dateNow = LocalDateTime.now();
+        return articleDAO.countFilteredArticles(criteria, currentUserId, dateNow);
     }
+
 }

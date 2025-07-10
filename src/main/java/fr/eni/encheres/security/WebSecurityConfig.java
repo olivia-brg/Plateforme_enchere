@@ -73,8 +73,10 @@ public class WebSecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
-                        .loginPage("/login").permitAll()
+                        .loginPage("/login")
+                        .failureUrl("/login?error=true")
                         .defaultSuccessUrl("/loginSucess")
+                        .permitAll()
                 )
                 .logout(logout -> logout
                 .invalidateHttpSession(true)

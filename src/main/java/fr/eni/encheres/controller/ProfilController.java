@@ -116,6 +116,4 @@ public class ProfilController {
         logger.info("deleteUser : {} not deleted", connectedUser.getUserName());
         return "redirect:/profile?id=" + connectedUser.getId();
     }
-
-
 }

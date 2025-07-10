@@ -3,6 +3,8 @@ package fr.eni.encheres.bll.bid;
 import fr.eni.encheres.bll.article.ArticleService;
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Bid;
+import fr.eni.encheres.dal.ArticleDAO;
+import fr.eni.encheres.dal.ArticleDAOImpl;
 import fr.eni.encheres.dal.BidDAO;
 import fr.eni.encheres.exception.BusinessException;
 import org.springframework.stereotype.Service;
@@ -15,12 +17,14 @@ import java.util.List;
 @Service
 public class BidServiceImpl implements BidService {
 
-    private final ArticleService articleService;
-    private final BidDAO bidDAO;
 
-    public BidServiceImpl(ArticleService articleService, BidDAO bidDAO) {
-        this.articleService = articleService;
+    private final BidDAO bidDAO;
+    private final ArticleDAO articleDAO;
+
+    public BidServiceImpl(BidDAO bidDAO, ArticleDAO articleDAO) {
+
         this.bidDAO = bidDAO;
+        this.articleDAO = articleDAO;
     }
 
     public void createBid(Bid bid, int userId, int articleId) {
@@ -37,7 +41,7 @@ public class BidServiceImpl implements BidService {
             be.add("La mise doit être suppérieur à l'enchère la plus haute !");
         }
 
-        if (bidAmount < articleService.consultArticleById(articleId).getStartingPrice()){
+        if (bidAmount < articleDAO.findArticleById(articleId).getStartingPrice()){
             be.add("La mise doit être supperieur au prix de départ !");
         }
 
@@ -56,7 +60,7 @@ public class BidServiceImpl implements BidService {
         }
 
         Bid maxBid = Collections.max(listBid, Comparator.comparing(Bid::getBidAmount));
-        Article article = articleService.consultArticleById(articleId);
+        Article article = articleDAO.findArticleById(articleId);
         maxBid.setArticle(article);
         return maxBid;
     }
