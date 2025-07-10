@@ -105,10 +105,7 @@
                 <th:block th:unless="${connectedUser.id!=article.user.id}">
                     <th:block th:if="${auctionStartDateTime > currentDateTime}">
 
-                        <button th:onclick="'window.location.href=\'' + @{/changeArticle(articleId=${article.id})} + '\''"
-                                type="submit">
-                            Modifier
-                        </button>
+
                         <button th:onclick="'window.location.href=\'' + @{/delete(articleId=${article.id})} + '\''"
                                 type="button">
                             Annuler la vente

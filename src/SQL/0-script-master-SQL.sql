@@ -89,7 +89,9 @@ VALUES ('makusu', 'maxime', 'jeannin', 'max.jeannin@hotmail.com', '0245856335', 
        ('HappyBeer', 'pierrick', 'rouxel', 'pierrick.rouxel@hotmail.com', '0245858435', 'rue du houblon', 'Nantes',
         '44100', '$2a$10$fsvFQmKlShqro1GXRh9/9eeG/9EMjo/xc1NfYMlginstKJ93Zpc3O', 100, 'USER'),
        ('olv', 'Olivia', 'Bergaglia', 'olv@mail.com', '0245858435', 'rue de la pisse', 'Nantes',
-        '44000', '$2a$10$IoSm.e1uzc9mjQq1uW6A/.T/wPqWkGNwROyNeEcFJbTATYb9LRQAq', 9999, 'ADMIN');
+        '44000', '$2a$10$IoSm.e1uzc9mjQq1uW6A/.T/wPqWkGNwROyNeEcFJbTATYb9LRQAq', 9999, 'ADMIN'),
+       ('raph', 'Raphael', 'Micelli', 'rph@mail.com', '0245858435', 'rue de la street', 'Genève',
+        '55000', '$2a$10$IoSm.e1uzc9mjQq1uW6A/.T/wPqWkGNwROyNeEcFJbTATYb9LRQAq', 9999, 'ADMIN');
 
 -- 📂 CATÉGORIES
 INSERT INTO categories(name)
