@@ -241,6 +241,20 @@ public class ArticleDAOImpl implements ArticleDAO {
         return namedParameterJdbcTemplate.queryForObject(sql.toString(), namedParameters, Integer.class);
     }
 
+    public void updateArticle(Article article,int id) {
+        String sql = "UPDATE articles SET name = :name, description = :description, auctionStartDate = :auctionStartDate, auctionEndDate = :auctionEndDate, startingPrice = :startingPrice, categoryid = :categoryId WHERE id = :id";
+        MapSqlParameterSource nameParameters = new MapSqlParameterSource();
+        nameParameters.addValue("id", id);
+        nameParameters.addValue("name", article.getName());
+        nameParameters.addValue("description", article.getDescription());
+        nameParameters.addValue("categoryId", article.getCategory().getId());
+        nameParameters.addValue("auctionStartDate", article.getAuctionStartDate());
+        nameParameters.addValue("auctionEndDate", article.getAuctionEndDate());
+        nameParameters.addValue("startingPrice", article.getStartingPrice());
+        namedParameterJdbcTemplate.update(sql, nameParameters);
+    }
+
+
 
 
 

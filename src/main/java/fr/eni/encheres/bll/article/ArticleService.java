@@ -20,8 +20,9 @@ public interface ArticleService {
 
 	public Address consultAddressById(int id);
 
-  void createArticle(Article article, int userId);
+  	void createArticle(Article article, int userId);
 
+	void updateArticle(Article article,int id);
 
 	public boolean isOnSaleArticle(int articleId) throws BusinessException;
 

@@ -94,24 +94,20 @@
             <th:block th:if="${connectedUser.id!=article.user.id}">
                 <button th:disabled="${!connectedUser.isActive}" type="submit">Enchérir</button>
             </th:block>
-
-            <th:block th:unless="${connectedUser.id!=article.user.id}">
-                <div th:with="currentDateTime=${#temporals.format(#temporals.createNow(), 'yyyyMMddHHmm')},
-             auctionDateTime=${#temporals.format(article.auctionStartDate, 'yyyyMMddHHmm')}">
-                    <button th:if="${auctionDateTime > currentDateTime}"
-                            th:onclick="'window.location.href=\'' + @{/changeArticle(id=${article.id})} + '\''"
-                            type="submit">
-                        Modifier
-                    </button>
-                </div>
-            </th:block>
             <span th:each="msg : ${errorMessages}" th:text="${msg}"></span>
-
-
             <!-- Ajout d'un champ caché pour l'ID de l'article -->
             <input name="articleId" th:value="${article.id}" type="hidden"/>
-
         </form>
+        <th:block th:unless="${connectedUser.id!=article.user.id}">
+            <div th:with="currentDateTime=${#temporals.format(#temporals.createNow(), 'yyyyMMddHHmm')},
+             auctionDateTime=${#temporals.format(article.auctionStartDate, 'yyyyMMddHHmm')}">
+                <button th:if="${auctionDateTime > currentDateTime}"
+                        th:onclick="'window.location.href=\'' + @{/changeArticle(articleId=${article.id})} + '\''"
+                        type="submit">
+                    Modifier
+                </button>
+            </div>
+        </th:block>
         <div class="form-group">
             <button onclick="window.location.href='/'" type="submit">Back</button>
         </div>

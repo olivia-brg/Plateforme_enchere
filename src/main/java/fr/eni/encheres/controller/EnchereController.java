@@ -14,7 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -127,7 +129,7 @@ public class EnchereController {
                           @ModelAttribute("connectedUser") User connectedUser,
                           Model model) {
         article.setUser(connectedUser);
-        article.setAuctionStartDate(LocalDateTime.now());
+        //article.setAuctionStartDate(LocalDateTime.now());
         //On appelle la méthode du service qui créera l'article
         articleService.createArticle(article, connectedUser.getId());
 
@@ -248,12 +250,25 @@ public class EnchereController {
     }
 
     @GetMapping("/changeArticle")
-    public String changeArticle(@RequestParam(name = "id") int id, Model model) {
-        Article current = articleService.consultArticleById(id);
-        Address address = articleService.consultAddressById(current.getWithdrawalAddress().getDeliveryAddressId());
-        current.setWithdrawalAddress(address);
-        model.addAttribute("article", current);
+    public String changeArticle(@RequestParam(name="articleId") int id, Model model) {
+        Article article = articleService.consultArticleById(id);
+        article.setId(id);
+        List<Category> listeCategories = articleService.consultCategories();
+        User vendeur = userService.findById(article.getUser().getId());
+        article.setUser(vendeur);
+        model.addAttribute("listeCategories", listeCategories);
+        Address address = articleService.consultAddressById(article.getWithdrawalAddress().getDeliveryAddressId());
+        article.setWithdrawalAddress(address);
+        model.addAttribute("article", article);
         return "change-product";
+    }
+
+    @PostMapping("/changeArticle")
+    public String updateArticle(@RequestParam(name="articleId") int id,@ModelAttribute("article") Article article, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("article", article);
+        articleService.updateArticle(article,id);
+        logger.info("errors : {}", bindingResult.hasErrors());
+        return "redirect:/";
     }
 
 
