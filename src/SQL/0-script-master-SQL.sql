@@ -51,7 +51,7 @@ CREATE TABLE articles
     auctionStartDate  DATETIME2,
     auctionEndDate    DATETIME2,
     startingPrice     NUMERIC(10),
-    soldPrice         NUMERIC(10),
+    soldPrice         NUMERIC(10) DEFAULT 0,
     imageURL          VARCHAR(110),
     isOnSale          BIT,
     CONSTRAINT fk_article_user FOREIGN KEY (userId) REFERENCES auctionUsers (id),
