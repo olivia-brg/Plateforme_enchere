@@ -10,11 +10,9 @@
 
 <body>
 <main>
-    <h1>ENI-Enchères</h1>
-    <h2>Détail vente</h2>
     <div class="detail-objet articleForm">
         <h3 th:text="${article.name}"></h3>
-        <img alt="" src="pic.jpg">
+        <img th:alt="${article.getDescription()}" th:src="${article.getImageURL()}">
         <div class="form-group">
             <label for="description">Description:</label>
             <input id="description" name="description" readonly th:value="${article.description}" type="text">
@@ -40,7 +38,6 @@
             <input id="intial-price" name="intial-price" readonly th:value="${article.startingPrice}" type="number">
         </div>
         <div class="form-group">
-
             <label for="auction-start">Début de l'enchère:</label>
             <input id="auction-start" name="auction-start" readonly th:value="${article.auctionStartDate}"
                    type="datetime">
@@ -65,14 +62,17 @@
                 <input id="city" readonly required th:field="*{city}" type="text">
             </div>
         </div>
-
-        <div class="form-group">
-            <input type="hidden" name="userId" readonly th:value="${article.user.id}">
+        <div class="form-group" type="hidden">
+            <input name="userId" readonly th:value="${article.user.id}">
         </div>
         <div class="form-group">
             <label for="seller">Vendeur: </label>
-            <input id="seller" name="seller" readonly th:value="${article.user.firstName}+ ' ' +${article.user.lastName}"
-                   type="text">
+            <a th:href="@{/profile(id=${article.user.id})}">
+                <input id="seller" name="seller" readonly
+                       style="text-decoration: underline; color: #0056b3; cursor: pointer"
+                       th:value="${article.user.firstName}+ ' ' +${article.user.lastName}"
+                       type="text">
+            </a>
         </div>
         <form action="/bid" class="form-group" method="POST">
             <!-- CSRF Token -->
@@ -83,29 +83,36 @@
                 Votre compte est désactivé. Vous ne pouvez pas participer aux enchères.
             </div>
 
-            <label for="user-bid">Ma propositon :</label>
+            <div th:with="currentDateTime=${#temporals.format(#temporals.createNow(), 'yyyyMMddHHmm')},
+                              auctionStartDateTime=${#temporals.format(article.auctionStartDate, 'yyyyMMddHHmm')},
+                              auctionEndDateTime=${#temporals.format(article.auctionEndDate, 'yyyyMMddHHmm')}">
+                <th:block th:if="${(connectedUser.id!=article.user.id) && (auctionEndDateTime > currentDateTime) && (auctionStartDateTime < currentDateTime)}">
 
-            <input id="user-bid" name="user-bid"
-                   th:disabled="${!connectedUser.isActive}"
-                   th:min="${article.soldPrice > article.startingPrice} ? article.soldPrice : article.startingPrice"
-                   th:value="${article.soldPrice}"
-                   type="number">
+                    <span class="exception" th:each="msg : ${errorMessages}" th:text="${msg}"></span>
+                    <label for="user-bid">Ma propositon :</label>
+                    <input id="user-bid" name="user-bid"
+                           th:disabled="${!connectedUser.isActive}"
+                           th:min="${article.soldPrice > article.startingPrice} ? article.soldPrice : article.startingPrice"
+                           th:value="${article.soldPrice}"
+                           type="number">
 
-            <th:block th:if="${connectedUser.id!=article.user.id}">
-                <button th:disabled="${!connectedUser.isActive}" type="submit">Enchérir</button>
-            </th:block>
+                    <button th:disabled="${!connectedUser.isActive}" type="submit">Enchérir</button>
+                </th:block>
 
-            <th:block th:unless="${connectedUser.id!=article.user.id}">
-                <div th:with="currentDateTime=${#temporals.format(#temporals.createNow(), 'yyyyMMddHHmm')},
-             auctionDateTime=${#temporals.format(article.auctionStartDate, 'yyyyMMddHHmm')}">
-                    <button th:if="${auctionDateTime > currentDateTime}"
-                            th:onclick="'window.location.href=\'' + @{/changeArticle(id=${article.id})} + '\''"
-                            type="submit">
-                        Modifier
-                    </button>
-                </div>
-            </th:block>
-            <span th:each="msg : ${errorMessages}" th:text="${msg}"></span>
+                <th:block th:unless="${connectedUser.id!=article.user.id}">
+                    <th:block th:if="${auctionStartDateTime > currentDateTime}">
+
+                        <button th:onclick="'window.location.href=\'' + @{/changeArticle(articleId=${article.id})} + '\''"
+                                type="submit">
+                            Modifier
+                        </button>
+                        <button th:onclick="'window.location.href=\'' + @{/delete(articleId=${article.id})} + '\''"
+                                type="button">
+                            Annuler la vente
+                        </button>
+                    </th:block>
+                </th:block>
+            </div>
 
 
             <!-- Ajout d'un champ caché pour l'ID de l'article -->

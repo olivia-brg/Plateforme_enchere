@@ -11,11 +11,11 @@
 <body>
 <main>
     <h1>ENI-Enchères</h1>
-    <div class="exception" th:if="${errorMessage}">
-        <span th:each="msg : ${errorMessage}" th:text="${msg}"></span>
-	</div>
 
     <form data-th-action="@{/login}" method="post" class="userForm">
+        <div class="exception" th:if="${errorMessage}">
+            <span th:each="msg : ${errorMessage}" th:text="${msg}"></span>
+        </div>
         <label for="userName">Identifiant :</label>
         <input type="text" id="username" name="username" required>
 
