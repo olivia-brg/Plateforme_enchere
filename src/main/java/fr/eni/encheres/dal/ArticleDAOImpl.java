@@ -140,21 +140,26 @@ public class ArticleDAOImpl implements ArticleDAO {
         }
 
         if (criteria.getSearchFilter() != null) {
+            boolean first = true;
             for (FilterType filter : criteria.getSearchFilter()) {
+
+                if (first) {sql.append("AND "); first = false;}
+                else {sql.append("OR ");}
+
                 switch (filter) {
                     case openAuctions:
                         logger.info("Filter openAuctions");
-                        sql.append("AND a.auctionStartDate < :now AND a.auctionEndDate > :now ");
+                        sql.append("a.auctionStartDate < :now AND a.auctionEndDate > :now ");
                         namedParameters.addValue("now", dateNow);
                         break;
                     case ongoingAuctions:
                         logger.info("Filter ongoingAuctions");
-                        sql.append("AND b.userId = :currentUserId ");
+                        sql.append("b.userId = :currentUserId ");
                         namedParameters.addValue("currentUserId", currentUserId);
                         break;
                     case wonAuctions:
                         //vraiment c'est GPT qui a produit ça moi j'ai pas réussi après maintes essais signé Pierrick
-                        sql.append("AND a.isOnSale = 0 ");
+                        sql.append("a.isOnSale = 0 ");
                         sql.append("AND EXISTS ( " +
                                 "SELECT 1 FROM bids b2 " +
                                 "WHERE b2.articleId = a.id " +
@@ -166,21 +171,21 @@ public class ArticleDAOImpl implements ArticleDAO {
                         break;
                     case CurrentSales:
                         logger.info("Filter CurrentSales");
-                        sql.append("AND a.userId = :currentUserId ");
+                        sql.append("a.userId = :currentUserId ");
                         sql.append("AND a.auctionStartDate < :now AND a.auctionEndDate > :now ");
                         namedParameters.addValue("currentUserId", currentUserId);
                         namedParameters.addValue("now", dateNow);
                         break;
                     case notStartedSales:
                         logger.info("Filter notStartedSales");
-                        sql.append("AND a.userId = :currentUserId ");
+                        sql.append("a.userId = :currentUserId ");
                         sql.append("AND a.auctionStartDate > :now ");
                         namedParameters.addValue("currentUserId", currentUserId);
                         namedParameters.addValue("now", dateNow);
                         break;
                     case finishedSales:
                         logger.info("Filter finishedSales");
-                        sql.append("AND a.userId = :currentUserId ");
+                        sql.append("a.userId = :currentUserId ");
                         sql.append("AND a.auctionEndDate < :now ");
                         namedParameters.addValue("currentUserId", currentUserId);
                         namedParameters.addValue("now", dateNow);
@@ -219,19 +224,24 @@ public class ArticleDAOImpl implements ArticleDAO {
         }
 
         if (criteria.getSearchFilter() != null) {
+            boolean first = true;
             for (FilterType filter : criteria.getSearchFilter()) {
+
+                if (first) {sql.append("AND "); first = false;}
+                else {sql.append("OR ");}
+
                 switch (filter) {
                     case openAuctions:
-                        sql.append("AND a.auctionStartDate < :now AND a.auctionEndDate > :now ");
+                        sql.append("a.auctionStartDate < :now AND a.auctionEndDate > :now ");
                         namedParameters.addValue("now", dateNow);
                         break;
                     case ongoingAuctions:
-                        sql.append("AND b.userId = :currentUserId ");
+                        sql.append("b.userId = :currentUserId ");
                         namedParameters.addValue("currentUserId", currentUserId);
                         break;
                     case wonAuctions:
                         //vraiment c'est GPT qui a produit ça moi j'ai pas réussi après maintes essais signé Pierrick
-                        sql.append("AND a.isOnSale = 0 ");
+                        sql.append("a.isOnSale = 0 ");
                         sql.append("AND EXISTS ( " +
                                 "SELECT 1 FROM bids b2 " +
                                 "WHERE b2.articleId = a.id " +
@@ -242,19 +252,19 @@ public class ArticleDAOImpl implements ArticleDAO {
                         namedParameters.addValue("currentUserId", currentUserId);
                         break;
                     case CurrentSales:
-                        sql.append("AND a.userId = :currentUserId ");
+                        sql.append("a.userId = :currentUserId ");
                         sql.append("AND a.auctionStartDate < :now AND a.auctionEndDate > :now ");
                         namedParameters.addValue("currentUserId", currentUserId);
                         namedParameters.addValue("now", dateNow);
                         break;
                     case notStartedSales:
-                        sql.append("AND a.userId = :currentUserId ");
+                        sql.append("a.userId = :currentUserId ");
                         sql.append("AND a.auctionStartDate > :now ");
                         namedParameters.addValue("currentUserId", currentUserId);
                         namedParameters.addValue("now", dateNow);
                         break;
                     case finishedSales:
-                        sql.append("AND a.userId = :currentUserId ");
+                        sql.append("a.userId = :currentUserId ");
                         sql.append("AND a.auctionEndDate < :now ");
                         namedParameters.addValue("currentUserId", currentUserId);
                         namedParameters.addValue("now", dateNow);
