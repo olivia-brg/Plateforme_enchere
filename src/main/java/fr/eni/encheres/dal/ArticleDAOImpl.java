@@ -27,6 +27,7 @@ import java.util.List;
 public class ArticleDAOImpl implements ArticleDAO {
 
     private final String FIND_ALL = "SELECT ID, NAME, DESCRIPTION, AUCTIONSTARTDATE, AUCTIONENDDATE, STARTINGPRICE, SOLDPRICE, ISONSALE, CATEGORYID, DELIVERYADDRESSID, USERID, ImageURL FROM ARTICLES";
+    private final String DELETE_ARTICLE_BY_ID = "DELETE FROM articles WHERE id = :id";
 
     private final String INSERT_NEW_ARTICLE = """
             	INSERT INTO articles(userID,categoryId,deliveryAddressId,name,description,auctionStartDate,auctionEndDate,startingPrice,isOnSale,IMAGEURL)
@@ -255,6 +256,13 @@ public class ArticleDAOImpl implements ArticleDAO {
     }
 
 
+    @Override
+    public boolean deleteArticle(int articleId) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("id", articleId);
+        logger.info("Deleting {}", articleId);
+        return namedParameterJdbcTemplate.update(DELETE_ARTICLE_BY_ID, mapSqlParameterSource) == 1;
+    }
 
 
 

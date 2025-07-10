@@ -15,8 +15,8 @@
     <h2 th:text="'Profil de ' + ${userFetched.userName}"></h2>
         <!-- CSRF Token -->
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-        <input type="text" id="userId" name="userId" th:value="*{id}" readonly>
-        <input type="text" id="userSts" name="userSts" th:value="*{isActive}" readonly>
+        <input type="hidden" id="userId" name="userId" th:value="*{id}" readonly>
+        <input type="hidden" id="userSts" name="userSts" th:value="*{isActive}" readonly>
         <div class="form-group">
             <label for="userName">Username:</label>
             <input type="text" id="userName" name="userName" th:value="*{userName}" readonly>

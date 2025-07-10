@@ -5,12 +5,12 @@
                                                               ressourcesSupp=~{})}">
 
 <head>
-    <title>Auctions List</title>
+    <title>Enchères</title>
 </head>
 
 <body>
 <main>
-    <h1>ENI-Auctions</h1>
+    <h1>ENI-Enchères</h1>
 
     <div class="filtres">
         <form method="get" th:action="@{/encheres}" class="filterForm">
@@ -77,14 +77,17 @@
             <div class="article-infos">
                 <h5 th:text="${a.name}">Exemple</h5>
                 <p th:text="'Prix : '+${a.soldPrice} "></p>
-                <p>Classement: </p>
+                <h5>Classement :</h5>
+                <p th:each="bid, stat : ${a.getTopFiveBids()}">
+                    <span th:text="'Top '+ ${stat.index + 1}+' : ' +${bid.bidAmount}"></span>
+                </p>
                 <p th:text="${'Debut de l''enchère : ' + a.auctionStartDate}">Début de l'enchère: </p>
                 <p th:text="${'Fin de l''enchère : ' + a.auctionEndDate}">Fin de l'enchère: </p>
                 <!--<p th:text="'Retrait : ' + ${a.withdrawalAddress.street} + ' ' + ${a.withdrawalAddress.city} + ' ' + ${a.withdrawalAddress.postalCode}">Retrait: </p>-->
                 <p th:text="'Vendeur : ' + ${a.user.firstName} + ' ' + ${a.user.lastName}">Vendeur: </p>
                 <a data-th-if="${#authorization.expression('isAuthenticated()')}"
                         th:href="@{/detailArticle(articleId=${a.id})}">Détail de la vente</a>
-                <p th:if="${!a.isOnSale()}" th:text="'VENDU'"></p>
+                <p th:if="${!a.isOnSale()}" style="color: red; text-align: center; font-size: 1.5rem"><strong>VENDU</strong></p>
             </div>
         </div>
     </div>

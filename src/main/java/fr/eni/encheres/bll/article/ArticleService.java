@@ -1,34 +1,42 @@
 package fr.eni.encheres.bll.article;
 
-import java.util.List;
-
-import fr.eni.encheres.bo.*;
+import fr.eni.encheres.bo.Address;
+import fr.eni.encheres.bo.Article;
+import fr.eni.encheres.bo.Bid;
+import fr.eni.encheres.bo.Category;
 import fr.eni.encheres.dto.ArticleSearchCriteria;
 import fr.eni.encheres.exception.BusinessException;
 
+import java.util.List;
+
 public interface ArticleService {
 
-	public Article consultArticleById(int id);
+    Article consultArticleById(int id);
 
-	public List<Article> consultArticles() throws BusinessException;
+    List<Article> consultArticles() throws BusinessException;
 
-	List<Article> getFilteredArticles(ArticleSearchCriteria criteria, int currentUserId, int page, int size);
+    List<Article> getFilteredArticles(ArticleSearchCriteria criteria, int currentUserId, int page, int size);
 
-	public List<Category> consultCategories();
+    List<Category> consultCategories();
 
-	public Category consultCategoryById(int id);
+    Category consultCategoryById(int id);
 
-	public Address consultAddressById(int id);
 
   	void createArticle(Article article, int userId);
 
 	void updateArticle(Article article,int id);
 
-	public boolean isOnSaleArticle(int articleId) throws BusinessException;
-
-	public void closeSale(int articleId);
+    Address consultAddressById(int id);
 
 
-	int countFilteredArticles(ArticleSearchCriteria criteria, int currentUserId);
 
+    boolean isOnSaleArticle(int articleId) throws BusinessException;
+
+    void closeSale(int articleId);
+
+    int countFilteredArticles(ArticleSearchCriteria criteria, int currentUserId);
+
+    boolean deleteArticle(int articleId);
+
+	List<Bid> topFiveBids(int articleId);
 }

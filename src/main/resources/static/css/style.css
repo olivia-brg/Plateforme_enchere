@@ -49,6 +49,11 @@ h1 {
     max-width: 500px;
 }
 
+.articleForm img {
+    margin: 1.5rem;
+    border-radius: 5px;
+}
+
 /* ########### FORMULAIRE DE FILTRES RESPONSIVE ########### */
 .filtres {
     margin-bottom: 2rem;
@@ -387,6 +392,12 @@ a:hover {
 .form-group input {
     width: 100%;
     padding: 10px;
+}
+
+.form-group #description {
+    max-width: 100%;
+    min-width: 100%;
+    min-height: 5rem;
 }
 
 /* ########### HEADER ########### */
