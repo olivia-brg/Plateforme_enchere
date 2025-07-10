@@ -51,7 +51,6 @@ public class EnchereController {
     }
 
     @RequestMapping(path = {"/", "/encheres"}, method = {RequestMethod.GET, RequestMethod.POST})
-
     public String search(
             @ModelAttribute(value = "connectedUser", binding = false) User connectedUser,
             @ModelAttribute ArticleSearchCriteria criteria,
