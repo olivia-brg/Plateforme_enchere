@@ -87,7 +87,7 @@
                 <p th:text="'Vendeur : ' + ${a.user.firstName} + ' ' + ${a.user.lastName}">Vendeur: </p>
                 <a data-th-if="${#authorization.expression('isAuthenticated()')}"
                         th:href="@{/detailArticle(articleId=${a.id})}">Détail de la vente</a>
-                <p th:if="${!a.isOnSale()}" th:text="'VENDU'"></p>
+                <p th:if="${!a.isOnSale()}" style="color: red; text-align: center; font-size: 1.5rem"><strong>VENDU</strong></p>
             </div>
         </div>
     </div>
