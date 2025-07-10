@@ -202,7 +202,7 @@ public class EnchereController {
 
             Bid maxBid = bidService.getHighestBid(currentArticle.getId());
             if (maxBid != null) {
-                userService.addCredit(maxBid.getBidAmount(), maxBid.getUser().getId());
+                userService.addCredit(maxBid.getBidAmount(), maxBid.getUserId());
             }
 
             bid.setArticle(currentArticle);
@@ -248,11 +248,16 @@ public class EnchereController {
 
 
     @PostMapping("/changeArticle")
-    public String updateArticle(@RequestParam(name="articleId") int id,@ModelAttribute("article") Article article, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String updateArticle(@RequestParam(name="articleId") int id,@ModelAttribute("article") Article article, BindingResult bindingResult, RedirectAttributes redirectAttributes,Model model) {
+        // Gestion des erreurs de validation
+        if (bindingResult.hasErrors()) {
+            return "change-product";
+        }
+
         redirectAttributes.addFlashAttribute("article", article);
         articleService.updateArticle(article,id);
-        logger.info("errors : {}", bindingResult.hasErrors());
-        return "redirect:/";
+            logger.info("errors : {}", bindingResult.hasErrors());
+            return "redirect:/";
     }
 
 
