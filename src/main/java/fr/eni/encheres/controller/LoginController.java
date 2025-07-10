@@ -3,6 +3,7 @@ package fr.eni.encheres.controller;
 import fr.eni.encheres.bll.user.UserService;
 import fr.eni.encheres.bo.User;
 import fr.eni.encheres.exception.BusinessException;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -57,13 +58,19 @@ public class LoginController {
                         @ModelAttribute("connectedUser") User connectedUser,
 
 						RedirectAttributes redirectAttributes) {
+
 		connectedUser.setUserName(userDetails.getUsername());
 		connectedUser.setRole(userDetails.getAuthorities().iterator().next().getAuthority());
 		connectedUser.setId(userService.findByUsername(connectedUser.getUserName()).getId());
 		connectedUser.setIsActive(userService.findByUsername(connectedUser.getUserName()).getIsActive());
 
 
+
+        logger.error(connectedUser.toString());
+
+
         logger.info(connectedUser.toString());
+
         logger.info("{} is connected", connectedUser.getUserName());
         logger.info("has role {}", connectedUser.getRole());
         logger.info("has id {}", connectedUser.getId());
