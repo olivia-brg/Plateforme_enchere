@@ -244,6 +244,4 @@ public class EnchereController {
         articleService.deleteArticle(id);
         return "redirect:/encheres";
     }
-
-
 }
