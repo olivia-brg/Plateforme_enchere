@@ -42,7 +42,7 @@ public class LoginController {
 
     @GetMapping("/login?error")
     public String loginError() {
-        System.out.println("Login unsuccessfull");
+        logger.info("Login unsuccessfull");
         return "login";
     }
 
@@ -68,6 +68,8 @@ public class LoginController {
 
         logger.error(connectedUser.toString());
 
+
+        logger.info(connectedUser.toString());
 
         logger.info("{} is connected", connectedUser.getUserName());
         logger.info("has role {}", connectedUser.getRole());
@@ -108,15 +110,12 @@ public class LoginController {
 
     @PostMapping("/register")
     public String registred(@ModelAttribute User user, @ModelAttribute("connectedUser") User connectedUser, Model model, RedirectAttributes redirectAttributes) {
-        System.out.println("méthode registred workin");
         logger.info("méthode registred workin");
 
         try {
-            System.out.println(user.getEmail());
-            //todo: est ce que c'est là qu'on met l'encodage ?
+            logger.info(user.getEmail());
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             this.userService.createNewUser(user);
-
 
             user = this.userService.load(user.getUserName(), user.getId(), user.getPassword());
             if (user != null) {
@@ -144,13 +143,13 @@ public class LoginController {
                 connectedUser.setCredit(0);
                 connectedUser.setRole(null);
             }
-            System.out.println(connectedUser);
+            logger.info(connectedUser.toString());
             return "redirect:/";
 
         } catch (BusinessException e) {
 
             redirectAttributes.addFlashAttribute("errorMessages", e.getMessages());
-            logger.warn("exception username already used");
+            logger.info("exception username already used");
             return "redirect:/";
         }
 

@@ -1,12 +1,15 @@
 package fr.eni.encheres.bll.bid;
 
 import fr.eni.encheres.bll.article.ArticleService;
+import fr.eni.encheres.bll.user.UserServiceImpl;
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Bid;
 import fr.eni.encheres.dal.ArticleDAO;
 import fr.eni.encheres.dal.ArticleDAOImpl;
 import fr.eni.encheres.dal.BidDAO;
 import fr.eni.encheres.exception.BusinessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +20,7 @@ import java.util.List;
 @Service
 public class BidServiceImpl implements BidService {
 
-
+    private static final Logger logger = LoggerFactory.getLogger(BidServiceImpl.class);
     private final BidDAO bidDAO;
     private final ArticleDAO articleDAO;
 

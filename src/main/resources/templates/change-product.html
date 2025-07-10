@@ -5,76 +5,86 @@
                                                               ressourcesSupp=~{})}">
 
 <head>
-  <title th:text="'Détail de ' + ${article.getName()}"></title>
+    <title th:text="'Détail de ' + ${article.getName()}"></title>
 </head>
 
 <body>
 <main>
-  <h1>ENI-Enchères</h1>
-  <h2>Détail vente</h2>
-  <form th:action="@{/changeArticle(articleId=${article.id})}" data-th-object="${article}" class="detail-objet articleForm" method="post" >
-    <!-- CSRF Token -->
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-    <label for="name"></label>
-    <input type="text" id="name" name="name" th:value="${article.name}">
-    <img src="pic.jpg" alt="">
-    <div class="form-group">
-      <label for="description">Description:</label>
-      <input type="text" id="description" name="description"  th:value="${article.description}">
-    </div>
-    <select id="category" th:field="${article.category}">Toutes
-      <option th:each="categoryFromList : ${listeCategories}" data-th-value="${categoryFromList.getId()}"
-              data-th-text="${categoryFromList.getName()}"></option>
-    </select>
-    <div class="form-group">
-      <label for="best-bid">Meilleur offre:</label>
-      <input type="text" id="best-bid" name="best-bid" readonly th:if="${maxBid != null}" th:value="${maxBid.getBidAmount()}">
-      <span type="text" id="no-bid" name="best-bid" readonly th:if="${maxBid == null}">Aucune enchere</span>
-    </div>
-    <!--        <div class="form-group">-->
-    <!--            <label for="best-user">Meilleur encherisseur:</label>-->
-    <!--            <input type="text" id="best-user" name="best-user" readonly th:if="${maxBid != null}" th:value="${maxBid.getArticle().getUser().getLastName()}">-->
-    <!--            <span id="no-user-bid"  th:if="${maxBid == null}">Aucune enchere</span>-->
-    <!--        </div>-->
+    <h1>ENI-Enchères</h1>
+    <h2>Détail vente</h2>
+    <div class="detail-objet articleForm">
+        <label for="name"></label>
+        <input id="name" name="name" th:value="${article.name}" type="text">
+        <img alt="" src="pic.jpg">
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <input id="description" name="description" th:value="${article.description}" type="text">
+        </div>
+        <select id="category" th:field="${article.category}">Toutes
+            <option data-th-text="${categoryFromList.getName()}" data-th-value="${categoryFromList.getId()}"
+                    th:each="categoryFromList : ${listeCategories}"></option>
+        </select>
+        <div class="form-group">
+            <label for="best-bid">Meilleur offre:</label>
+            <input id="best-bid" name="best-bid" readonly th:if="${maxBid != null}" th:value="${maxBid.getBidAmount()}"
+                   type="text">
+            <span id="no-bid" name="best-bid" readonly th:if="${maxBid == null}" type="text">Aucune enchere</span>
+        </div>
+        <!--        <div class="form-group">-->
+        <!--            <label for="best-user">Meilleur encherisseur:</label>-->
+        <!--            <input type="text" id="best-user" name="best-user" readonly th:if="${maxBid != null}" th:value="${maxBid.getArticle().getUser().getLastName()}">-->
+        <!--            <span id="no-user-bid"  th:if="${maxBid == null}">Aucune enchere</span>-->
+        <!--        </div>-->
 
-    <div class="form-group">
-      <label for="intial-price">Mise à prix:</label>
-      <input type="number" id="intial-price" name="intial-price" th:field="${article.startingPrice}">
-    </div>
-    <div class="form-group">
+        <div class="form-group">
+            <label for="intial-price">Mise à prix:</label>
+            <input id="intial-price" name="intial-price" th:value="${article.startingPrice}" type="number">
+        </div>
+        <div class="form-group">
+            <label for="auction-start">Fin de l'enchère:</label>
+            <input id="auction-start" name="auction-start" th:value="${article.auctionStartDate}" type="datetime-local">
+        </div>
+        <div class="form-group">
+            <label for="auction-end">Début de l'enchère :</label>
+            <input id="auction-end" name="auction-end" th:value="${article.auctionEndDate}" type="datetime-local">
+        </div>
+        <h4><label for="withdraw_Address">Adresse de retrait :</label></h4>
+        <div id="withdraw_Address" th:object="${article.withdrawalAddress}">
+            <div class="form-group">
+                <label for="street">Rue : </label>
+                <input id="street" required th:field="*{street}" type="text">
+            </div>
+            <div class="form-group">
+                <label for="postalCode">Code postal : </label>
+                <input id="postalCode" required th:field="*{postalCode}" type="text">
+            </div>
+            <div class="form-group">
+                <label for="city">Ville : </label>
+                <input id="city" required th:field="*{city}" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="seller">Vendeur: </label>
 
-      <label for="auction-start">Début de l'enchère:</label>
-      <input type="datetime-local" id="auction-start" th:name="auctionStartDate"  th:value="${article.auctionStartDate}">
-    </div>
-    <div class="form-group">
-      <label for="auction-end">Fin de l'enchère :</label>
-      <input type="datetime-local" id="auction-end" th:name="auctionEndDate"  th:value="${article.auctionEndDate}">
+            <input id="seller" name="seller" readonly th:value="${article.user.firstName}+ ' ' +${article.user.lastName}"
+                   type="text">
+        </div>
+        <form action="/bid" class="form-group" method="POST">
+            <label for="user-bid">Ma propositon </label>
+            <input id="user-bid" name="user-bid"
+                   th:min="${article.soldPrice > article.startingPrice} ? article.soldPrice : article.startingPrice"
+                   th:value="${article.soldPrice}"
+                   type="number">
 
-    </div>
-    <h4><label for="withdraw_Address">Adresse de retrait :</label></h4>
-    <div id="withdraw_Address" th:object="${article.withdrawalAddress}">
-      <div class="form-group">
-        <label for="street">Rue : </label>
-        <input readonly type="text" id="street" th:field="*{street}" required>
-      </div>
-      <div class="form-group">
-        <label for="postalCode">Code postal : </label>
-        <input readonly type="text" id="postalCode" th:field="*{postalCode}" required>
-      </div>
-      <div class="form-group">
-        <label for="city">Ville : </label>
-        <input readonly type="text" id="city" th:field="*{city}" required>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="seller">Vendeur: </label>
+            <button type="submit">Enchérir</button>
 
-      <input type="text" id="seller" name="user" readonly th:value="${article.user.firstName}+ ' ' +${article.user.lastName}">
+            <input name="articleId" th:value="${article.id}" type="hidden">
+
+        </form>
+        <div class="form-group">
+            <button onclick="window.location.href='/'" type="submit">Back</button>
+        </div>
     </div>
-    <div class="form-group">
-      <button type="submit">Valider</button>
-    </div>
-  </form>
 </main>
 </body>
 </html>

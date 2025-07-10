@@ -290,7 +290,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public void insertNewUser(User user) {
-        logger.warn("call to insert methode");
+        logger.info("call to insert methode");
 
         Map<String, Object> params = new HashMap<>();
         params.put("userName", user.getUserName());
@@ -301,7 +301,7 @@ public class UserDAOImpl implements UserDAO {
         params.put("street", user.getStreet());
         params.put("city", user.getCity());
         params.put("postalCode", user.getPostalCode());
-        params.put("password", user.getPassword());  // Make sure password is hashed in real app
+        params.put("password", user.getPassword());
 
         namedParameterJdbcTemplate.update(INSERT_NEW_USER, params);
     }
