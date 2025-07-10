@@ -44,6 +44,7 @@ public class UserServiceImpl implements UserService {
 
             return this.userDAO.login(username, password);
         } else {
+            logger.error("Username or password incorrect");
             be.add("wrong informations");
             throw be;
         }

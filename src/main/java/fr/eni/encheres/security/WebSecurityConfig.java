@@ -44,7 +44,7 @@ public class WebSecurityConfig {
 
         //todo remplacer 1 par isActive
         users.setUsersByUsernameQuery("select username, password, isActive from auctionUsers where username=?");
-        System.out.println("user database has been loaded");
+        logger.info("user database has been loaded");
         users.setAuthoritiesByUsernameQuery("select username, Role from auctionUsers where username =?");
         return users;
     }
