@@ -123,7 +123,7 @@ public class ArticleDAOImpl implements ArticleDAO {
 
         // jointure pour récupérer les enchères de l'utilisateur actif
         if (criteria.getSearchFilter() != null && criteria.getSearchFilter().contains(FilterType.ongoingAuctions)) {
-            sql.append("JOIN bids b ON b.articleId = a.id ");
+            sql.append("LEFT JOIN bids b ON b.articleId = a.id ");
         }
 
         sql.append("WHERE 1=1 ");
@@ -199,6 +199,8 @@ public class ArticleDAOImpl implements ArticleDAO {
         sql.append("ORDER BY a.auctionEndDate ASC ");
         sql.append("OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY;");
 
+        logger.info(sql.toString());
+
         return namedParameterJdbcTemplate.query(sql.toString(), namedParameters, new ArticleRowMapper());
     }
 
@@ -208,7 +210,7 @@ public class ArticleDAOImpl implements ArticleDAO {
         StringBuilder sql = new StringBuilder("SELECT COUNT(DISTINCT a.id) FROM articles a ");
 
         if (criteria.getSearchFilter() != null && criteria.getSearchFilter().contains(FilterType.ongoingAuctions)) {
-            sql.append("JOIN bids b ON b.articleId = a.id ");
+            sql.append("LEFT JOIN bids b ON b.articleId = a.id ");
         }
 
         sql.append("WHERE 1=1 ");
