@@ -126,8 +126,7 @@ WHILE @i < 100
                 10 + (@i * 2),
                 NULL,
                 1,
-                'https://cdn.pratico-pratiques.com/app/uploads/sites/4/2018/08/30162023/les-differentes-varietes-de-biere.jpeg');
-
+                'img/' + CAST(@i % 50 + 1 AS VARCHAR) + '.jpg');
         SET @i = @i + 1;
     END
 -- 💰 ENCHÈRES DE DÉMO SUR LES 30 PREMIERS ARTICLES
