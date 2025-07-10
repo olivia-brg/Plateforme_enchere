@@ -47,8 +47,7 @@ public class WebSecurityConfig {
     @Bean
     UserDetailsManager userDetailsManager(DataSource datasource) {
         JdbcUserDetailsManager users = new JdbcUserDetailsManager(datasource);
-
-        //todo remplacer 1 par isActive
+        
         users.setUsersByUsernameQuery("select username, password, isActive from auctionUsers where username=?");
         logger.info("user database has been loaded");
         users.setAuthoritiesByUsernameQuery("select username, Role from auctionUsers where username =?");
@@ -65,7 +64,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        HttpSessionSecurityContextRepository repo = new HttpSessionSecurityContextRepository();
+//        HttpSessionSecurityContextRepository repo = new HttpSessionSecurityContextRepository();
         http
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/").permitAll()
@@ -92,10 +91,10 @@ public class WebSecurityConfig {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/")
                 .permitAll()
-        )
-                .securityContext((context) -> context
-                        .securityContextRepository(repo)
-                );
+        );
+//                .securityContext((context) -> context
+//                        .securityContextRepository(repo)
+//                );
 
         return http.build();
     }

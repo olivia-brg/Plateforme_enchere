@@ -56,7 +56,6 @@ public class LoginController {
     @GetMapping("/loginSucess")
     public String login(@AuthenticationPrincipal UserDetails userDetails,
                         @ModelAttribute("connectedUser") User connectedUser,
-
 						RedirectAttributes redirectAttributes) {
 
 		connectedUser.setUserName(userDetails.getUsername());
@@ -64,18 +63,12 @@ public class LoginController {
 		connectedUser.setId(userService.findByUsername(connectedUser.getUserName()).getId());
 		connectedUser.setIsActive(userService.findByUsername(connectedUser.getUserName()).getIsActive());
 
-
-
         logger.error(connectedUser.toString());
-
-
         logger.info(connectedUser.toString());
-
         logger.info("{} is connected", connectedUser.getUserName());
         logger.info("has role {}", connectedUser.getRole());
         logger.info("has id {}", connectedUser.getId());
         logger.info("is it active? {} ", connectedUser.getIsActive());
-
 
         return "redirect:/";
     }
