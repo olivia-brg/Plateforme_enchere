@@ -91,7 +91,7 @@ public class ArticleDAOImpl implements ArticleDAO {
         namedParameters.addValue("auctionEndDate", article.getAuctionEndDate());
         namedParameters.addValue("startingPrice", article.getStartingPrice());
         namedParameters.addValue("imageURL", article.getImageURL());
-        System.out.println("L'article ajouté : " + article);
+        logger.info("L'article ajouté : {}", article);
         // les dates sont nulles pour le moment
         return namedParameterJdbcTemplate.update(INSERT_NEW_ARTICLE, namedParameters);
     }
@@ -143,31 +143,31 @@ public class ArticleDAOImpl implements ArticleDAO {
             for (FilterType filter : criteria.getSearchFilter()) {
                 switch (filter) {
                     case openAuctions:
-                        logger.warn("Filter openAuctions");
+                        logger.info("Filter openAuctions");
                         sql.append("AND a.auctionStartDate < :now AND a.auctionEndDate > :now ");
                         namedParameters.addValue("now", dateNow);
                         break;
                     case ongoingAuctions:
-                        logger.warn("Filter ongoingAuctions");
+                        logger.info("Filter ongoingAuctions");
                         sql.append("AND b.userId = :currentUserId ");
                         namedParameters.addValue("currentUserId", currentUserId);
                         break;
                     case CurrentSales:
-                        logger.warn("Filter CurrentSales");
+                        logger.info("Filter CurrentSales");
                         sql.append("AND a.userId = :currentUserId ");
                         sql.append("AND a.auctionStartDate < :now AND a.auctionEndDate > :now ");
                         namedParameters.addValue("currentUserId", currentUserId);
                         namedParameters.addValue("now", dateNow);
                         break;
                     case notStartedSales:
-                        logger.warn("Filter notStartedSales");
+                        logger.info("Filter notStartedSales");
                         sql.append("AND a.userId = :currentUserId ");
                         sql.append("AND a.auctionStartDate > :now ");
                         namedParameters.addValue("currentUserId", currentUserId);
                         namedParameters.addValue("now", dateNow);
                         break;
                     case finishedSales:
-                        logger.warn("Filter finishedSales");
+                        logger.info("Filter finishedSales");
                         sql.append("AND a.userId = :currentUserId ");
                         sql.append("AND a.auctionEndDate < :now ");
                         namedParameters.addValue("currentUserId", currentUserId);

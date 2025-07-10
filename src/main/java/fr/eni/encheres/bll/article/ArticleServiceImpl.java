@@ -96,13 +96,13 @@ public class ArticleServiceImpl implements ArticleService {
         //Si l'adresse existe on lui attribue l'id existante
         if (addressExists) {
             address.setDeliveryAddressId(addressDAO.findIdByAddress(address));
-            System.out.println("id de l'adresse existante : " + address.getDeliveryAddressId());
+            logger.info("id de l'adresse existante : {}", address.getDeliveryAddressId());
         }
         //sinon on crée l'adresse (Fonctionne sur une première création d'article)
         else {
             int newAdressId = addressDAO.create(address);
             address.setDeliveryAddressId(newAdressId);
-            System.out.println("id de l'adresse : " + address.getDeliveryAddressId());
+            logger.info("id de l'adresse : {}", address.getDeliveryAddressId());
         }
         //enfin on crée l'article
         articleDAO.create(article, userId, address.getDeliveryAddressId());

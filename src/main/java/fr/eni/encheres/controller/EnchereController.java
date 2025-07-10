@@ -66,7 +66,7 @@ public class EnchereController {
         // suppression du caratère de recherche fantôme
         if (criteria.getSearchText() != null && criteria.getSearchText().isEmpty()) criteria.setSearchText(null);
 
-        logger.warn(criteria.toString());
+        logger.info(criteria.toString());
         int userId = connectedUser.getId();
 
         List<Article> articles = articleService.getFilteredArticles(criteria, userId, page, size);
@@ -80,11 +80,11 @@ public class EnchereController {
 
         // Vérifiez que chaque article a bien son ID
 //        articles.forEach(article -> {
-//            System.out.println("Article ID: " + article.getId() + ", Name: " + article.getName());
+//            logger.info("Article ID: " + article.getId() + ", Name: " + article.getName());
 //        });
 
         for (Article article : articles) {
-            System.out.println("IS USER :" + article.getId());
+            logger.info("IS USER : {}", article.getId());
             if (!articleService.isOnSaleArticle(article.getId())){
                 articleService.closeSale(article.getId());
 
@@ -135,7 +135,7 @@ public class EnchereController {
     public String afficherUnArticle(@RequestParam("articleId") int id, Model model, @ModelAttribute("connectedUser") User connectedUser) {
         // On garde une référence à l'ID de l'utilisateur connecté
         int connectedUserId = connectedUser.getId();
-        System.out.println("user ID is" + connectedUserId);
+        logger.info("user ID is {}", connectedUserId);
 
         Article current = articleService.consultArticleById(id);
 
@@ -152,13 +152,12 @@ public class EnchereController {
 
             Bid maxBid = bidService.getHighestBid(current.getId());
             model.addAttribute("maxBid", maxBid);
-            System.out.println("vendeur is : " + vendeur);
-            System.out.println("connected user is : " + connectedUser);
+            logger.info("vendeur is : {}", vendeur);
+            logger.info("connected user is : {}", connectedUser);
             // On s'assure que l'ID de l'utilisateur connecté n'a pas changé
 
 
-        }else
-        {System.out.println("Article inconnu!!");}
+        } else { logger.error("Article inconnu!!"); }
         connectedUser.setId(connectedUserId);
 
         return "detail-vente";

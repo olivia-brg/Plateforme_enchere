@@ -1,6 +1,9 @@
 package fr.eni.encheres.dal;
 
+import fr.eni.encheres.bll.user.UserServiceImpl;
 import fr.eni.encheres.bo.Address;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -14,6 +17,8 @@ import java.sql.Statement;
 
 @Repository
 public class AddressDAOImpl implements AddressDAO {
+
+	private static final Logger logger = LoggerFactory.getLogger(AddressDAOImpl.class);
 
 	private final String FIND_BY_ID = "SELECT ID, STREET, POSTALCODE, CITY FROM DELIVERYADDRESS WHERE ID = :id";
 	private final String CREATE_ADDRESS = """
@@ -48,7 +53,7 @@ public class AddressDAOImpl implements AddressDAO {
 		namedParameters.addValue("postalCode", address.getPostalCode());
 		namedParameters.addValue("city", address.getCity());
 		int result = jdbcTemplate.queryForObject(FIND_ID_BY_ADDRESS, namedParameters, Integer.class);
-		System.out.println("id de l\'adresse requêtée"+ result);
+		logger.info("id de l'adresse requêtée : {}", result);
 		return result;
 	}
 
@@ -79,7 +84,7 @@ public class AddressDAOImpl implements AddressDAO {
 			return ps;
 		}, keyHolder);
 		address.setDeliveryAddressId(keyHolder.getKey().intValue());
-		System.out.println("L'adresse ajoutée : " + address.toString());
+		logger.info("L'adresse ajoutée : {}", address.toString());
 
 		return keyHolder.getKey().intValue();
 	}
