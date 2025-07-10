@@ -1,40 +1,56 @@
 
-<form action="/sell" method="post" th:fragment="article-form-frag" th:object="${article}">
+<form action="/sell" method="post" th:fragment="article-form-frag" th:object="${article}" enctype="multipart/form-data">
     <div class="form-group">
         <label for="article">Article:</label>
         <input type="text" id="article" th:field="*{name}">
     </div>
     <div class="form-group">
+<<<<<<< Updated upstream
 
+=======
+        <!-- CSRF Token -->
+        <div class="text-danger exception" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+>>>>>>> Stashed changes
         <label for="category">Catégorie:</label>
         <!-- aller chercher les catégories dans la bdd-->
+        <div class="text-danger exception" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></div>
         <select id="category" th:field="*{category}">Toutes
             <option th:each="categoryFromList : ${listeCategories}" data-th-value="${categoryFromList.getId()}"
                     data-th-text="${categoryFromList.getName()}"></option>
         </select>
     </div>
     <div class="form-group">
+        <div class="text-danger exception" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
         <label for="description">Description:</label>
         <textarea th:field="*{description}" id="description"></textarea>
     </div>
     <div class="form-group">
         <label for="picture">photo de l'article </label>
-        <input type="file" id="picture" accept="image/*" />
-        <img src="" alt="">
+        <input type="file" id="picture" name="picture"
+               accept="image/*" />
+        <div class="image-preview" id="imagePreview" style="display: none; margin-top: 10px;">
+            <img id="previewImg" src="" alt="Aperçu de l'image" style="max-width: 200px; max-height: 200px;">
+        </div>
+
     </div>
 
     <div class="form-group">
+        <div class="text-danger exception" th:if="${#fields.hasErrors('startingPrice')}" th:errors="*{startingPrice}"></div>
         <label for="price">Prix initial:</label>
-        <input type="number" th:field="*{startingPrice}" id="price"></input>
+        <input type="number" th:field="*{startingPrice}" id="price">
     </div>
     <div class="form-group">
+        <div class="text-danger exception" th:if="${#fields.hasErrors('auctionStartDate')}" th:errors="*{auctionStartDate}"></div>
         <label for="bid-start">Début de l'enchère:</label>
         <input  type="datetime-local" th:field="*{auctionStartDate}" id="bid-start">
     </div>
     <div class="form-group">
+        <div class="text-danger exception" th:if="${#fields.hasErrors('auctionEndDate')}" th:errors="*{auctionEndDate}"></div>
         <label for="bid-end">Fin de l'enchère:</label>
         <input type="datetime-local" th:field="*{auctionEndDate}" id="bid-end">
     </div>
+    <div class="text-danger exception" th:if="${#fields.hasErrors('withdrawalAddress')}" th:errors="*{withdrawalAddress}"></div>
     <label> Adresse de retrait : </label>
     <div class="form-group" data-th-replace="~{/fragments/adress_form_fragment :: adress-form-frag}" >
     </div>
@@ -43,3 +59,18 @@
         <button type="submit">Annuler</button>
     </div>
 </form>
+<script>
+    document.getElementById('picture').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('imagePreview');
+                const img = document.getElementById('previewImg');
+                img.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+</script>

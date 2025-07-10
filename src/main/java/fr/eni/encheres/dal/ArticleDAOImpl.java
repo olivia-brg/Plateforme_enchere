@@ -70,12 +70,25 @@ public class ArticleDAOImpl implements ArticleDAO{
 
 	class ArticleRowMapper implements RowMapper<Article>{
 
+<<<<<<< Updated upstream
 		@Override
 		public Article mapRow(ResultSet rs, int rowNum) throws SQLException {
 			Article a = new Article();
 			a.setId(rs.getInt("ID"));
 			a.setName(rs.getString("NAME"));
 			a.setDescription(rs.getString("DESCRIPTION"));
+=======
+            java.sql.Timestamp startTimestamp = rs.getTimestamp("AUCTIONSTARTDATE");
+            java.sql.Timestamp endTimestamp = rs.getTimestamp("AUCTIONENDDATE");
+            a.setAuctionStartDate(startTimestamp != null ? startTimestamp.toLocalDateTime() : null);
+            a.setAuctionEndDate(endTimestamp != null ? endTimestamp.toLocalDateTime() : null);
+
+
+            a.setStartingPrice(rs.getFloat("STARTINGPRICE"));
+            a.setSoldPrice(rs.getFloat("SOLDPRICE"));
+            a.setOnSale(rs.getBoolean("ISONSALE"));
+            a.setImageURL(rs.getString("ImageURL"));
+>>>>>>> Stashed changes
 
 			a.setAuctionStartDate(rs.getTimestamp("AUCTIONSTARTDATE").toLocalDateTime());
 			a.setAuctionEndDate(rs.getTimestamp("AUCTIONENDDATE").toLocalDateTime());

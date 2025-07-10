@@ -14,7 +14,7 @@
     <h2>Détail vente</h2>
     <div class="detail-objet" >
         <h3 th:text="${article.name}"></h3>
-        <img src="pic.jpg" alt="">
+        <img th:src="${imgUrl}" alt="">
         <div class="form-group">
             <label for="description">Description:</label>
             <input type="text" id="description" name="description" readonly th:value="${article.description}">

@@ -38,7 +38,7 @@ public class Article {
 	@NotNull(message = "L'adresse de retrait est obligatoire.")
 	private Address withdrawalAddress;
 
-	@NotNull(message = "L'utilisateur est obligatoire.")
+//	@NotNull(message = "L'utilisateur est obligatoire.")
 	private User user;
 	
 //	Full constructor
@@ -137,6 +137,7 @@ public class Article {
 		return user;
 	}
 	public void setUser(User user) {
+
 		this.user = user;
 	}
 

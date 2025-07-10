@@ -11,12 +11,23 @@
 <body>
 <main>
     <h1>ENI-Auctions</h1>
+<<<<<<< Updated upstream
 
 <div class="filtres">
     <h2>Filtres :</h2>
     <form method="get" th:action="@{/encheres}">
         <label for="category">Catégories </label>
         <select id="category" name="category">
+=======
+    
+    <div class="filtres">
+        <h2>Filtres :</h2>
+        <form method="get" th:action="@{/encheres}">
+            <input name="searchText" placeholder="Search.." type="text" th:value="${criteria.searchText}">
+
+            <label for="category">Catégories </label>
+            <select id="category" name="categoryId" th:value="${criteria.categoryId}">
+>>>>>>> Stashed changes
 
             <option value="" th:selected="${category == null}">Toutes</option>
             <option th:each="categoryFromList : ${listeCategories}"

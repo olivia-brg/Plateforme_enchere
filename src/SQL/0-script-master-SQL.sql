@@ -59,6 +59,7 @@ CREATE TABLE articles (
 
 );
 
+<<<<<<< Updated upstream
 CREATE TABLE bids (
                       bidId INT IDENTITY ,
                       bidDate DATETIME2,
@@ -68,6 +69,18 @@ CREATE TABLE bids (
                       CONSTRAINT pk_bid PRIMARY KEY (bidId),
                       CONSTRAINT fk_bid_user FOREIGN KEY(userId) REFERENCES auctionUsers(id),
                       CONSTRAINT fk_bid_article FOREIGN KEY(articleId) REFERENCES articles(id),
+=======
+-- 💸 ENCHÈRES
+CREATE TABLE bids
+(
+    bidId     INT IDENTITY PRIMARY KEY,
+    bidDate   DATETIME2,
+    bidAmount NUMERIC(10),
+    userId    INT,
+    articleId INT,
+    CONSTRAINT fk_bid_user FOREIGN KEY (userId) REFERENCES auctionUsers (id) ON DELETE CASCADE,
+    CONSTRAINT fk_bid_article FOREIGN KEY (articleId) REFERENCES articles (id) ON DELETE CASCADE
+>>>>>>> Stashed changes
 );
 
 
