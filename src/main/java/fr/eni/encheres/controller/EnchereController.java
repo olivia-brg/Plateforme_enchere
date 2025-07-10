@@ -225,7 +225,7 @@ public class EnchereController {
 
 
 
-            return "redirect:/detailArticle?id=" + articleId;
+            return "detail-vente";
 
 
 
@@ -236,7 +236,7 @@ public class EnchereController {
             model.addAttribute("article", currentArticle);
             model.addAttribute("errorMessages", be.getMessages());
 
-            return "redirect:/detailArticle?id=" + articleId;
+            return "detail-vente";
 
         }
     }
